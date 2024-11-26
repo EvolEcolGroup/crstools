@@ -31,7 +31,4 @@ A list with two elements: "proj4" and "wkt". The "proj4" element contains the PR
 \description{
 This function takes the parameters of a custom projection and returns the PROJ.4 and WKT strings.
 }
-\examples{
-crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
-}
 \keyword{internal}

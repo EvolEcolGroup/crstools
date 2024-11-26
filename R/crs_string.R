@@ -12,9 +12,11 @@
 #' @param datum Character string. The datum. Options are "WGS84", "ETRS89", "NAD83".
 #' @param unit Character string. The linear unit. Options are "m" (meters) and "ft" (feet).
 #' @return A list with two elements: "proj4" and "wkt". The "proj4" element contains the PROJ.4 string, while the "wkt" element contains the WKT string.
-#' @examples
-#' crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
 #' @keywords internal
+
+
+# @examples
+# crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
 
 
 ################################################################################
