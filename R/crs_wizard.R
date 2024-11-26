@@ -367,13 +367,13 @@ crs_small_area <- function(property, center, scale, lonmin, lonmax, latmin, latm
   } else {
     if (ratio > 1.25) {
       # Regional map with north-south extent
-      prj_suggestions <- printNSextent(property, center)
+      prj_suggestions <- crs_ns_extent(property, center)
     } else if (ratio < 0.8) {
       # Regional map with east-west extent
-      prj_suggestions <- printEWextent(property, center, scale, lonmin =lonmin, lonmax = lonmax, latmin = latmin, latmax = latmax)
+      prj_suggestions <- crs_ew_extent(property, center, scale, lonmin =lonmin, lonmax = lonmax, latmin = latmin, latmax = latmax)
     } else {
       # Regional map in square format
-      prj_suggestions <- printSquareFormat(property, center)
+      prj_suggestions <- crs_square_format(property, center)
     }
   }
 
@@ -386,7 +386,7 @@ crs_small_area <- function(property, center, scale, lonmin, lonmax, latmin, latm
 
 ################################################################################
 ## crs for regional maps with square extent
-printSquareFormat <- function(property, center, latmin, latmax) {
+crs_square_format <- function(property, center, latmin, latmax) {
   # Initialize output as an empty vector for storing HTML strings
  # outputText <- c()
 
@@ -521,7 +521,7 @@ printSquareFormat <- function(property, center, latmin, latmax) {
 
 ################################################################################
 # regional map with a north-south extent
-printNSextent <- function(property, center) {
+crs_ns_extent <- function(property, center) {
   # Initialize output as an empty vector for storing HTML strings
   outputText <- c()
 
@@ -577,7 +577,7 @@ printNSextent <- function(property, center) {
 }
 
 ################################################################################
-printEWextent <- function(property, center, scale,
+crs_ew_extent <- function(property, center, scale,
                           lonmin, lonmax, latmin, latmax) {
 
   # Flag to determine if scale note should be included
@@ -679,8 +679,8 @@ printEWextent <- function(property, center, scale,
       previewMapProjection <- activeProjection <- "Lambert conformal conic"
 
       # Check if the cone opens at a pole
-      # TODO the checkConicOK function is not working yet
-      #conic_check <- checkConicOK(center$lat, center$lng, previewMapProjection)
+      # TODO the crs_check_conic function is not working yet
+      #conic_check <- crs_check_conic(center$lat, center$lng, previewMapProjection)
       conic_check <- TRUE # DEBUG this is currently set to TRUE without checking
       if (conic_check > 0) {
         # outputText <- c(outputText, sprintf(
@@ -719,8 +719,8 @@ printEWextent <- function(property, center, scale,
       previewMapProjection <- activeProjection <- "Albers equal area conic"
 
 
-      # TODO the checkConicOK function is not working yet
-      #conicTest <- checkConicOK(center$lat, center$lng, previewMapProjection)
+      # TODO the crs_check_conic function is not working yet
+      #conicTest <- crs_check_conic(center$lat, center$lng, previewMapProjection)
       conicTest <- TRUE # DEBUG this is currently set to TRUE without checking
 
 
@@ -786,7 +786,7 @@ printEWextent <- function(property, center, scale,
 
 ################################################################################
 # Checking if the fan of the selected extent exposes a cone opening at a pole
-checkConicOK <- function(lat0, lon0, projectionString) {
+crs_check_conic <- function(lat0, lon0, projectionString) {
   # Define projection function
   projection <- pickProjection(lat0, lon0, projectionString)
 

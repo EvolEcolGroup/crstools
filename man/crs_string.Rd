@@ -34,3 +34,4 @@ This function takes the parameters of a custom projection and returns the PROJ.4
 \examples{
 crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
 }
+\keyword{internal}
