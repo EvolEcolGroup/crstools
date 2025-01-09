@@ -54,19 +54,34 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit) {
 
   WKTstr <- paste0(
     WKTstr,
-    switch(
-      prj,
-      "aeqd" = paste0('Azimuthal_Equidistant",', gcs_str, 'PROJECTION["Azimuthal_Equidistant"],'),
-      "laea" = paste0('Lambert_Azimuthal",', gcs_str, 'PROJECTION["Lambert_Azimuthal_Equal_Area"],'),
-      "stere" = paste0('Stereographic",', gcs_str, 'PROJECTION["Stereographic"],'),
-      "aea" = paste0('Albers",', gcs_str, 'PROJECTION["Albers"],'),
-      "eqdc" = paste0('Equidistant_Conic",', gcs_str, 'PROJECTION["Equidistant_Conic"],'),
-      "lcc" = paste0('Lambert_Conformal_Conic",', gcs_str, 'PROJECTION["Lambert_Conformal_Conic"],'),
-      "cea" = paste0('Cylindrical_Equal_Area",', gcs_str, 'PROJECTION["Cylindrical_Equal_Area"],'),
-      "merc" = paste0('Mercator",', gcs_str, 'PROJECTION["Mercator"],'),
-      "eqc" = paste0('Equidistant_Cylindrical",', gcs_str, 'PROJECTION["Equidistant_Cylindrical"],'),
-      # Add other projections here if necessary
-      return("")
+      switch(
+        prj,
+        "aeqd" = paste0('Azimuthal_Equidistant",', gcs_str, 'PROJECTION["Azimuthal_Equidistant"],'),
+        "laea" = paste0('Lambert_Azimuthal",', gcs_str, 'PROJECTION["Lambert_Azimuthal_Equal_Area"],'),
+        "stere" = paste0('Stereographic",', gcs_str, 'PROJECTION["Stereographic"],'),
+        "aea" = paste0('Albers",', gcs_str, 'PROJECTION["Albers"],'),
+        "eqdc" = paste0('Equidistant_Conic",', gcs_str, 'PROJECTION["Equidistant_Conic"],'),
+        "lcc" = paste0('Lambert_Conformal_Conic",', gcs_str, 'PROJECTION["Lambert_Conformal_Conic"],'),
+        "cea" = paste0('Cylindrical_Equal_Area",', gcs_str, 'PROJECTION["Cylindrical_Equal_Area"],'),
+        "merc" = paste0('Mercator",', gcs_str, 'PROJECTION["Mercator"],'),
+        "eqc" = paste0('Equidistant_Cylindrical",', gcs_str, 'PROJECTION["Equidistant_Cylindrical"],'),
+        "tcea" = paste0('Transverse_Cylindrical_Equal_Area",', gcs_str, 'PROJECTION["Transverse_Cylindrical_Equal_Area"],'),
+        "tmerc" = paste0('Transverse_Mercator",', gcs_str, 'PROJECTION["Transverse_Mercator"],'),
+        "cass" = paste0('Cassini",', gcs_str, 'PROJECTION["Cassini"],'),
+        "moll" = paste0('Mollweide",', gcs_str, 'PROJECTION["Mollweide"],'),
+        "hammer" = paste0('Hammer_Aitoff",', gcs_str, 'PROJECTION["Hammer_Aitoff"],'),
+        "eck4" = paste0('Eckert_IV",', gcs_str, 'PROJECTION["Eckert_IV"],'),
+        "eqearth" = paste0('Equal_Earth",', gcs_str, 'PROJECTION["Equal_Earth"],'),
+        "wag4" = paste0('Wagner_IV",', gcs_str, 'PROJECTION["Wagner_IV"],'),
+        "wag7" = paste0('Wagner_VII",', gcs_str, 'PROJECTION["Wagner_VII"],'),
+        "robin" = paste0('Robinson",', gcs_str, 'PROJECTION["Robinson"],'),
+        "natearth" = paste0('Natural_Earth",', gcs_str, 'PROJECTION["Natural_Earth"],'),
+        "wintri" = paste0('Winkel_Tripel",', gcs_str, 'PROJECTION["Winkel_Tripel"],'),
+        "patterson" = paste0('Patterson",', gcs_str, 'PROJECTION["Patterson"],'),
+        "latlong" = paste0('Plate_Carree",', gcs_str, 'PROJECTION["Plate_Carree"],'),
+        "mill" = paste0('Miller_Cylindrical",', gcs_str, 'PROJECTION["Miller_Cylindrical"],'),
+        "tpeqd" = paste0('Two_Point_Equidistant",', gcs_str, 'PROJECTION["Two_Point_Equidistant"],'),
+         stop("Projection not recognized. Please select a valid projection.")
     )
   )
 
