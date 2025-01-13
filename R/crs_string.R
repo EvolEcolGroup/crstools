@@ -27,27 +27,26 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit) {
   WKTstr <- "PROJCS[\"ProjWiz_Custom_"
 
   # Formatting Geographic/Geodetic Datum
-  gcs_str <- ""
-  datum_str <- switch(
+  # BUG we need to get both gcs_str and datum_str, but currently failing ot write gcs_str
+
+  gcs_datum_str <- switch(
     datum,
     "WGS84" = {
-      gcs_str <<- "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],"
-      " +datum=WGS84"
+      c("GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],",
+      " +datum=WGS84")
     },
     "ETRS89" = {
-      gcs_str <<- "GEOGCS[\"GCS_ETRS_1989\",DATUM[\"D_ETRS_1989\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],"
-      " +ellps=GRS80"
+      c("GEOGCS[\"GCS_ETRS_1989\",DATUM[\"D_ETRS_1989\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],",
+      " +ellps=GRS80")
     },
     "NAD83" = {
-      gcs_str <<- "GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],"
-      " +datum=NAD83"
+      c("GEOGCS[\"GCS_North_American_1983\",DATUM[\"D_North_American_1983\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],",
+      " +datum=NAD83")
     },
-    return("")
+    stop("invalid datum")
   )
-
-  if (datum_str == "") {
-    stop("Datum not recognized. Please select a valid datum.")
-  }
+  gcs_str <- gcs_datum_str[1]
+  datum_str <- gcs_datum_str[2]
 
   # Formatting Projection
   PROJstr <- paste0(PROJstr, ifelse(prj == "latlong", "eqc", prj))
@@ -84,11 +83,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit) {
          stop("Projection not recognized. Please select a valid projection.")
     )
   )
-
-  # Give error if projection is not recognized
-  if (WKTstr == "") {
-    stop("Projection not recognized. Please select a valid projection.")
-  }
+  browser()
 
   # Formatting Projection Parameters
   if (!is.na(x0)) {
@@ -198,8 +193,8 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit) {
 
          # Default
          {
-           PROJstr <- ""
-           WKTstr <- ""
+           PROJstr <- PROJstr
+           WKTstr <- WKTstr
          }
   )
 
