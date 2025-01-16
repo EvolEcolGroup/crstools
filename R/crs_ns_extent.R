@@ -1,7 +1,17 @@
+#' @title North-South extent
+#' @description Checking the North-South extent of a regional map
+#' @param distortion character string (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param center The center of the map projection.
+#' @return data.frame with the suggested projection.
+#' @keywords internal
+
+# TODO fix function arguments - original function did not have distortion
+# but crs_small_area passes property and centre? See crs_small_area 130
 
 ################################################################################
 # regional map with a north-south extent
-crs_ns_extent <- function(property, center) {
+crs_ns_extent <- function(distortion, property, center) {
   # Initialize output as an empty vector for storing HTML strings
   outputText <- c()
 

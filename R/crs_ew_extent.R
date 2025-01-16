@@ -1,6 +1,22 @@
+#' @title East-West extent
+#' @description Checking the East-West extent of a regional map
+#' @param distortion character string (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param center The center of the map projection.
+#' @param scale numeric value, scale of the map.
+#' @param lonmin The minimum longitude of the map. Default is -180.
+#' @param lonmax The maximum longitude of the map. Default is 180.
+#' @param latmin numeric value, minimum latitude of the map.
+#' @param latmax numeric value, maximum latitude of the map.
+#' @return data.frame with the suggested projection.
+#' @keywords internal
+
+# TODO fix function arguments - original function did not have distortion
+# but crs_small_area passes property and centre? See crs_small_area 130
+
 
 ################################################################################
-crs_ew_extent <- function(property, center, scale,
+crs_ew_extent <- function(distortion, property, center, scale,
                           lonmin, lonmax, latmin, latmax) {
 
   # Flag to determine if scale note should be included
