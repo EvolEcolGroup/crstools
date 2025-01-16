@@ -1,5 +1,13 @@
-#' projections for a small map with square format
+#' @title Projection of a square map
+#' @description Projections for a small map with square format
+#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
+#' @param latmin The minimum latitude of the map. Default is -90.
+#' @param latmax The maximum latitude of the map. Default is 90.
+#' @return data.frame with the suggested projection.
+#' @keywords internal
 #'
+
 ################################################################################
 ## crs for regional maps with square extent
 crs_square_format <- function(property, center, latmin, latmax) {
