@@ -1,10 +1,18 @@
-#' @title choose the crs for a small area (region or country)
+#' @title Projection of a small area (region or country)
 #' @description maps showing a smaller area
-#' @param distortion
+#' @param distortion character string (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
+#' @param scale numeric value, scale of the map.
+#' @param lonmin The minimum longitude of the map. Default is -180.
+#' @param lonmax The maximum longitude of the map. Default is 180.
+#' @param latmin numeric value, minimum latitude of the map.
+#' @param latmax numeric value, maximum latitude of the map.
+#' @return data.frame with the suggested projection.
+#' @keywords internal
 
 ################################################################################
 # maps showing a smaller area
-crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, latmax,  ang_unit = "degrees") {
+crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, latmax) {
 
   # Computing longitude extent
   dlon <- lonmax - lonmin
