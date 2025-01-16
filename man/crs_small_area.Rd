@@ -2,19 +2,29 @@
 % Please edit documentation in R/crs_small_area.R
 \name{crs_small_area}
 \alias{crs_small_area}
-\title{choose the crs for a small area (region or country)}
+\title{Projection of a small area (region or country)}
 \usage{
-crs_small_area(
-  distortion,
-  center,
-  scale,
-  lonmin,
-  lonmax,
-  latmin,
-  latmax,
-  ang_unit = "degrees"
-)
+crs_small_area(distortion, center, scale, lonmin, lonmax, latmin, latmax)
+}
+\arguments{
+\item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
+
+\item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
+
+\item{scale}{numeric value, scale of the map.}
+
+\item{lonmin}{The minimum longitude of the map. Default is -180.}
+
+\item{lonmax}{The maximum longitude of the map. Default is 180.}
+
+\item{latmin}{numeric value, minimum latitude of the map.}
+
+\item{latmax}{numeric value, maximum latitude of the map.}
+}
+\value{
+data.frame with the suggested projection.
 }
 \description{
 maps showing a smaller area
 }
+\keyword{internal}
