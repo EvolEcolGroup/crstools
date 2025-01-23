@@ -31,4 +31,8 @@ A list with two elements: "proj4" and "wkt". The "proj4" element contains the PR
 \description{
 This function takes the parameters of a custom projection and returns the PROJ.4 and WKT strings.
 }
+\details{
+Note that the WKT string contains a few special characters to define indentation; these should not
+impact the parsing of the wkt string (eg. by \code{sf})
+}
 \keyword{internal}

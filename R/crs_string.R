@@ -2,6 +2,9 @@
 #'
 #' This function takes the parameters of a custom projection and returns the PROJ.4 and WKT strings.
 #'
+#' Note that the WKT string contains a few special characters to define indentation; these should not
+#' impact the parsing of the wkt string (eg. by `sf`)
+#'
 #' @param prj Character string. The projection type. Options are "aeqd" (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic), "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (Equidistant Cylindrical).
 #' @param x0 Numeric. The false easting value.
 #' @param lat0 Numeric. The latitude of origin.
