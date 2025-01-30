@@ -86,7 +86,6 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit) {
          stop("Projection not recognized. Please select a valid projection.")
     )
   )
-  browser()
 
   # Formatting Projection Parameters
   if (!is.na(x0)) {

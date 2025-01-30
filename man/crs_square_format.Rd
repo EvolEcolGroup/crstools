@@ -2,10 +2,23 @@
 % Please edit documentation in R/crs_square_format.R
 \name{crs_square_format}
 \alias{crs_square_format}
-\title{projections for a small map with square format}
+\title{Projection of a square map}
 \usage{
-crs_square_format(property, center, latmin, latmax)
+crs_square_format(distortion, center, latmin, latmax)
+}
+\arguments{
+\item{distortion}{The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
+
+\item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
+
+\item{latmin}{The minimum latitude of the map. Default is -90.}
+
+\item{latmax}{The maximum latitude of the map. Default is 90.}
+}
+\value{
+data.frame with the suggested projection.
 }
 \description{
-projections for a small map with square format
+Projections for a small map with square format
 }
+\keyword{internal}

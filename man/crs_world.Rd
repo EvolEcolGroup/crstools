@@ -4,10 +4,10 @@
 \alias{crs_world}
 \title{World map projections}
 \usage{
-crs_world(property, center, scale, round_cm)
+crs_world(distortion, center, scale, round_cm)
 }
 \arguments{
-\item{property}{The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
 
 \item{center}{The center of the map projection.}
 

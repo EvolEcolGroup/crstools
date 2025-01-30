@@ -2,7 +2,7 @@
 % Please edit documentation in R/crs_hemisphere.R
 \name{crs_hemisphere}
 \alias{crs_hemisphere}
-\title{Hemisphere projection}
+\title{Projection of a hemisphere map}
 \usage{
 crs_hemisphere(distortion, center, scale, latmin, latmax)
 }

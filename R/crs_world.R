@@ -1,6 +1,6 @@
 #' @title World map projections
 #' @description This function provides a list of world map projections.
-#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param distortion The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
 #' @param center The center of the map projection.
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
@@ -9,7 +9,7 @@
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(property, center, scale, round_cm) {
+crs_world <- function(distortion, center, scale, round_cm) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points
@@ -40,7 +40,7 @@ crs_world <- function(property, center, scale, round_cm) {
   # Formatting central meridian
   lng <- round_world_coords(center$lng, scale, round_cm)
 
-  if (property == "Equalarea") {
+  if (distortion == "Equalarea") {
     # Equal-area projections with poles as lines
     for (i in 3:6) {
       projectionName <- listWorld[[i]]$projection
@@ -61,7 +61,7 @@ crs_world <- function(property, center, scale, round_cm) {
     #    worldCM(lng, outputTEXT)
     # TODO do we want to add central meridian information as an attribute to the prj_suggestions data frame?
 
-  } else if (property == "Equidistant") {
+  } else if (distortion == "Equidistant") {
     # TODO DEBUG
     stop("Equidistant for the whole world not implemented yet")
 
