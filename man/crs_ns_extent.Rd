@@ -4,12 +4,10 @@
 \alias{crs_ns_extent}
 \title{North-South extent}
 \usage{
-crs_ns_extent(distortion, property, center)
+crs_ns_extent(distortion, center)
 }
 \arguments{
 \item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
-
-\item{property}{The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
 
 \item{center}{The center of the map projection.}
 }

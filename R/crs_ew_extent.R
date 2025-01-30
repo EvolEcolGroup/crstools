@@ -1,7 +1,6 @@
 #' @title East-West extent
 #' @description Checking the East-West extent of a regional map
 #' @param distortion character string (e.g., "Equalarea", "Equidistant", "Compromise").
-#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
 #' @param center The center of the map projection.
 #' @param scale numeric value, scale of the map.
 #' @param lonmin The minimum longitude of the map. Default is -180.
@@ -11,21 +10,18 @@
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 
-# TODO fix function arguments - original function did not have distortion
-# but crs_small_area passes property and centre? See crs_small_area 130
-
 
 ################################################################################
-crs_ew_extent <- function(distortion, property, center, scale,
+crs_ew_extent <- function(distortion, center, scale,
                           lonmin, lonmax, latmin, latmax) {
 
   # Flag to determine if scale note should be included
   scaleNote <- FALSE
 
-  # Add the initial output based on the property
-  if (property == "Conformal") {
+  # Add the initial output based on the distortion
+  if (distortion == "Conformal") {
     message("Conformal projection for regional maps with an east-west extent")
-  } else if (property == "Equalarea") {
+  } else if (distortion == "Equalarea") {
     message("Equal-area projection for regional maps with an east-west extent")
   }
 
@@ -33,7 +29,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
   # Case: Close to poles
   if (center$lat > 70) {
     #   previewMapLat0 <- 90
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       #    previewMapProjection <- activeProjection <- "Stereographic"
       scaleNote <- TRUE
       # outputText <- c(outputText, sprintf(
@@ -42,7 +38,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
       # ))
       crs_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Polar stereographic", notes = "Conformal projection for regional maps with an east-west extent")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       # previewMapProjection <- activeProjection <- "Lambert azimuthal equal area"
       # outputText <- c(outputText, sprintf(
       #   "<p class='outputText'><span data-proj-name='%s'>Polar Lambert azimuthal equal-area</span>%s</p>",
@@ -53,7 +49,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
     }
   } else if (center$lat < -70) {
     previewMapLat0 <- -90
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       #      previewMapProjection <- activeProjection <- "Stereographic"
       scaleNote <- TRUE
       # outputText <- c(outputText, sprintf(
@@ -62,7 +58,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
       # ))
       crs_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=-90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Polar stereographic", notes = "Conformal projection for regional maps with an east-west extent")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       # previewMapProjection <- activeProjection <- "Lambert azimuthal equal area"
       # outputText <- c(outputText, sprintf(
       #   "<p class='outputText'><span data-proj-name='%s'>Polar Lambert azimuthal equal-area</span>%s</p>",
@@ -81,7 +77,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
       latS <- center$lat
     }
 
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       # previewMapProjection <- activeProjection <- "Mercator"
       scaleNote <- TRUE
       # outputText <- c(outputText, sprintf(
@@ -90,7 +86,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
       # ))
       crs_suggestions <- data.frame(prj="merc", x0=NA_real_, lat0=latS, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Mercator", notes = "Conformal projection for regional maps with an east-west extent")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       # previewMapProjection <- activeProjection <- "Cylindrical equal area"
       # outputText <- c(outputText, sprintf(
       #   "<p class='outputText'><span data-proj-name='%s'>Cylindrical equal-area</span>%s</p>",
@@ -114,7 +110,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
     # latS2 <- outputLAT(latmax - interval, FALSE)
     # previewMapLat0 <- center$lat
 
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       previewMapProjection <- activeProjection <- "Lambert conformal conic"
 
       # Check if the cone opens at a pole
@@ -154,7 +150,7 @@ crs_ew_extent <- function(distortion, property, center, scale,
                                         description = "Polar stereographic", notes = "Conformal projection for regional maps with an east-west extent")
         }
       }
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       previewMapProjection <- activeProjection <- "Albers equal area conic"
 
 
@@ -214,8 +210,8 @@ crs_ew_extent <- function(distortion, property, center, scale,
 
   # Include the scale factor note if necessary
   if (scaleNote) {
-    #outputText <- c(outputText, printScaleFactorNote(property))
-    printScaleFactorNote(property)
+    #outputText <- c(outputText, printScaleFactorNote(distortion))
+    printScaleFactorNote(distortion)
   }
 
   # Return the complete output

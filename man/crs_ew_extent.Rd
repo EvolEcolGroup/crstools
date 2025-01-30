@@ -4,21 +4,10 @@
 \alias{crs_ew_extent}
 \title{East-West extent}
 \usage{
-crs_ew_extent(
-  distortion,
-  property,
-  center,
-  scale,
-  lonmin,
-  lonmax,
-  latmin,
-  latmax
-)
+crs_ew_extent(distortion, center, scale, lonmin, lonmax, latmin, latmax)
 }
 \arguments{
 \item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
-
-\item{property}{The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
 
 \item{center}{The center of the map projection.}
 

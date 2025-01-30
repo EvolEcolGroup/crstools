@@ -1,6 +1,6 @@
 #' @title Projection of a square map
 #' @description Projections for a small map with square format
-#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param distortion The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
 #' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
 #' @param latmin The minimum latitude of the map. Default is -90.
 #' @param latmax The maximum latitude of the map. Default is 90.
@@ -10,16 +10,16 @@
 
 ################################################################################
 ## crs for regional maps with square extent
-crs_square_format <- function(property, center, latmin, latmax) {
+crs_square_format <- function(distortion, center, latmin, latmax) {
   # Initialize output as an empty vector for storing HTML strings
   # outputText <- c()
 
 
   # Add conformal or equal-area description
-  # if (property == "Conformal") {
+  # if (distortion == "Conformal") {
   #   outputText <- c(outputText, "<p><b>Conformal projection for regional maps in square format</b></p>")
   #   previewMapProjection <- activeProjection <- "Stereographic"
-  # } else if (property == "Equalarea") {
+  # } else if (distortion == "Equalarea") {
   #   outputText <- c(outputText, "<p><b>Equal-area projection for regional maps in square format</b></p>")
   #   previewMapProjection <- activeProjection <- "Lambert azimuthal equal area"
   # }
@@ -27,7 +27,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
   # Handle cases based on the latitude of the center
   if (center$lat > 75) {
     previewMapLat0 <- 90
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -37,7 +37,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       #   outputText <- c(
       #     outputText,
       #     sprintf(
@@ -51,7 +51,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
     #outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
   } else if (center$lat < -75) {
     previewMapLat0 <- -90
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -61,7 +61,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=-90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       #   outputText <- c(
       #     outputText,
       #     sprintf(
@@ -76,7 +76,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
     #outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
   } else if (abs(center$lat) < 15 && (latmax * latmin) <= 0) {
     previewMapLat0 <- 0
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -86,7 +86,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
       # )
       prj_summary <- data.frame(prj="stere", x0=NA_real_, lat0=0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                 description = "Equatorial stereographic", notes = "Conformal projection for regional maps in square format")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -106,7 +106,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
     # )
     # previewMapLat0 <- center$lat
 
-    if (property == "Conformal") {
+    if (distortion == "Conformal") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -116,7 +116,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=center$lat, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Oblique stereographic", notes = "Conformal projection for regional maps in square format")
-    } else if (property == "Equalarea") {
+    } else if (distortion == "Equalarea") {
       # outputText <- c(
       #   outputText,
       #   sprintf(
@@ -131,7 +131,7 @@ crs_square_format <- function(property, center, latmin, latmax) {
   }
 
   # Include any notes about the scale factor
-  if (property == "Conformal") {
+  if (distortion == "Conformal") {
     message("To reduce overall area distortion on the map, one can also apply a scale factor <i>k</i>.
   Various values for <i>k</i> can be applied and the area distortion patterns along the center
   and at the border of the map are compared to select most appropriate value.")

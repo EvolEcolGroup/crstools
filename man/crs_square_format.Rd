@@ -4,10 +4,10 @@
 \alias{crs_square_format}
 \title{Projection of a square map}
 \usage{
-crs_square_format(property, center, latmin, latmax)
+crs_square_format(distortion, center, latmin, latmax)
 }
 \arguments{
-\item{property}{The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 

@@ -1,23 +1,19 @@
 #' @title North-South extent
 #' @description Checking the North-South extent of a regional map
 #' @param distortion character string (e.g., "Equalarea", "Equidistant", "Compromise").
-#' @param property The property of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
 #' @param center The center of the map projection.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 
-# TODO fix function arguments - original function did not have distortion
-# but crs_small_area passes property and centre? See crs_small_area 130
-
 ################################################################################
 # regional map with a north-south extent
-crs_ns_extent <- function(distortion, property, center) {
+crs_ns_extent <- function(distortion, center) {
   # Initialize output as an empty vector for storing HTML strings
   outputText <- c()
 
 
-  # Formatting the output based on the property
-  if (property == "Conformal") {
+  # Formatting the output based on the distortion
+  if (distortion == "Conformal") {
     # previewMapProjection <- activeProjection <- "Transverse Mercator"
     # outputText <- c(
     #   outputText,
@@ -29,7 +25,7 @@ crs_ns_extent <- function(distortion, property, center) {
     # )
     crs_suggestions <- data.frame(prj="tmerc", x0=NA_real_, lat0=NA_real_, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                   description = "Transverse Mercator", notes = "Conformal projection for regional maps with a north-south extent")
-  } else if (property == "Equalarea") {
+  } else if (distortion == "Equalarea") {
     # previewMapProjection <- activeProjection <- "Transverse cylindrical equal area"
     # outputText <- c(
     #   outputText,
@@ -50,11 +46,11 @@ crs_ns_extent <- function(distortion, property, center) {
   #previewMapLat0 <- 0
 
   # Include notes about the scale factor
-  #outputText <- c(outputText, printScaleFactorNote(property))
-  printScaleFactorNote(property)
+  #outputText <- c(outputText, printScaleFactorNote(distortion))
+  printScaleFactorNote(distortion)
 
   # Additional note for equal-area projection
-  if (property == "Equalarea") {
+  if (distortion == "Equalarea") {
     # outputText <- c(
     #   outputText,
     #   "<p><b>Note:</b> To reduce overall distortion on the map, one can also compress the map in the north-south direction (with a factor <i>s</i>) and expand the map in the east-west direction (with a factor 1 / <i>s</i>). The factor <i>s</i> can be determined with a trial-and-error approach, comparing the distortion patterns along the center and at the border of the map.</p>"
