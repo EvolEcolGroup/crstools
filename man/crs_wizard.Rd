@@ -5,7 +5,7 @@
 \title{Suggestions for map projections depending on the extent}
 \usage{
 crs_wizard(
-  distortion = c("Equalarea", "Comformal", "Equidistant", "Compromise"),
+  distortion = c("equal_area", "conformal", "equidistant", "compromise"),
   lonmin = -180,
   lonmax = 180,
   latmin = -90,
@@ -15,8 +15,8 @@ crs_wizard(
 }
 \arguments{
 \item{distortion}{The type of distortion to be minimized. Options are
-"Equalarea", "Conformal", "Equidistant" and "Compromise". Default is
-"Equalarea".}
+"equal_area", "conformal", "equidistant" and "compromise". Default is
+"equal_area".}
 
 \item{lonmin}{The minimum longitude of the map. Default is -180.}
 

@@ -7,7 +7,7 @@
 crs_world(distortion, center, scale, round_cm)
 }
 \arguments{
-\item{distortion}{The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
 
 \item{center}{The center of the map projection.}
 

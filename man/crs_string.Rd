@@ -7,7 +7,7 @@
 crs_string(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit)
 }
 \arguments{
-\item{prj}{Character string. The projection type. Options are "aeqd" (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic), "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (Equidistant Cylindrical).}
+\item{prj}{Character string. The projection type. Options are "aeqd" (Azimuthal equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (equidistant Conic), "lcc" (Lambert conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (equidistant Cylindrical).}
 
 \item{x0}{Numeric. The false easting value.}
 

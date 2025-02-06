@@ -1,6 +1,6 @@
 #' @title World map projections
 #' @description This function provides a list of world map projections.
-#' @param distortion The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").
+#' @param distortion The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").
 #' @param center The center of the map projection.
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
@@ -22,7 +22,7 @@ crs_world <- function(distortion, center, scale, round_cm) {
     list(projection = "Wagner IV (or Putnins P2`)", PROJ4 = "wag4"),
     list(projection = "Wagner VII (or Hammer-Wagner)", PROJ4 = "wag7"),
 
-    # Compromise world map projections
+    # compromise world map projections
     list(projection = "Natural Earth", PROJ4 = "natearth"),
     list(projection = "Robinson", PROJ4 = "robin"),
     list(projection = "Winkel Tripel", PROJ4 = "wintri"),
@@ -40,7 +40,7 @@ crs_world <- function(distortion, center, scale, round_cm) {
   # Formatting central meridian
   lng <- round_world_coords(center$lng, scale, round_cm)
 
-  if (distortion == "Equalarea") {
+  if (distortion == "equal_area") {
     # Equal-area projections with poles as lines
     for (i in 3:6) {
       projectionName <- listWorld[[i]]$projection
@@ -61,42 +61,42 @@ crs_world <- function(distortion, center, scale, round_cm) {
     #    worldCM(lng, outputTEXT)
     # TODO do we want to add central meridian information as an attribute to the prj_suggestions data frame?
 
-  } else if (distortion == "Equidistant") {
+  } else if (distortion == "equidistant") {
     # TODO DEBUG
-    stop("Equidistant for the whole world not implemented yet")
+    stop("equidistant for the whole world not implemented yet")
 
-    # Equidistant projections
-    outputTEXT <- paste(outputTEXT, "<p><b>Equidistant world map projections</b></p>", sep = "")
+    # equidistant projections
+    outputTEXT <- paste(outputTEXT, "<p><b>equidistant world map projections</b></p>", sep = "")
 
     # Dropdown menu for equidistant projections
     outputTEXT <- paste(outputTEXT,
-                        "<div><div><select name='worldEquidistantMenu' id='worldEquidistantMenu'>",
+                        "<div><div><select name='worldequidistantMenu' id='worldequidistantMenu'>",
                         "<option value='Polar azimuthal equidistant'><b>Polar azimuthal equidistant</b></option>",
                         "<option value='Oblique azimuthal equidistant'><b>Oblique azimuthal equidistant</b></option>",
                         "<option value='Two-point equidistant'><b>Two-point equidistant</b></option>",
-                        "</select></div><div id='worldEquidistantBox'></div></div>",
+                        "</select></div><div id='worldequidistantBox'></div></div>",
                         sep = ""
     )
 
     # Update active projection and preview
-    outputWorldEquidistantOption(center, scale)
+    outputWorldequidistantOption(center, scale)
   } else {
-    # Compromise projections
+    # compromise projections
 
-    # Compromise projections loop
+    # compromise projections loop
     for (i in 7:9) {
       projectionName <- listWorld[[i]]$projection
       proj4 <- listWorld[[i]]$PROJ4
       prj_suggestions <- rbind(prj_suggestions,
                                data.frame(prj=proj4, x0=NA_real_, lat0=NA_real_, lat1=NA_real_, lat2=NA_real_, lon0=lng, k0=NA_real_,
-                                          description = projectionName, notes = "Compromise world map projection"))
+                                          description = projectionName, notes = "compromise world map projection"))
     }
     for (i in 10:12) {
       projectionName <- listWorld[[i]]$projection
       proj4 <- listWorld[[i]]$PROJ4
       prj_suggestions <- rbind(prj_suggestions,
                                data.frame(prj=proj4, x0=NA_real_, lat0=NA_real_, lat1=NA_real_, lat2=NA_real_, lon0=lng, k0=NA_real_,
-                                          description = projectionName, notes = "Compromise rectangular world map projection"))
+                                          description = projectionName, notes = "compromise rectangular world map projection"))
     }
 
     # Add central meridian and additional notes

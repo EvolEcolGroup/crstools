@@ -7,7 +7,7 @@
 crs_small_area(distortion, center, scale, lonmin, lonmax, latmin, latmax)
 }
 \arguments{
-\item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant", "compromise").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 
