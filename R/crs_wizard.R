@@ -57,6 +57,18 @@ crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant",
     lon_max <- x_ext[2]
     lat_min <- x_ext[3]
     lat_max <- x_ext[4]
+
+  # check that the extent is valid
+  # first check that latitudes are within the range
+  if (lat_min < -90 || lat_max > 90) {
+    stop("Latitude values must be between -90 and 90")
+  # check that lat_min is smaller than lat_max
+  } else if (lat_min > lat_max) {
+     stop("lat_min must be smaller than lat_max")
+  # check that lon_min is smaller than lon_max
+  } else if (lon_min > lon_max) {
+     stop("lon_min must be smaller than lon_max")
+  } 
   
   # check if the input is correct
   distortion <- match.arg(distortion)
