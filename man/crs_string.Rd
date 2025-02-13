@@ -4,7 +4,17 @@
 \alias{crs_string}
 \title{Function to format the PROJ.4 and WKT strings}
 \usage{
-crs_string(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit)
+crs_string(
+  prj,
+  x0,
+  lat0,
+  lat1,
+  lat2,
+  lon0,
+  k0,
+  datum = c("WGS84", "ETRS89", "NAD83"),
+  unit = c("m", "ft")
+)
 }
 \arguments{
 \item{prj}{Character string. The projection type. Options are "aeqd" (Azimuthal equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (equidistant Conic), "lcc" (Lambert conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (equidistant Cylindrical).}

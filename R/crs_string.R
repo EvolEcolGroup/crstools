@@ -29,9 +29,8 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
                        unit= c("m","ft")) {
   
   # Check if the input is correct
-  prj <- match.arg(prj)
+#  prj <- match.arg(prj)
   datum <- match.arg(datum)
-  
 
   PROJstr <- "+proj="
   WKTstr <- "PROJCS[\"ProjWiz_Custom_"
@@ -247,7 +246,9 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
 #' contains the PROJ.4 string, while the "wkt" element contains the WKT string.
 
 crs_string_row <- function(x, datum, unit){
-  crs_string(x[1], x[2], x[3], x[4], x[5], x[6], x[7], datum, unit)
+  crs_string(prj = x$prj[1],x0 =x$x0[1],
+             lat0= x$lat0[1], lat1=x$lat1[1], lat2=x$lat2[1], lon0=x$lon0[1], k0=x$k0[1],
+             datum, unit)
 }
 # Example usage
 # crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")

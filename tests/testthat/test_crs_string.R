@@ -22,5 +22,3 @@ testthat::test_that("generate crs string correctly", {
   expect_true(sf::st_crs(test_string$wkt)== sf::st_crs(test_string$proj4))
 })
 
-
-sf::st_crs(test_string$wkt)== sf::st_crs(test_string$proj4)

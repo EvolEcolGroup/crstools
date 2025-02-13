@@ -5,18 +5,24 @@
 \title{Suggestions for map projections depending on the extent}
 \usage{
 crs_wizard(
+  x,
   distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-  lonmin = -180,
-  lonmax = 180,
-  latmin = -90,
-  latmax = 90,
-  roundCM = FALSE
+  roundCM = FALSE,
+  return_best = TRUE,
+  datum = c("WGS84", "ETRS89", "NAD83"),
+  unit = c("m", "ft")
 )
 }
 \arguments{
 \item{distortion}{The type of distortion to be minimized. Options are
 "equal_area", "conformal", "equidistant" and "compromise". Default is
 "equal_area".}
+
+\item{roundCM}{Logical. If TRUE, the central meridian is rounded to the
+nearest degree. Default is FALSE.}
+
+\item{return_best}{Logical. If TRUE, only the best projection is returned, otherwise,
+if there are multiple options, a list will be returned}
 
 \item{lonmin}{The minimum longitude of the map. Default is -180.}
 
@@ -25,12 +31,12 @@ crs_wizard(
 \item{latmin}{The minimum latitude of the map. Default is -90.}
 
 \item{latmax}{The maximum latitude of the map. Default is 90.}
-
-\item{roundCM}{Logical. If TRUE, the central meridian is rounded to the
-nearest degree. Default is FALSE.}
 }
 \value{
-A data frame with the suggested map projections.
+Either a list of two strings (proj4 and WKT) for a single projection
+(if either only one projection is available or return_best is TRUE),
+or a list of lists, each containing two strings (proj4 and WKT) for a
+single projection (if multiple projections are available and return_best is FALSE).
 }
 \description{
 This function provides suggestions for map projections depending on the extent
@@ -39,9 +45,13 @@ it is also possible to get suggestions for conformal, equidistant or
 compromise projections. The algorithm is a reimplementation in R of
 Projection Wizard (Bojan et al., 2016), version 2.1.
 }
+\details{
+TODO give some additional explanation about distortions, trade-offs
+(especially in the case of whole world maps)
+}
 \examples{
 # Whole map
-crs_wizard(lonmin = -180, lonmax = 180,latmin = -90, latmax = 90)
+crs_wizard(c(-180,180,-90, 90))
 # Northen Hemisphere
 crs_wizard(lonmin = -180, lonmax = 180, latmin = 21, latmax = 70)
 # Hemisphere showing the tropics

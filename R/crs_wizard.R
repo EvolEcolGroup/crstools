@@ -29,7 +29,7 @@
 #'  single projection (if multiple projections are available and return_best is FALSE).
 #' @examples
 #' # Whole map
-#' crs_wizard(lonmin = -180, lonmax = 180,latmin = -90, latmax = 90)
+#' crs_wizard(c(-180,180,-90, 90))
 #' # Northen Hemisphere
 #' crs_wizard(lonmin = -180, lonmax = 180, latmin = 21, latmax = 70)
 #' # Hemisphere showing the tropics
@@ -39,13 +39,30 @@
 #' @export
 #'
 
-crs_wizard <- function(distortion = c("equal_area","conformal","equidistant","compromise"),
-                       lon_min = -180, lon_max = 180, lat_min = -90, lat_max = 90,
+crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant","compromise"),
                        roundCM = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
                        unit= c("m","ft")
                        ) {
+  if (inherits(x, "SpatExtent")) {
+    x_ext <- as.vector(x)
+  } else if(inherits(x, "SpatRaster")){
+    x_ext <- as.vector(terra::ext(x))
+  } else if (inherits(x, "numeric") && length(x) == 4){
+    x_ext <- x
+  } else {
+    stop("x must be a vector, a SpatExtent object or a SpatRaster object")
+  }
+  
+    lon_min <- x_ext[1]
+    lon_max <- x_ext[2]
+    lat_min <- x_ext[3]
+    lat_max <- x_ext[4]
+  
   # check if the input is correct
   distortion <- match.arg(distortion)
+  
+  datum <- match.arg(datum)
+  unit <- match.arg(unit)
 
   # Computing the scale of the map
   scale <- 720 / (lon_max - lon_min) / (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
@@ -92,9 +109,22 @@ crs_wizard <- function(distortion = c("equal_area","conformal","equidistant","co
     crs_df <- crs_df[1,]
   }
   if (nrow(crs_df) == 1) {
-    crs_string_row(crs_df[1,], datum, unit)
+    crs_obj <- crs_string_row(crs_df[1,], datum, unit)
+    crs_obj[["description"]] <- crs_df[1, "description"]
+    crs_obj[["notes"]] <- crs_df[1, "notes"]
+    return(crs_obj)
+  } else {
+    crs_list <- list()
+    for (i in seq_len(nrow(crs_df))) {
+      crs_obj <- crs_string_row(crs_df[i,], datum, unit)
+      crs_obj[["description"]] <- crs_df[i, "description"]
+      crs_obj[["notes"]] <- crs_df[i, "notes"]
+      crs_list[[i]] <- crs_obj
+    }
+    names(crs_list) <- crs_df$prj
+    return(crs_list)
   }
-  browser()
+
   
 }
 
