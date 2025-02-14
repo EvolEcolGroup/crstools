@@ -26,8 +26,6 @@ testthat::test_that("test_crs_wizard", {
                "lat_min must be smaller than lat_max")
   expect_error(crs_wizard(c(180, -180, -90, 90), distortion = "equal_area", return_best = FALSE),
                "lon_min must be smaller than lon_max")
-  expect_error(crs_wizard(c(-30, 40, -120, 80), distortion = "equal_area", return_best = FALSE),
-               "Latitude values must be between -90 and 90")
   
   ############################################
   # A hemisphere
