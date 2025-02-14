@@ -11,7 +11,7 @@ crs_wizard(
   return_best = TRUE,
   datum = c("WGS84", "ETRS89", "NAD83"),
   unit = c("m", "ft"),
-  quiet = FALSE
+  lat_check = TRUE
 )
 }
 \arguments{
@@ -25,7 +25,8 @@ nearest degree. Default is FALSE.}
 \item{return_best}{Logical. If TRUE, only the best projection is returned, otherwise,
 if there are multiple options, a list will be returned}
 
-\item{quiet}{Logical. If TRUE, no messages are printed. Default is FALSE.}
+\item{lat_check}{Logical. If TRUE, the function will check if lat values are within range (-90,90).
+Default is TRUE.}
 
 \item{lonmin}{The minimum longitude of the map. Default is -180.}
 
