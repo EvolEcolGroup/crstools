@@ -10,7 +10,8 @@ crs_wizard(
   roundCM = FALSE,
   return_best = TRUE,
   datum = c("WGS84", "ETRS89", "NAD83"),
-  unit = c("m", "ft")
+  unit = c("m", "ft"),
+  lat_check = TRUE
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ nearest degree. Default is FALSE.}
 
 \item{return_best}{Logical. If TRUE, only the best projection is returned, otherwise,
 if there are multiple options, a list will be returned}
+
+\item{lat_check}{Logical. If TRUE, the function will check if lat values are within range (-90,90).
+Default is TRUE.}
 
 \item{lonmin}{The minimum longitude of the map. Default is -180.}
 

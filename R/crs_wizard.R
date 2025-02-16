@@ -23,6 +23,8 @@
 #' nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned, otherwise,
 #' if there are multiple options, a list will be returned
+#' @param lat_check Logical. If TRUE, the function will check if lat values are within range (-90,90). 
+#' Default is TRUE.
 #' @return Either a list of two strings (proj4 and WKT) for a single projection
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
@@ -41,7 +43,7 @@
 
 crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant","compromise"),
                        roundCM = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit= c("m","ft")
+                       unit= c("m","ft"), lat_check =TRUE
                        ) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
@@ -57,6 +59,20 @@ crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant",
     lon_max <- x_ext[2]
     lat_min <- x_ext[3]
     lat_max <- x_ext[4]
+
+  # check that the extent is valid
+  # first check that latitudes are within the range
+  # this ensures that lon and lat are fed in the correct order (at least in some cases)
+  if ((lat_min < -90 || lat_max > 90) & lat_check == TRUE) {
+    stop("Latitude values must be between -90 and 90")
+  }
+  # check that lat_min is smaller than lat_max
+  if (lat_min > lat_max) {
+     stop("lat_min must be smaller than lat_max")
+  # check that lon_min is smaller than lon_max
+  } else if (lon_min > lon_max) {
+     stop("lon_min must be smaller than lon_max")
+  } 
   
   # check if the input is correct
   distortion <- match.arg(distortion)
