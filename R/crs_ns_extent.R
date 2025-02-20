@@ -24,7 +24,7 @@ crs_ns_extent <- function(distortion, center) {
     #   )
     # )
     crs_suggestions <- data.frame(prj="tmerc", x0=NA_real_, lat0=NA_real_, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                  description = "Transverse Mercator", notes = "conformal projection for regional maps with a north-south extent")
+                                  description = "Transverse Mercator", notes = "Conformal projection for regional maps with a north-south extent")
   } else if (distortion == "equal_area") {
     # previewMapProjection <- activeProjection <- "Transverse cylindrical equal area"
     # outputText <- c(

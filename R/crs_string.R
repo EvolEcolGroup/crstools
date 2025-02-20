@@ -1,20 +1,30 @@
 #' Function to format the PROJ.4 and WKT strings
 #'
-#' This function takes the parameters of a custom projection and returns the PROJ.4 and WKT strings.
+#' This function takes the parameters of a custom projection and returns the
+#' PROJ.4 and WKT strings.
 #'
-#' Note that the WKT string contains a few special characters to define indentation; these should not
-#' impact the parsing of the wkt string (eg. by `sf`)
+#' Note that the WKT string contains a few special characters to define
+#' indentation; these should not impact the parsing of the wkt string (eg. by
+#' `sf`)
 #'
-#' @param prj Character string. The projection type. Options are "aeqd" (Azimuthal equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (equidistant Conic), "lcc" (Lambert conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (equidistant Cylindrical).
+#' @param prj Character string. The projection type. Options are "aeqd"
+#'   (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere"
+#'   (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic),
+#'   "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc"
+#'   (Mercator), "eqc" (Equidistant Cylindrical).
 #' @param x0 Numeric. The false easting value.
 #' @param lat0 Numeric. The latitude of origin.
 #' @param lat1 Numeric. The first standard parallel.
 #' @param lat2 Numeric. The second standard parallel.
 #' @param lon0 Numeric. The central meridian.
 #' @param k0 Numeric. The scale factor at the central meridian.
-#' @param datum Character string. The datum. Options are "WGS84", "ETRS89", "NAD83".
-#' @param unit Character string. The linear unit. Options are "m" (meters) and "ft" (feet).
-#' @return A list with two elements: "proj4" and "wkt". The "proj4" element contains the PROJ.4 string, while the "wkt" element contains the WKT string.
+#' @param datum Character string. The datum. Options are "WGS84", "ETRS89",
+#'   "NAD83".
+#' @param unit Character string. The linear unit. Options are "m" (meters) and
+#'   "ft" (feet).
+#' @return A list with two elements: "proj4" and "wkt". The "proj4" element
+#'   contains the PROJ.4 string, while the "wkt" element contains the WKT
+#'   string.
 #' @keywords internal
 
 
@@ -64,15 +74,15 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
     WKTstr,
       switch(
         prj,
-        "aeqd" = paste0('Azimuthal_equidistant",', gcs_str, 'PROJECTION["Azimuthal_equidistant"],'),
+        "aeqd" = paste0('Azimuthal_Equidistant",', gcs_str, 'PROJECTION["Azimuthal_Equidistant"],'),
         "laea" = paste0('Lambert_Azimuthal",', gcs_str, 'PROJECTION["Lambert_Azimuthal_Equal_Area"],'),
         "stere" = paste0('Stereographic",', gcs_str, 'PROJECTION["Stereographic"],'),
         "aea" = paste0('Albers",', gcs_str, 'PROJECTION["Albers"],'),
-        "eqdc" = paste0('equidistant_Conic",', gcs_str, 'PROJECTION["equidistant_Conic"],'),
-        "lcc" = paste0('Lambert_conformal_Conic",', gcs_str, 'PROJECTION["Lambert_conformal_Conic"],'),
+        "eqdc" = paste0('Equidistant_Conic",', gcs_str, 'PROJECTION["Equidistant_Conic"],'),
+        "lcc" = paste0('Lambert_Conformal_Conic",', gcs_str, 'PROJECTION["Lambert_Conformal_Conic"],'),
         "cea" = paste0('Cylindrical_Equal_Area",', gcs_str, 'PROJECTION["Cylindrical_Equal_Area"],'),
         "merc" = paste0('Mercator",', gcs_str, 'PROJECTION["Mercator"],'),
-        "eqc" = paste0('equidistant_Cylindrical",', gcs_str, 'PROJECTION["equidistant_Cylindrical"],'),
+        "eqc" = paste0('Equidistant_Cylindrical",', gcs_str, 'PROJECTION["Equidistant_Cylindrical"],'),
         "tcea" = paste0('Transverse_Cylindrical_Equal_Area",', gcs_str, 'PROJECTION["Transverse_Cylindrical_Equal_Area"],'),
         "tmerc" = paste0('Transverse_Mercator",', gcs_str, 'PROJECTION["Transverse_Mercator"],'),
         "cass" = paste0('Cassini",', gcs_str, 'PROJECTION["Cassini"],'),
@@ -88,7 +98,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
         "patterson" = paste0('Patterson",', gcs_str, 'PROJECTION["Patterson"],'),
         "latlong" = paste0('Plate_Carree",', gcs_str, 'PROJECTION["Plate_Carree"],'),
         "mill" = paste0('Miller_Cylindrical",', gcs_str, 'PROJECTION["Miller_Cylindrical"],'),
-        "tpeqd" = paste0('Two_Point_equidistant",', gcs_str, 'PROJECTION["Two_Point_equidistant"],'),
+        "tpeqd" = paste0('Two_Point_Equidistant",', gcs_str, 'PROJECTION["Two_Point_Equidistant"],'),
          stop("Projection not recognized. Please select a valid projection.")
     )
   )
@@ -109,7 +119,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
 
   # Other proj parameters
   switch(prj,
-         # Azimuthal equidistant or Lambert azimuthal
+         # Azimuthal Equidistant or Lambert azimuthal
          "aeqd" = ,
          "laea" = {
            PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_0=", lat0)
@@ -130,7 +140,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
            }
          },
 
-         # Albers, equidistant conic, or Lambert conformal conic
+         # Albers, Equidistant conic, or Lambert Conformal conic
          "aea" = ,
          "eqdc" = ,
          "lcc" = {
@@ -141,7 +151,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
                             "],</br>&nbsp;PARAMETER[\\\"Latitude_Of_Origin\\\",", lat0, "],")
          },
 
-         # Cylindrical equal-area, equidistant cylindrical, or Mercator
+         # Cylindrical equal-area, Equidistant cylindrical, or Mercator
          "cea" = ,
          "eqc" = ,
          "merc" = {
@@ -190,7 +200,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
                             "],</br>&nbsp;PARAMETER[\\\"Standard_Parallel_1\\\",50.467],")
          },
 
-         # Two-point azimuthal equidistant
+         # Two-point azimuthal Equidistant
          "tpeqd" = {
            PROJstr <- paste0(PROJstr, " +lat_1=", lat0, " +lon_1=", lat1, " +lat_2=", lat2, " +lon_2=", lon0)
            WKTstr <- paste0(WKTstr, "</br>&nbsp;PARAMETER[\\\"Latitude_Of_1st_Point\\\",", lat0,

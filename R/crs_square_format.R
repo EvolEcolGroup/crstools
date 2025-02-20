@@ -36,7 +36,7 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #   )
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar stereographic", notes = "conformal projection for regional maps in square format")
+                                    description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
     } else if (distortion == "equal_area") {
       #   outputText <- c(
       #     outputText,
@@ -60,7 +60,7 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #   )
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=-90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar stereographic", notes = "conformal projection for regional maps in square format")
+                                    description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
     } else if (distortion == "equal_area") {
       #   outputText <- c(
       #     outputText,
@@ -85,7 +85,7 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #   )
       # )
       prj_summary <- data.frame(prj="stere", x0=NA_real_, lat0=0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                description = "Equatorial stereographic", notes = "conformal projection for regional maps in square format")
+                                description = "Equatorial stereographic", notes = "Conformal projection for regional maps in square format")
     } else if (distortion == "equal_area") {
       # outputText <- c(
       #   outputText,
@@ -115,7 +115,7 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #   )
       # )
       prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=center$lat, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Oblique stereographic", notes = "conformal projection for regional maps in square format")
+                                    description = "Oblique stereographic", notes = "Conformal projection for regional maps in square format")
     } else if (distortion == "equal_area") {
       # outputText <- c(
       #   outputText,

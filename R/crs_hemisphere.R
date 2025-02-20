@@ -42,10 +42,10 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
                                     description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics")
     } else if (distortion == "conformal") {
       prj_suggestions <- data.frame(prj="merc", x0=NA_real_, lat0=latStd, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Mercator", notes = "conformal projection for maps showing the tropics")
+                                    description = "Mercator", notes = "Conformal projection for maps showing the tropics")
     } else if (distortion == "equidistant") {
       prj_suggestions <- data.frame(prj="eqc", x0=NA_real_, lat0=latStd, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "equidistant cylindrical", notes = "equidistant projection for maps showing the tropics - distance correct along meridians")
+                                    description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians")
     }
     # TODO do we add these as attributed to the prj_summary data frame?
     #    outputText <- append(outputText, paste0("<p class='outputText'>Standard parallel: ", latStr, "</p>"))
@@ -68,7 +68,7 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
                                     description = "Lambert azimuthal equal-area", notes = "Equal-area projection for maps showing a hemisphere")
     } else if (distortion == "equidistant") {
       prj_suggestions <- data.frame(prj="aeqd", x0=NA_real_, lat0=lat, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Azimuthal equidistant", notes = "equidistant projection for maps showing a hemisphere")
+                                    description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere")
     }
     # TODO do we add these as attributed to the prj_summary data frame?
     #    outputText <- append(outputText, paste0("<p class='outputText'>Center latitude: ", latStr, "</p>"))

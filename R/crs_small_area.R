@@ -57,7 +57,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
       prj_suggestions <- data.frame(prj="cass", x0=NA_real_, lat0=0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
                                     description = "Cassini", notes = "Distance correct along any line perpendicular to the central meridian")
     } else if (abs(center$lat) < 15) {
-      # previewMapProjection <- "equidistant cylindrical"
+      # previewMapProjection <- "Equidistant cylindrical"
       # previewMapLat0 <- 0
       # latS <- ifelse(latmax * latmin <= 0, max(abs(latmax), abs(latmin)) / 2, center$lat)
       # outputText <- c(outputText, sprintf(
@@ -65,7 +65,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
       #   previewMapProjection, latS, lng
       # ))
       prj_suggestions <- data.frame(prj="eqc", x0=NA_real_, lat0=latS, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "equidistant cylindrical", notes = "Distance correct along meridians")
+                                    description = "Equidistant cylindrical", notes = "Distance correct along meridians")
     } else { # case: between pole and equator
       interval <- (latmax - latmin) / 6
       #latOr <- center$lat
@@ -78,7 +78,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
       #   latOr, latS1, latS2, lng
       # ))
       prj_suggestions <- data.frame(prj="eqdc", x0=NA_real_, lat0=center$lat,  lat1=latmin + interval, lat2=latmax - interval, lon0=center$lng, k0=NA_real_,
-                                    description = "equidistant conic", notes = "Distance correct along meridians")
+                                    description = "Equidistant conic", notes = "Distance correct along meridians")
     }
 
   } else if ((latmin >= 84 && distortion == "conformal") || (latmax <= -80 && distortion == "conformal")) {
@@ -91,7 +91,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
     #   previewMapProjection, lng, scaleFactor
     # ))
     prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=previewMapLat0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=scaleFactor,
-                                  description = "Polar stereographic", notes = "conformal projection at very large map scale")
+                                  description = "Polar stereographic", notes = "Conformal projection at very large map scale")
   } else if (dlon <= 3 && distortion == "conformal") {
     # case: very large scale, Universal Polar Stereographic - South Pole
     # previewMapProjection <- "Transverse Mercator"
@@ -102,7 +102,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
     #   previewMapProjection, lng, scaleFactor
     # ))
     prj_suggestions <- data.frame(prj="tmerc", x0=NA_real_, lat0=previewMapLat0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=scaleFactor,
-                                  description = "Transverse Mercator", notes = "conformal projection at very large map scale")
+                                  description = "Transverse Mercator", notes = "Conformal projection at very large map scale")
 
   } else if (dlon <= 3 && distortion == "conformal") {
     #    previewMapProjection <- "Transverse Mercator"
@@ -113,7 +113,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
     #   previewMapProjection, lng, scaleFactor
     # ))
     prj_suggestions <- data.frame(prj="tmerc", x0=NA_real_, lat0=previewMapLat0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=scaleFactor,
-                                  description = "Transverse Mercator", notes = "conformal projection at very large map scale")
+                                  description = "Transverse Mercator", notes = "Conformal projection at very large map scale")
   } else if (dlon <= 6 && distortion == "conformal") {
     #    previewMapProjection <- "Transverse Mercator"
     previewMapLat0 <- 0
@@ -123,7 +123,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
     #   previewMapProjection, lng, scaleFactor
     # ))
     prj_suggestions <- data.frame(prj="tmerc", x0=NA_real_, lat0=previewMapLat0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=scaleFactor,
-                                  description = "Transverse Mercator", notes = "conformal projection at very large map scale")
+                                  description = "Transverse Mercator", notes = "Conformal projection at very large map scale")
   } else {
     if (ratio > 1.25) {
       # Regional map with north-south extent
