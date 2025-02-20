@@ -21,6 +21,13 @@ testthat::test_that("test_crs_wizard", {
   expect_true(length(whole_eqa_list) == 6)
   # TODO check at least one of these projections against proj wizard
   
+  # check for correct coordinates 
+  expect_error(crs_wizard(c(-180, 180, 90, -90), distortion = "equal_area", return_best = FALSE), 
+               "lat_min must be smaller than lat_max")
+  expect_error(crs_wizard(c(180, -180, -90, 90), distortion = "equal_area", return_best = FALSE),
+               "lon_min must be smaller than lon_max")
+  expect_error(crs_wizard(c(-180,180,-91, 90), distortion = "equal_area"),
+               "Latitude values must be between -90 and 90")
   ############################################
   # A hemisphere
   ############################################
