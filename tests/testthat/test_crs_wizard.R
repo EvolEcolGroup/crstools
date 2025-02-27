@@ -49,8 +49,5 @@ testthat::test_that("test whole hemisphere", {
   
   expect_equal(suggested_crs$proj4,ref_proj4 )
   expect_true(sf::st_crs(suggested_crs$wkt) == sf::st_crs(ref_wkt))
-  
-  diffObj(sf::st_crs(suggested_crs$wkt)$wkt, sf::st_crs(ref_wkt)$wkt)
-  
-  
+
 })

@@ -122,11 +122,10 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          # Azimuthal Equidistant or Lambert azimuthal
          "aeqd" = ,
          "laea" = {
-           PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_0=", lat0)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                            "],PARAMETER[\\\"Latitude_Of_Origin\\\",", lat0, "],")
+           PROJstr <- paste0(PROJstr, ' +lon_0=', lon0, ' +lat_0=', lat0)
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                            '],PARAMETER["Latitude_Of_Origin",', lat0, '],')
          },
-
          # Stereographic
          "stere" = {
            if (is.na(k0)) {
