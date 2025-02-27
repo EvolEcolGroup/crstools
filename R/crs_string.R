@@ -130,12 +130,12 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          "stere" = {
            if (is.na(k0)) {
              PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_0=", lat0)
-             WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                              "],PARAMETER[\\\"Scale_Factor\\\",1.0],PARAMETER[\\\"Latitude_Of_Origin\\\",", lat0, "],")
+             WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                              '],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",', lat0, "],")
            } else {
              PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_0=", lat0, " +k_0=", k0)
-             WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                              "],PARAMETER[\\\"Scale_Factor\\\",", k0, "],PARAMETER[\\\"Latitude_Of_Origin\\\",", lat0, "],")
+             WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                              '],PARAMETER["Scale_Factor",', k0, '],PARAMETER["Latitude_Of_Origin",', lat0, "],")
            }
          },
 
@@ -144,10 +144,10 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          "eqdc" = ,
          "lcc" = {
            PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_1=", lat1, " +lat_2=", lat2, " +lat_0=", lat0)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                            "],PARAMETER[\\\"Standard_Parallel_1\\\",", lat1,
-                            "],PARAMETER[\\\"Standard_Parallel_2\\\",", lat2,
-                            "],PARAMETER[\\\"Latitude_Of_Origin\\\",", lat0, "],")
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                            '],PARAMETER["Standard_Parallel_1",', lat1,
+                            '],PARAMETER["Standard_Parallel_2",', lat2,
+                            '],PARAMETER["Latitude_Of_Origin",', lat0, "],")
          },
 
          # Cylindrical equal-area, Equidistant cylindrical, or Mercator
@@ -155,8 +155,8 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          "eqc" = ,
          "merc" = {
            PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +lat_ts=", lat1)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                            "],PARAMETER[\\\"Standard_Parallel_1\\\",", lat1, "],")
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                            '],PARAMETER["Standard_Parallel_1",', lat1, "],")
          },
 
          # Transverse cylindrical equal-area, Transverse Mercator, or Cassini
@@ -165,13 +165,13 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          "cass" = {
            if (is.na(k0)) {
              PROJstr <- paste0(PROJstr, " +lon_0=", lon0)
-             WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                              "],PARAMETER[\\\"Scale_Factor\\\",1.0],PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],")
+             WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                              '],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",0.0],')
            } else {
              PROJstr <- paste0(PROJstr, " +lon_0=", lon0, " +k_0=", k0)
-             WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                              "],PARAMETER[\\\"Scale_Factor\\\",", k0,
-                              "],PARAMETER[\\\"Latitude_Of_Origin\\\",0.0],")
+             WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                              '],PARAMETER["Scale_Factor",', k0,
+                              '],PARAMETER["Latitude_Of_Origin",0.0],')
            }
          },
 
@@ -189,23 +189,23 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
          "latlong" = ,
          "mill" = {
            PROJstr <- paste0(PROJstr, " +lon_0=", lon0)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0, "],")
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0, "],")
          },
 
          # Winkel Tripel
          "wintri" = {
            PROJstr <- paste0(PROJstr, " +lon_0=", lon0)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Central_Meridian\\\",", lon0,
-                            "],PARAMETER[\\\"Standard_Parallel_1\\\",50.467],")
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Central_Meridian",', lon0,
+                            '],PARAMETER["Standard_Parallel_1",50.467],')
          },
 
          # Two-point azimuthal Equidistant
          "tpeqd" = {
            PROJstr <- paste0(PROJstr, " +lat_1=", lat0, " +lon_1=", lat1, " +lat_2=", lat2, " +lon_2=", lon0)
-           WKTstr <- paste0(WKTstr, "PARAMETER[\\\"Latitude_Of_1st_Point\\\",", lat0,
-                            "],PARAMETER[\\\"Latitude_Of_2nd_Point\\\",", lat2,
-                            "],PARAMETER[\\\"Longitude_Of_1st_Point\\\",", lat1,
-                            "],PARAMETER[\\\"Longitude_Of_2nd_Point\\\",", lon0, "],")
+           WKTstr <- paste0(WKTstr, 'PARAMETER["Latitude_Of_1st_Point",', lat0,
+                            '],PARAMETER["Latitude_Of_2nd_Point",', lat2,
+                            '],PARAMETER["Longitude_Of_1st_Point",', lat1,
+                            '],PARAMETER["Longitude_Of_2nd_Point",', lon0, "],")
          },
 
          # Default
