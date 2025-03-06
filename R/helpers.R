@@ -1,4 +1,3 @@
-
 ################################################################################
 # Normalizing longitude values
 normalise_lon <- function(lon, lon0) {

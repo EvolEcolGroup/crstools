@@ -35,8 +35,10 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("stere", NA, 90.0, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "stere", x0 = NA_real_, lat0 = 90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Polar stereographic", notes = "Conformal projection for regional maps in square format"
+      )
     } else if (distortion == "equal_area") {
       #   outputText <- c(
       #     outputText,
@@ -45,10 +47,12 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #       activeProjection, stringLinks("laea", NA, 90.0, NA, NA, center$lng, NA)
       #     )
       #   )
-      prj_suggestions <- data.frame(prj="laea", x0=NA_real_, lat0=90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "laea", x0 = NA_real_, lat0 = 90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Polar Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format"
+      )
     }
-    #outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
+    # outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
   } else if (center$lat < -75) {
     previewMapLat0 <- -90
     if (distortion == "conformal") {
@@ -59,8 +63,10 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("stere", NA, -90.0, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=-90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar stereographic", notes = "Conformal projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "stere", x0 = NA_real_, lat0 = -90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Polar stereographic", notes = "Conformal projection for regional maps in square format"
+      )
     } else if (distortion == "equal_area") {
       #   outputText <- c(
       #     outputText,
@@ -69,11 +75,12 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #       activeProjection, stringLinks("laea", NA, -90.0, NA, NA, center$lng, NA)
       #     )
       #   )
-      prj_suggestions <- data.frame(prj="laea", x0=NA_real_, lat0=-90, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Polar Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format")
-
+      prj_suggestions <- data.frame(
+        prj = "laea", x0 = NA_real_, lat0 = -90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Polar Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format"
+      )
     }
-    #outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
+    # outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
   } else if (abs(center$lat) < 15 && (latmax * latmin) <= 0) {
     previewMapLat0 <- 0
     if (distortion == "conformal") {
@@ -84,8 +91,10 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("stere", NA, 0.0, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_summary <- data.frame(prj="stere", x0=NA_real_, lat0=0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                description = "Equatorial stereographic", notes = "Conformal projection for regional maps in square format")
+      prj_summary <- data.frame(
+        prj = "stere", x0 = NA_real_, lat0 = 0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Equatorial stereographic", notes = "Conformal projection for regional maps in square format"
+      )
     } else if (distortion == "equal_area") {
       # outputText <- c(
       #   outputText,
@@ -94,10 +103,12 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("laea", NA, 0.0, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_suggestions <- data.frame(prj="laea", x0=NA_real_, lat0=0, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Equatorial Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "laea", x0 = NA_real_, lat0 = 0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Equatorial Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format"
+      )
     }
-    #outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
+    # outputText <- c(outputText, sprintf("<p class='outputText'>Central meridian: %s</p>", lng))
   } else {
     # Case: Between the pole and equator
     # centerText <- sprintf(
@@ -114,8 +125,10 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("stere", NA, center$lat, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_suggestions <- data.frame(prj="stere", x0=NA_real_, lat0=center$lat, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Oblique stereographic", notes = "Conformal projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "stere", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Oblique stereographic", notes = "Conformal projection for regional maps in square format"
+      )
     } else if (distortion == "equal_area") {
       # outputText <- c(
       #   outputText,
@@ -124,10 +137,12 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("laea", NA, center$lat, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_suggestions <- data.frame(prj="laea", x0=NA_real_, lat0=center$lat, lat1=NA_real_, lat2=NA_real_, lon0=center$lng, k0=NA_real_,
-                                    description = "Oblique Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format")
+      prj_suggestions <- data.frame(
+        prj = "laea", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        description = "Oblique Lambert azimuthal equal-area", notes = "Equal-area projection for regional maps in square format"
+      )
     }
-    #outputText <- c(outputText, sprintf("<p class='outputText'>%s</p>", centerText))
+    # outputText <- c(outputText, sprintf("<p class='outputText'>%s</p>", centerText))
   }
 
   # Include any notes about the scale factor

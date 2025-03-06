@@ -23,7 +23,7 @@
 #' nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned, otherwise,
 #' if there are multiple options, a list will be returned
-#' @param lat_check Logical. If TRUE, the function will check if lat values are within range (-90,90). 
+#' @param lat_check Logical. If TRUE, the function will check if lat values are within range (-90,90).
 #' Default is TRUE.
 #' @return Either a list of two strings (proj4 and WKT) for a single projection
 #' (if either only one projection is available or return_best is TRUE),
@@ -31,34 +31,33 @@
 #'  single projection (if multiple projections are available and return_best is FALSE).
 #' @examples
 #' # Whole map
-#' crs_wizard(c(-180,180,-90, 90))
+#' crs_wizard(c(-180, 180, -90, 90))
 #' # Northen Hemisphere
-#' crs_wizard(lonmin = -180, lonmax = 180, latmin = 21, latmax = 70)
+#' crs_wizard(c(-180, 180, 21, 70))
 #' # Hemisphere showing the tropics
-#' crs_wizard(lonmin = -180, lonmax = 180, latmin = -7, latmax = 21)
+#' crs_wizard(c(-180, 180, -7, 21))
 #' # Regional map for EW extent
-#' crs_wizard(lonmin = -60, lonmax = 20, latmin = 40, latmax = 70)
+#' crs_wizard(c(-60, 20, 40, 70))
 #' @export
 #'
 
-crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant","compromise"),
+crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
                        roundCM = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit= c("m","ft"), lat_check =TRUE
-                       ) {
+                       unit = c("m", "ft"), lat_check = TRUE) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
-  } else if(inherits(x, "SpatRaster")){
+  } else if (inherits(x, "SpatRaster")) {
     x_ext <- as.vector(terra::ext(x))
-  } else if (inherits(x, "numeric") && length(x) == 4){
+  } else if (inherits(x, "numeric") && length(x) == 4) {
     x_ext <- x
   } else {
     stop("x must be a vector, a SpatExtent object or a SpatRaster object")
   }
-  
-    lon_min <- x_ext[1]
-    lon_max <- x_ext[2]
-    lat_min <- x_ext[3]
-    lat_max <- x_ext[4]
+
+  lon_min <- x_ext[1]
+  lon_max <- x_ext[2]
+  lat_min <- x_ext[3]
+  lat_max <- x_ext[4]
 
   # check that the extent is valid
   # first check that latitudes are within the range
@@ -68,15 +67,15 @@ crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant",
   }
   # check that lat_min is smaller than lat_max
   if (lat_min > lat_max) {
-     stop("lat_min must be smaller than lat_max")
-  # check that lon_min is smaller than lon_max
+    stop("lat_min must be smaller than lat_max")
+    # check that lon_min is smaller than lon_max
   } else if (lon_min > lon_max) {
-     stop("lon_min must be smaller than lon_max")
-  } 
-  
+    stop("lon_min must be smaller than lon_max")
+  }
+
   # check if the input is correct
   distortion <- match.arg(distortion)
-  
+
   datum <- match.arg(datum)
   unit <- match.arg(unit)
 
@@ -95,44 +94,43 @@ crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant",
   }
 
   # Choose the appropriate type of map
-  if (scale < 1.5) {  # World (small-scale) map
-    if (distortion=="conformal") {
+  if (scale < 1.5) { # World (small-scale) map
+    if (distortion == "conformal") {
       stop("conformal is not available for maps covering the whole world; try equal_area instead")
     }
     crs_df <- crs_world(distortion, center, scale, roundCM)
-
   } else if (scale < 6) { # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
-      if (distortion=="conformal") {
+      if (distortion == "conformal") {
         stop("conformal is not available for maps covering a whole hemisphere; try equal_area instead")
       }
     }
-    if (distortion=="compromise") {
+    if (distortion == "compromise") {
       stop("compromise is not available for maps covering a whole hemisphere; try equal_area instead")
     }
-    crs_df <- crs_hemisphere(distortion, center, scale,  latmin = lat_min, latmax =lat_max)
-
+    crs_df <- crs_hemisphere(distortion, center, scale, latmin = lat_min, latmax = lat_max)
   } else { # Continent or a smaller area (large-scale) map
-    if (distortion=="compromise") {
+    if (distortion == "compromise") {
       stop("compromise is not available for maps focussing on a single continent or small area; try equal_area instead")
     }
     crs_df <- crs_small_area(distortion, center, scale,
-                   lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax =lat_max)
+      lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax = lat_max
+    )
   }
-  
+
   if ((nrow(crs_df) > 1) && return_best) {
-    crs_df <- crs_df[1,]
+    crs_df <- crs_df[1, ]
   }
   if (nrow(crs_df) == 1) {
-    crs_obj <- crs_string_row(crs_df[1,], datum, unit)
+    crs_obj <- crs_string_row(crs_df[1, ], datum, unit)
     crs_obj[["description"]] <- crs_df[1, "description"]
     crs_obj[["notes"]] <- crs_df[1, "notes"]
     return(crs_obj)
   } else {
     crs_list <- list()
     for (i in seq_len(nrow(crs_df))) {
-      crs_obj <- crs_string_row(crs_df[i,], datum, unit)
+      crs_obj <- crs_string_row(crs_df[i, ], datum, unit)
       crs_obj[["description"]] <- crs_df[i, "description"]
       crs_obj[["notes"]] <- crs_df[i, "notes"]
       crs_list[[i]] <- crs_obj
@@ -140,8 +138,6 @@ crs_wizard <- function(x, distortion = c("equal_area","conformal","equidistant",
     names(crs_list) <- crs_df$prj
     return(crs_list)
   }
-
-  
 }
 
 

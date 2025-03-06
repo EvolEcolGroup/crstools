@@ -13,7 +13,6 @@
 ################################################################################
 # maps showing a hemisphere
 crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
-
   angUnit <- "degrees" # TODO arbitrarily set to degrees, check where it comes from
   # we probably don't want to do any pretty formatting, so this could be removed.
 
@@ -38,14 +37,20 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
 
     # Adding projection output
     if (distortion == "equal_area") {
-      prj_suggestions <- data.frame(prj="cea", x0=NA_real_, lat0=latStd, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics")
+      prj_suggestions <- data.frame(
+        prj = "cea", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics"
+      )
     } else if (distortion == "conformal") {
-      prj_suggestions <- data.frame(prj="merc", x0=NA_real_, lat0=latStd, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Mercator", notes = "Conformal projection for maps showing the tropics")
+      prj_suggestions <- data.frame(
+        prj = "merc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        description = "Mercator", notes = "Conformal projection for maps showing the tropics"
+      )
     } else if (distortion == "equidistant") {
-      prj_suggestions <- data.frame(prj="eqc", x0=NA_real_, lat0=latStd, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians")
+      prj_suggestions <- data.frame(
+        prj = "eqc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
+      )
     }
     # TODO do we add these as attributed to the prj_summary data frame?
     #    outputText <- append(outputText, paste0("<p class='outputText'>Standard parallel: ", latStr, "</p>"))
@@ -64,11 +69,15 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
 
     # Adding projection output
     if (distortion == "equal_area") {
-      prj_suggestions <- data.frame(prj="laea", x0=NA_real_, lat0=lat, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Lambert azimuthal equal-area", notes = "Equal-area projection for maps showing a hemisphere")
+      prj_suggestions <- data.frame(
+        prj = "laea", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        description = "Lambert azimuthal equal-area", notes = "Equal-area projection for maps showing a hemisphere"
+      )
     } else if (distortion == "equidistant") {
-      prj_suggestions <- data.frame(prj="aeqd", x0=NA_real_, lat0=lat, lat1=NA_real_, lat2=NA_real_, lon0=lon, k0=NA_real_,
-                                    description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere")
+      prj_suggestions <- data.frame(
+        prj = "aeqd", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere"
+      )
     }
     # TODO do we add these as attributed to the prj_summary data frame?
     #    outputText <- append(outputText, paste0("<p class='outputText'>Center latitude: ", latStr, "</p>"))
@@ -79,4 +88,3 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
 
   return(prj_suggestions)
 }
-

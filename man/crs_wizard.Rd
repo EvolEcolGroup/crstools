@@ -55,13 +55,13 @@ TODO give some additional explanation about distortions, trade-offs
 }
 \examples{
 # Whole map
-crs_wizard(c(-180,180,-90, 90))
+crs_wizard(c(-180, 180, -90, 90))
 # Northen Hemisphere
-crs_wizard(lonmin = -180, lonmax = 180, latmin = 21, latmax = 70)
+crs_wizard(c(-180, 180, 21, 70))
 # Hemisphere showing the tropics
-crs_wizard(lonmin = -180, lonmax = 180, latmin = -7, latmax = 21)
+crs_wizard(c(-180, 180, -7, 21))
 # Regional map for EW extent
-crs_wizard(lonmin = -60, lonmax = 20, latmin = 40, latmax = 70)
+crs_wizard(c(-60, 20, 40, 70))
 }
 \references{
 Bojan, S, Bernhard, J, & Helen, J (2016) Projection Wizard - An
