@@ -1,4 +1,10 @@
 testthat::test_that("test input sanity", {
+  # check if input is not an expected class
+  site <- data.frame(latitude = c(11,8),
+                     longitude = c(5,9))
+  expect_error(crs_wizard(site, distortion = "equal_area"), 
+               "x must be a vector, a SpatExtent object or a SpatRaster object")
+  
   # check for correct coordinates
   expect_error(
     crs_wizard(c(-180, 180, 90, -90), distortion = "equal_area", return_best = FALSE),
@@ -126,7 +132,7 @@ testthat::test_that("test whole world", {
   # not work with the whole world "equidistant for the whole 
   # world not implemented yet"
   
-  # EQUIDISTANT 
+  # COMPROMISE 
   whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)
   expect_true(length(whole_comp_list) == 6)
   
@@ -226,6 +232,10 @@ testthat::test_that("test whole world", {
                            UNIT["Meter",1.0]]'
   expect_equal(whole_comp_list$mill$proj4, ref_proj4_mill)
   expect_true(sf::st_crs(whole_comp_list$mill$wkt) == sf::st_crs(ref_wkt_mill))
+  
+  # CONFORMAL
+  expect_error(whole_conf <- crs_wizard(c(-180, 180, -90, 90), distortion = "conformal"),
+                 "conformal is not available for maps covering the whole world")
 
 })
 
@@ -304,6 +314,14 @@ testthat::test_that("test whole hemisphere", {
                                   UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_south_hem_eqd$proj4, ref_proj4_south_hem_eqd)
   expect_true(sf::st_crs(suggested_crs_south_hem_eqd$wkt) == sf::st_crs(ref_wkt_south_hem_eqd))
+  
+  # COMPROMISE 
+  expect_error(suggested_crs_south_hem_comp <- crs_wizard(c(-180, 180, -90, 0), distortion = "compromise"),
+               "compromise is not available for maps covering a whole hemisphere")
+  
+  # CONFORMAL
+  expect_error(suggested_crs_south_hem_conf <- crs_wizard(c(-180, 180, -90, 0), distortion = "conformal"),
+               "conformal is not available for maps covering a whole hemisphere")
   
   })
 
