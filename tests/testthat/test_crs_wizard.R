@@ -15,6 +15,8 @@ testthat::test_that("test input sanity", {
 })
 
 testthat::test_that("test whole world", {
+  # EQUAL AREA
+  # check Equal Earth projection
   suggested_crs <- crs_wizard(c(-180, 180, -90, 90), distortion = "equal_area")
   ref_proj4 <- "+proj=eqearth +lon_0=0 +datum=WGS84 +units=m +no_defs"
   ref_wkt <- 'PROJCS["ProjWiz_Custom_Equal_Earth",
@@ -119,24 +121,190 @@ testthat::test_that("test whole world", {
 
   expect_equal(whole_eqa_list$wag7$proj4, ref_proj4_wag7)
   expect_true(sf::st_crs(whole_eqa_list$wag7$wkt) == sf::st_crs(ref_wkt_wag7))
+  
+  #@TODO: need to add test for EQUIDISTANT as for the moment the function does 
+  # not work with the whole world "equidistant for the whole 
+  # world not implemented yet"
+  
+  # EQUIDISTANT 
+  whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)
+  expect_true(length(whole_comp_list) == 6)
+  
+  # check Robinson projection
+  ref_proj4_robin <- "+proj=robin +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_robin <- 'PROJCS["ProjWiz_Custom_Robinson",
+                             GEOGCS["GCS_WGS_1984",
+                                    DATUM["D_WGS_1984",
+                                          SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                    PRIMEM["Greenwich",0.0],
+                                    UNIT["Degree",0.0174532925199433]],
+                             PROJECTION["Robinson"],
+                             PARAMETER["False_Easting",0.0],
+                             PARAMETER["False_Northing",0.0],
+                             PARAMETER["Central_Meridian",0],
+                             UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$robin$proj4, ref_proj4_robin)
+  expect_true(sf::st_crs(whole_comp_list$robin$wkt) == sf::st_crs(ref_wkt_robin))
+  
+  # check Natural Earth projection
+  ref_proj4_natearth <- "+proj=natearth +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_natearth <- 'PROJCS["ProjWiz_Custom_Natural_Earth",
+                             GEOGCS["GCS_WGS_1984",
+                                    DATUM["D_WGS_1984",
+                                          SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                    PRIMEM["Greenwich",0.0],
+                                    UNIT["Degree",0.0174532925199433]],
+                             PROJECTION["Natural_Earth"],
+                             PARAMETER["False_Easting",0.0],
+                             PARAMETER["False_Northing",0.0],
+                             PARAMETER["Central_Meridian",0],
+                             UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$natearth$proj4, ref_proj4_natearth)
+  expect_true(sf::st_crs(whole_comp_list$natearth$wkt) == sf::st_crs(ref_wkt_natearth))
+  
+  # check Winkel Tripel projection
+  ref_proj4_wintri <- "+proj=wintri +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_wintri <- 'PROJCS["ProjWiz_Custom_Winkel_Tripel",
+                           GEOGCS["GCS_WGS_1984",
+                                  DATUM["D_WGS_1984",
+                                        SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                  PRIMEM["Greenwich",0.0],
+                                  UNIT["Degree",0.0174532925199433]],
+                           PROJECTION["Winkel_Tripel"],
+                           PARAMETER["False_Easting",0.0],
+                           PARAMETER["False_Northing",0.0],
+                           PARAMETER["Central_Meridian",0],
+                           PARAMETER["Standard_Parallel_1",50.467],
+                           UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$wintri$proj4, ref_proj4_wintri)
+  expect_true(sf::st_crs(whole_comp_list$wintri$wkt) == sf::st_crs(ref_wkt_wintri))
+  
+  # check Patterson projection
+  ref_proj4_patterson <- "+proj=patterson +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_patterson <- 'PROJCS["ProjWiz_Custom_Patterson",
+                              GEOGCS["GCS_WGS_1984",
+                                     DATUM["D_WGS_1984",
+                                           SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                     PRIMEM["Greenwich",0.0],
+                                     UNIT["Degree",0.0174532925199433]],
+                              PROJECTION["Patterson"],
+                              PARAMETER["False_Easting",0.0],
+                              PARAMETER["False_Northing",0.0],
+                              PARAMETER["Central_Meridian",0],
+                              UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$patterson$proj4, ref_proj4_patterson)
+  expect_true(sf::st_crs(whole_comp_list$patterson$wkt) == sf::st_crs(ref_wkt_patterson))
+  
+  # check Plate Carree projection
+  ref_proj4_latlong <- "+proj=eqc +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_latlong <- 'PROJCS["ProjWiz_Custom_Plate_Carree",
+                            GEOGCS["GCS_WGS_1984",
+                                   DATUM["D_WGS_1984",
+                                         SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                   PRIMEM["Greenwich",0.0],
+                                   UNIT["Degree",0.0174532925199433]],
+                            PROJECTION["Plate_Carree"],
+                            PARAMETER["False_Easting",0.0],
+                            PARAMETER["False_Northing",0.0],
+                            PARAMETER["Central_Meridian",0],
+                            UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$latlong$proj4, ref_proj4_latlong)
+  expect_true(sf::st_crs(whole_comp_list$latlong$wkt) == sf::st_crs(ref_wkt_latlong))
+  
+  # check Miller cylindrical projection
+  ref_proj4_mill <- "+proj=mill +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_mill <- 'PROJCS["ProjWiz_Custom_Miller_Cylindrical",
+                           GEOGCS["GCS_WGS_1984",
+                                  DATUM["D_WGS_1984",
+                                        SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                  PRIMEM["Greenwich",0.0],
+                                  UNIT["Degree",0.0174532925199433]],
+                           PROJECTION["Miller_Cylindrical"],
+                           PARAMETER["False_Easting",0.0],
+                           PARAMETER["False_Northing",0.0],
+                           PARAMETER["Central_Meridian",0],
+                           UNIT["Meter",1.0]]'
+  expect_equal(whole_comp_list$mill$proj4, ref_proj4_mill)
+  expect_true(sf::st_crs(whole_comp_list$mill$wkt) == sf::st_crs(ref_wkt_mill))
+
 })
 
 testthat::test_that("test whole hemisphere", {
-  suggested_crs <- crs_wizard(c(-180, 180, 0, 90), distortion = "equidistant")
-  ref_proj4 <- "+proj=aeqd +lon_0=0 +lat_0=45 +datum=WGS84 +units=m +no_defs"
-  ref_wkt <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
- GEOGCS["GCS_WGS_1984",
-  DATUM["D_WGS_1984",
-   SPHEROID["WGS_1984",6378137.0,298.257223563]],
-  PRIMEM["Greenwich",0.0],
-  UNIT["Degree",0.0174532925199433]],
- PROJECTION["Azimuthal_Equidistant"],
- PARAMETER["False_Easting",0.0],
- PARAMETER["False_Northing",0.0],
- PARAMETER["Central_Meridian",0],
- PARAMETER["Latitude_Of_Origin",45],
- UNIT["Meter",1.0]]'
+  # EQUAL AREA
+  # check northern hemisphere
+  suggested_crs_north_hem_eqa <- crs_wizard(c(-180, 180, 0, 90), distortion = "equal_area")
+  ref_proj4_north_hem_eqa <- "+proj=laea +lon_0=0 +lat_0=45 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_north_hem_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                                  PARAMETER["False_Easting",0.0],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",0],
+                                  PARAMETER["Latitude_Of_Origin",45],
+                                  UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_north_hem_eqa$proj4, ref_proj4_north_hem_eqa)
+  expect_true(sf::st_crs(suggested_crs_north_hem_eqa$wkt) == sf::st_crs(ref_wkt_north_hem_eqa))
+  
+  # check southern hemisphere
+  suggested_crs_south_hem_eqa <- crs_wizard(c(-180, 180, -90, 0), distortion = "equal_area")
+  ref_proj4_south_hem_eqa <- "+proj=laea +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_south_hem_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                                  PARAMETER["False_Easting",0.0],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",0],
+                                  PARAMETER["Latitude_Of_Origin",-45],
+                                  UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_south_hem_eqa$proj4, ref_proj4_south_hem_eqa)
+  expect_true(sf::st_crs(suggested_crs_south_hem_eqa$wkt) == sf::st_crs(ref_wkt_south_hem_eqa))
+  
+  # EQUIDISTANT
+  # check northern hemisphere
+  suggested_crs_north_hem_eqd <- crs_wizard(c(-180, 180, 0, 90), distortion = "equidistant")
+  ref_proj4_north_hem_eqd <- "+proj=aeqd +lon_0=0 +lat_0=45 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_north_hem_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Azimuthal_Equidistant"],
+                                  PARAMETER["False_Easting",0.0],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",0],
+                                  PARAMETER["Latitude_Of_Origin",45],
+                                  UNIT["Meter",1.0]]'
 
-  expect_equal(suggested_crs$proj4, ref_proj4)
-  expect_true(sf::st_crs(suggested_crs$wkt) == sf::st_crs(ref_wkt))
-})
+  expect_equal(suggested_crs_north_hem_eqd$proj4, ref_proj4_north_hem_eqd)
+  expect_true(sf::st_crs(suggested_crs_north_hem_eqd$wkt) == sf::st_crs(ref_wkt_north_hem_eqd))
+  
+  # check southern hemisphere
+  suggested_crs_south_hem_eqd <- crs_wizard(c(-180, 180, -90, 0), distortion = "equidistant")
+  ref_proj4_south_hem_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_south_hem_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Azimuthal_Equidistant"],
+                                  PARAMETER["False_Easting",0.0],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",0],
+                                  PARAMETER["Latitude_Of_Origin",-45],
+                                  UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_south_hem_eqd$proj4, ref_proj4_south_hem_eqd)
+  expect_true(sf::st_crs(suggested_crs_south_hem_eqd$wkt) == sf::st_crs(ref_wkt_south_hem_eqd))
+  
+  })
+
+
