@@ -64,13 +64,14 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
     } else if (abs(center$lat) < 15) {
       # previewMapProjection <- "Equidistant cylindrical"
       # previewMapLat0 <- 0
-      # latS <- ifelse(latmax * latmin <= 0, max(abs(latmax), abs(latmin)) / 2, center$lat)
+      #browser()
+      latS <- ifelse(latmax * latmin <= 0, max(abs(latmax), abs(latmin)) / 2, center$lat)
       # outputText <- c(outputText, sprintf(
       #   "<p><span data-proj-name='%s'>equidistant cylindrical</span> - distance correct along meridians<br>Standard parallel: %.2f<br>Central meridian: %s</p>",
       #   previewMapProjection, latS, lng
       # ))
       prj_suggestions <- data.frame(
-        prj = "eqc", x0 = NA_real_, lat0 = latS, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        prj = "eqc", x0 = NA_real_, lat0 = NA_real_, lat1 = latS, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Equidistant cylindrical", notes = "Distance correct along meridians"
       )
     } else { # case: between pole and equator
@@ -92,8 +93,8 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
   } else if ((latmin >= 84 && distortion == "conformal") || (latmax <= -80 && distortion == "conformal")) {
     # case: very large scale, Universal Polar Stereographic - North Pole
     # previewMapProjection <- "Stereographic"
-    # previewMapLat0 <- ifelse(latmin >= 84, 90, -90)
-    # scaleFactor <- 0.994
+    previewMapLat0 <- ifelse(latmin >= 84, 90, -90)
+    scaleFactor <- 0.994
     # outputText <- c(outputText, sprintf(
     #   "<p><b>conformal projection at very large map scale</b></p><p><span data-proj-name='%s'>Polar stereographic</span><br>Central meridian: %s<br>Scale factor: %.3f</p>",
     #   previewMapProjection, lng, scaleFactor
@@ -105,8 +106,8 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
   } else if (dlon <= 3 && distortion == "conformal") {
     # case: very large scale, Universal Polar Stereographic - South Pole
     # previewMapProjection <- "Transverse Mercator"
-    # previewMapLat0 <- 0
-    # scaleFactor <- 0.9999
+    previewMapLat0 <- 0
+    scaleFactor <- 0.9999
     # outputText <- c(outputText, sprintf(
     #   "<p><b>conformal projection at very large map scale</b></p><p><span data-proj-name='%s'>Transverse Mercator</span><br>Central meridian: %s<br>Scale factor: %.4f</p>",
     #   previewMapProjection, lng, scaleFactor

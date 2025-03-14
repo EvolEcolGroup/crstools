@@ -365,24 +365,22 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf$wkt) == sf::st_crs(ref_wkt_square_conf))
   
   # EQUIDISTANT
-  #TODO: fix function because of bug latS not calculated at all
-  
-  # suggested_crs_square_eqd <- crs_wizard(c(-22, 57, -37, 36), distortion = "equidistant")
-  # ref_proj4_square_eqd <- "+proj=eqc +lon_0=17.5 +lat_ts=18.5 +datum=WGS84 +units=m +no_defs"
-  # ref_wkt_square_eqd <- 'PROJCS["ProjWiz_Custom_Equidistant_Cylindrical",
-  #                              GEOGCS["GCS_WGS_1984",
-  #                                     DATUM["D_WGS_1984",
-  #                                           SPHEROID["WGS_1984",6378137.0,298.257223563]],
-  #                                     PRIMEM["Greenwich",0.0],
-  #                                     UNIT["Degree",0.0174532925199433]],
-  #                              PROJECTION["Equidistant_Cylindrical"],
-  #                              PARAMETER["False_Easting",0.0],
-  #                              PARAMETER["False_Northing",0.0],
-  #                              PARAMETER["Central_Meridian",17.5],
-  #                              PARAMETER["Standard_Parallel_1",18.5],
-  #                              UNIT["Meter",1.0]]'
-  # expect_equal(suggested_crs_square_eqd$proj4, ref_proj4_square_eqd)
-  # expect_true(sf::st_crs(suggested_crs_square_eqd$wkt) == sf::st_crs(ref_wkt_square_eqd))
+  suggested_crs_square_eqd <- crs_wizard(c(-22, 57, -37, 36), distortion = "equidistant")
+  ref_proj4_square_eqd <- "+proj=eqc +lon_0=17.5 +lat_ts=18.5 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_eqd <- 'PROJCS["ProjWiz_Custom_Equidistant_Cylindrical",
+                               GEOGCS["GCS_WGS_1984",
+                                      DATUM["D_WGS_1984",
+                                            SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                      PRIMEM["Greenwich",0.0],
+                                      UNIT["Degree",0.0174532925199433]],
+                               PROJECTION["Equidistant_Cylindrical"],
+                               PARAMETER["False_Easting",0.0],
+                               PARAMETER["False_Northing",0.0],
+                               PARAMETER["Central_Meridian",17.5],
+                               PARAMETER["Standard_Parallel_1",18.5],
+                               UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_eqd$proj4, ref_proj4_square_eqd)
+  expect_true(sf::st_crs(suggested_crs_square_eqd$wkt) == sf::st_crs(ref_wkt_square_eqd))
   
   # COMPROMISE
   expect_error(suggested_crs_square_comp <- crs_wizard(c(-22, 57, -37, 36), distortion = "compromise"),
