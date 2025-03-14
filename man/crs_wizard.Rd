@@ -12,7 +12,7 @@ crs_wizard(
   datum = c("WGS84", "ETRS89", "NAD83"),
   unit = c("m", "ft"),
   lat_check = TRUE,
-  world_equidistant = NULL
+  world_equidist = NULL
 )
 }
 \arguments{
@@ -37,10 +37,23 @@ Default is "WGS84".}
 \item{lat_check}{Logical. If TRUE, the function will check if lat values are within range (-90,90).
 Default is TRUE.}
 
-\item{world_equidistant}{if \code{distortion}="equidistant", then this should
-contain a list with one of the following sets of elements:
-pole_eq, lngP_eq, latC_eq, lngC_eq, lat1_eq, lng1_eq, lat2_eq, lng2_eq.
-THIS needs completing properly.}
+\item{world_equidist}{if \code{distortion}="equidistant" for a whole world
+projection, then this parameter should
+be a list with one of the following sets of elements:
+\itemize{
+\item "Polar azimuthal equidistant": \code{proj} = "polar", \code{pole}, where
+\code{pole} is either -90 or 90 for the South and North Pole, respectively,
+from or through which distances are correct.
+E.g. \code{list(proj = "polar", pole = 90)}
+\item "Oblique azimuthal equidistant": \code{proj} = "oblique", \code{lat_center}, \code{lng_center},
+where \code{lat_center} and \code{lng_center} are the latitude and longitude
+of the center from or through which distances are correct.
+E.g. \code{list(proj = "oblique", lat_center = 39, lng_center = 145)}
+\item "Two-point azimuthal": \code{proj} = "two_points", \code{lat1}, \code{lng1},
+\code{lat2}, \code{lng2}, where \code{lat1}, \code{lng1}, \code{lat2}, \code{lng2} are the latitude and
+longitude of two points on the map from which distances are correct.
+E.g. \code{list(proj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
+}}
 }
 \value{
 Either a list of two strings (proj4 and WKT) for a single projection

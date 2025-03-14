@@ -4,7 +4,7 @@
 \alias{crs_world_equidistant}
 \title{Function to create the world equidistant projection}
 \usage{
-crs_world_equidistant(center, scale, round_cm = FALSE, projection)
+crs_world_equidistant(center, scale, round_cm = FALSE, prj_details)
 }
 \arguments{
 \item{center}{The center of the map (named vector with lat and long)}
@@ -13,8 +13,7 @@ crs_world_equidistant(center, scale, round_cm = FALSE, projection)
 
 \item{round_cm}{The round central meridian.}
 
-\item{projection}{The projection to use
-projection suggestions}
+\item{prj_details}{a list of options defining the desired projection}
 }
 \value{
 The projection object

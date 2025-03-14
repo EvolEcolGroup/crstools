@@ -26,10 +26,22 @@
 #' @param datum The datum to use. Options are "WGS84", "ETRS89" and "NAD83".
 #' Default is "WGS84".
 #' @param unit The unit to use. Options are "m" and "ft". Default is "m".
-#' @param world_equidistant if `distortion`="equidistant", then this should
-#' contain a list with one of the following sets of elements: 
-#' pole_eq, lngP_eq, latC_eq, lngC_eq, lat1_eq, lng1_eq, lat2_eq, lng2_eq.
-#' THIS needs completing properly.
+#' @param world_equidist if `distortion`="equidistant" for a whole world
+#' projection, then this parameter should
+#' be a list with one of the following sets of elements:
+#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``, where
+#' `pole` is either -90 or 90 for the South and North Pole, respectively, 
+#' from or through which distances are correct, and `lng_central` is the central
+#' meridian. 
+#' E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
+#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`, `lng_center`,
+#' where `lat_center` and `lng_center` are the latitude and longitude 
+#' of the center from or through which distances are correct.
+#' E.g. `list(prj = "oblique", lat_center = 39, lng_center = 145)`
+#' * "Two-point azimuthal": `prj` = "two_points", `lat1`, `lng1`, 
+#' `lat2`, `lng2`, where `lat1`, `lng1`, `lat2`, `lng2` are the latitude and
+#' longitude of two points on the map from which distances are correct.
+#' E.g. `list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)`
 #' @return Either a list of two strings (proj4 and WKT) for a single projection
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
@@ -48,7 +60,7 @@
 
 crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
                        round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit = c("m", "ft"), lat_check = TRUE, world_equidistant = NULL) {
+                       unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -103,7 +115,7 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
     if (distortion == "conformal") {
       stop("conformal is not available for maps covering the whole world; try equal_area instead")
     }
-    crs_df <- crs_world(distortion, center, scale, round_cm)
+    crs_df <- crs_world(distortion, center, scale, round_cm, world_equidist)
   } else if (scale < 6) { # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {

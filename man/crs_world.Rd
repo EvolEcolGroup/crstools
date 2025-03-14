@@ -4,7 +4,7 @@
 \alias{crs_world}
 \title{World map projections}
 \usage{
-crs_world(distortion, center, scale, round_cm)
+crs_world(distortion, center, scale, round_cm, world_equidist)
 }
 \arguments{
 \item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
@@ -14,6 +14,9 @@ crs_world(distortion, center, scale, round_cm)
 \item{scale}{The scale of the map projection.}
 
 \item{round_cm}{The round central meridian.}
+
+\item{world_equidist}{The world equidistant parameters (see documentation
+for \code{\link[=crs_world]{crs_world()}})}
 }
 \value{
 A data frame with the suggested world map projections.

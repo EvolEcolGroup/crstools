@@ -4,12 +4,14 @@
 #' @param center The center of the map projection.
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
+#' @param world_equidist The world equidistant parameters (see documentation
+#' for [crs_world()])
 #' @return A data frame with the suggested world map projections.
 #' @keywords internal
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(distortion, center, scale, round_cm) {
+crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points
@@ -74,6 +76,9 @@ crs_world <- function(distortion, center, scale, round_cm) {
     # TODO DEBUG
     stop("equidistant for the whole world not implemented yet")
 
+    if (is.null(world_equidist)) {
+      stop("`world_equidist` must be provided for equidistant world map projections")
+    }
     # equidistant projections
     # outputTEXT <- paste(outputTEXT, "<p><b>equidistant world map projections</b></p>", sep = "")
 
@@ -89,7 +94,7 @@ crs_world <- function(distortion, center, scale, round_cm) {
 
     # Update active projection and preview
     crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
-                          prj_suggestions = prj_suggestions)
+                          prj_details = world_equidist)
   } else {
     # compromise projections
 
