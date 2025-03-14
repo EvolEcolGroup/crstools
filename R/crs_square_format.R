@@ -91,7 +91,7 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
       #     activeProjection, stringLinks("stere", NA, 0.0, NA, NA, center$lng, NA)
       #   )
       # )
-      prj_summary <- data.frame(
+      prj_suggestions <- data.frame(
         prj = "stere", x0 = NA_real_, lat0 = 0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Equatorial stereographic", notes = "Conformal projection for regional maps in square format"
       )
@@ -147,8 +147,8 @@ crs_square_format <- function(distortion, center, latmin, latmax) {
 
   # Include any notes about the scale factor
   if (distortion == "conformal") {
-    message("To reduce overall area distortion on the map, one can also apply a scale factor <i>k</i>.
-  Various values for <i>k</i> can be applied and the area distortion patterns along the center
+    message("To reduce overall area distortion on the map, one can also apply a scale factor.
+  Various values for can be applied and the area distortion patterns along the center
   and at the border of the map are compared to select most appropriate value.")
   }
 

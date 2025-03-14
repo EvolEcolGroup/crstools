@@ -326,3 +326,70 @@ testthat::test_that("test whole hemisphere", {
   })
 
 
+testthat::test_that("test square format", {
+  # EQUAL AREA 
+  suggested_crs_square_eqa <- crs_wizard(c(-22, 57, -37, 36), distortion = "equal_area")
+  ref_proj4_square_eqa <- "+proj=laea +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                               GEOGCS["GCS_WGS_1984",
+                                      DATUM["D_WGS_1984",
+                                            SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                      PRIMEM["Greenwich",0.0],
+                                      UNIT["Degree",0.0174532925199433]],
+                               PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                               PARAMETER["False_Easting",0.0],
+                               PARAMETER["False_Northing",0.0],
+                               PARAMETER["Central_Meridian",17.5],
+                               PARAMETER["Latitude_Of_Origin",0],
+                               UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_eqa$proj4, ref_proj4_square_eqa)
+  expect_true(sf::st_crs(suggested_crs_square_eqa$wkt) == sf::st_crs(ref_wkt_square_eqa))
+  
+  # CONFORMAL
+  suggested_crs_square_conf <- crs_wizard(c(-22, 57, -37, 36), distortion = "conformal")
+  ref_proj4_square_conf <- "+proj=stere +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_conf <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                GEOGCS["GCS_WGS_1984",
+                                       DATUM["D_WGS_1984",
+                                             SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                       PRIMEM["Greenwich",0.0],
+                                       UNIT["Degree",0.0174532925199433]],
+                                PROJECTION["Stereographic"],
+                                PARAMETER["False_Easting",0.0],
+                                PARAMETER["False_Northing",0.0],
+                                PARAMETER["Central_Meridian",17.5],
+                                PARAMETER["Scale_Factor",1.0],
+                                PARAMETER["Latitude_Of_Origin",0],
+                                UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_conf$proj4, ref_proj4_square_conf)
+  expect_true(sf::st_crs(suggested_crs_square_conf$wkt) == sf::st_crs(ref_wkt_square_conf))
+  
+  # EQUIDISTANT
+  #TODO: fix function because of bug latS not calculated at all
+  
+  # suggested_crs_square_eqd <- crs_wizard(c(-22, 57, -37, 36), distortion = "equidistant")
+  # ref_proj4_square_eqd <- "+proj=eqc +lon_0=17.5 +lat_ts=18.5 +datum=WGS84 +units=m +no_defs"
+  # ref_wkt_square_eqd <- 'PROJCS["ProjWiz_Custom_Equidistant_Cylindrical",
+  #                              GEOGCS["GCS_WGS_1984",
+  #                                     DATUM["D_WGS_1984",
+  #                                           SPHEROID["WGS_1984",6378137.0,298.257223563]],
+  #                                     PRIMEM["Greenwich",0.0],
+  #                                     UNIT["Degree",0.0174532925199433]],
+  #                              PROJECTION["Equidistant_Cylindrical"],
+  #                              PARAMETER["False_Easting",0.0],
+  #                              PARAMETER["False_Northing",0.0],
+  #                              PARAMETER["Central_Meridian",17.5],
+  #                              PARAMETER["Standard_Parallel_1",18.5],
+  #                              UNIT["Meter",1.0]]'
+  # expect_equal(suggested_crs_square_eqd$proj4, ref_proj4_square_eqd)
+  # expect_true(sf::st_crs(suggested_crs_square_eqd$wkt) == sf::st_crs(ref_wkt_square_eqd))
+  
+  # COMPROMISE
+  expect_error(suggested_crs_square_comp <- crs_wizard(c(-22, 57, -37, 36), distortion = "compromise"),
+               "compromise is not available for maps focussing on a single continent")
+  
+})  
+  
+  
+  
+  

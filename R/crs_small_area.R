@@ -148,7 +148,7 @@ crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, la
       prj_suggestions <- crs_ew_extent(distortion, center, scale, lonmin = lonmin, lonmax = lonmax, latmin = latmin, latmax = latmax)
     } else {
       # Regional map in square format
-      prj_suggestions <- crs_square_format(distortion, center)
+      prj_suggestions <- crs_square_format(distortion, center, latmin, latmax)
     }
   }
 
