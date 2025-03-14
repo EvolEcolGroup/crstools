@@ -41,18 +41,15 @@ Default is TRUE.}
 projection, then this parameter should
 be a list with one of the following sets of elements:
 \itemize{
-\item "Polar azimuthal equidistant": \code{proj} = "polar", \code{pole}, where
-\code{pole} is either -90 or 90 for the South and North Pole, respectively,
-from or through which distances are correct.
-E.g. \code{list(proj = "polar", pole = 90)}
-\item "Oblique azimuthal equidistant": \code{proj} = "oblique", \code{lat_center}, \code{lng_center},
+\item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \verb{lng_central``, where }pole\verb{is either -90 or 90 for the South and North Pole, respectively,  from or through which distances are correct, and}lng_central\verb{is the central meridian.  E.g.}list(prj = "polar", pole = 90, lng_central = -180)`
+\item "Oblique azimuthal equidistant": \code{prj} = "oblique", \code{lat_center}, \code{lng_center},
 where \code{lat_center} and \code{lng_center} are the latitude and longitude
 of the center from or through which distances are correct.
-E.g. \code{list(proj = "oblique", lat_center = 39, lng_center = 145)}
-\item "Two-point azimuthal": \code{proj} = "two_points", \code{lat1}, \code{lng1},
+E.g. \code{list(prj = "oblique", lat_center = 39, lng_center = 145)}
+\item "Two-point azimuthal": \code{prj} = "two_points", \code{lat1}, \code{lng1},
 \code{lat2}, \code{lng2}, where \code{lat1}, \code{lng1}, \code{lat2}, \code{lng2} are the latitude and
 longitude of two points on the map from which distances are correct.
-E.g. \code{list(proj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
+E.g. \code{list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
 }}
 }
 \value{

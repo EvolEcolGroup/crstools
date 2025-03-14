@@ -88,50 +88,89 @@ crs_world_equidistant <- function(center,
     #   addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
     # })
   } 
-  else if (activeWorldEqDistProj == "Oblique azimuthal equidistant") {
-    lngC_eq <- worldValues(center$lng, scale)
-    latC_eq <- worldValues(center$lat, scale)
+  else if (prj_details$prj == "oblique") {
+    #Oblique azimuthal equidistant
+    if (!"lat_center" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lat_center` element")
+    }
+    lat_center <- prj_details$lat_center
+    if(!"lng_center" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lng_center` element")
+    }
+    lng_center <- prj_details$lng_center
+
+#    outputTEXT <- paste0(outputTEXT, "<p class='outputText'>Distances are correct through or from the center - <span id='aeqd_str'>", 
+#                         stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA), "</span></br></p>")
     
-    outputTEXT <- paste0(outputTEXT, "<p class='outputText'>Distances are correct through or from the center - <span id='aeqd_str'>", 
-                         stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA), "</span></br></p>")
+    prj_suggestions <- data.frame(
+      prj = "aeqd", x0 = NA_real_, lat0 = latC_eq, lat1 = NA_real_, lat2 = NA_real_, lon0 = lngC_eq, k0 = NA_real_,
+      description = "Oblique azimuthal equidistant",
+      notes = paste0("Distance correct through or from the center (",lng_center,", ",lat_center,")")
+    )
     
-    observeEvent(input$latC_eq, {
-      latC_eq <- input$latC_eq
-      updateTextInput(session, "latC_val", value = formatWorldLAT(latC_eq))
-      updateTextInput(session, "aeqd_str", value = stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA))
-      addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
-    })
-    
-    observeEvent(input$lngC_eq, {
-      lngC_eq <- input$lngC_eq
-      updateTextInput(session, "lngC_val", value = formatWorldLON(lngC_eq))
-      updateTextInput(session, "aeqd_str", value = stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA))
-      addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
-    })
+    # observeEvent(input$latC_eq, {
+    #   latC_eq <- input$latC_eq
+    #   updateTextInput(session, "latC_val", value = formatWorldLAT(latC_eq))
+    #   updateTextInput(session, "aeqd_str", value = stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA))
+    #   addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
+    # })
+    # 
+    # observeEvent(input$lngC_eq, {
+    #   lngC_eq <- input$lngC_eq
+    #   updateTextInput(session, "lngC_val", value = formatWorldLON(lngC_eq))
+    #   updateTextInput(session, "aeqd_str", value = stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA))
+    #   addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
+    # })
   } 
-  else if (activeWorldEqDistProj == "Two-point azimuthal equidistant") {
-    lng1_eq <- worldValues(center$lng1, scale)
-    lat1_eq <- worldValues(center$lat1, scale)
-    lng2_eq <- worldValues(center$lng2, scale)
-    lat2_eq <- worldValues(center$lat2, scale)
+  else if (prj_details$prj == "two_points") {
+    # Two-point azimuthal equidistant
+    if (!"lat1" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lat1` element")
+    }
+    lat1_eq <- prj_details$lat1
+    if (!"lng1" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lng1` element")
+    }
+    lng1_eq <- prj_details$lng1
+    if (!"lat2" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lat2` element")
+    }
+    lat2_eq <- prj_details$lat2
+    if (!"lng2" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lng2` element")
+    }
+    lng2_eq <- prj_details$lng2
     
-    outputTEXT <- paste0(outputTEXT, "<p class='outputText'>Distances are correct from two points: <span id='tp_aeqd_str'>", 
-                         stringLinks("aeqd", NA, lat1_eq, NA, NA, lng1_eq, NA), " and ", 
-                         stringLinks("aeqd", NA, lat2_eq, NA, NA, lng2_eq, NA), "</span></br></p>")
+    prj_suggestions <- data.frame(
+      prj = "tpeqd", x0 = NA_real_, lat0 = lat1_eq, lat1 = lng1_eq, lat2 = lat2_eq, lon0 = lng2_eq, k0 = NA_real_,
+      description = "Two-point azimuthal equidistant",
+      notes = paste0("Distances are correct from two points: ",lng1_eq,", ",lat1_eq," and ",lng2_eq,", ",lat2_eq)
+    )
     
-    observeEvent(input$lat1_eq, {
-      lat1_eq <- input$lat1_eq
-      updateTextInput(session, "lat1_val", value = formatWorldLAT(lat1_eq))
-      updateTextInput(session, "tp_aeqd_str", value = paste0(stringLinks("aeqd", NA, lat1_eq, NA, NA, lng1_eq, NA), " and ", 
-                                                             stringLinks("aeqd", NA, lat2_eq, NA, NA, lng2_eq, NA)))
-      addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
-    })
     
-    observeEvent(input$lng1_eq, {
-      lng1_eq <- input$lng1_eq
-      updateTextInput(session, "lng1_val", value = formatWorldLON(lng1_eq))
-      addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
-    })
+    # THE CODE BELOW IS BADLY TRANSLATED
+    # lng1_eq <- worldValues(center$lng1, scale)
+    # lat1_eq <- worldValues(center$lat1, scale)
+    # lng2_eq <- worldValues(center$lng2, scale)
+    # lat2_eq <- worldValues(center$lat2, scale)
+    # 
+    # outputTEXT <- paste0(outputTEXT, "<p class='outputText'>Distances are correct from two points: <span id='tp_aeqd_str'>", 
+    #                      stringLinks("aeqd", NA, lat1_eq, NA, NA, lng1_eq, NA), " and ", 
+    #                      stringLinks("aeqd", NA, lat2_eq, NA, NA, lng2_eq, NA), "</span></br></p>")
+    # 
+    # observeEvent(input$lat1_eq, {
+    #   lat1_eq <- input$lat1_eq
+    #   updateTextInput(session, "lat1_val", value = formatWorldLAT(lat1_eq))
+    #   updateTextInput(session, "tp_aeqd_str", value = paste0(stringLinks("aeqd", NA, lat1_eq, NA, NA, lng1_eq, NA), " and ", 
+    #                                                          stringLinks("aeqd", NA, lat2_eq, NA, NA, lng2_eq, NA)))
+    #   addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
+    # })
+    # 
+    # observeEvent(input$lng1_eq, {
+    #   lng1_eq <- input$lng1_eq
+    #   updateTextInput(session, "lng1_val", value = formatWorldLON(lng1_eq))
+    #   addWorldMapPreview(center, activeWorldEqDistProj, TRUE)
+    # })
   } 
   else {
     stop("the `prj` element of world_equidistant` should be one of:\n",
