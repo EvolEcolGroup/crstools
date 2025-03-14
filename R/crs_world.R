@@ -37,7 +37,7 @@ crs_world <- function(distortion, center, scale, round_cm) {
   )
 
   # Cleaning the output (initialize output text)
-  outputTEXT <- ""
+  # outputTEXT <- ""
 
   # Formatting central meridian
   lng <- round_world_coords(center$lng, scale, round_cm)
@@ -75,20 +75,21 @@ crs_world <- function(distortion, center, scale, round_cm) {
     stop("equidistant for the whole world not implemented yet")
 
     # equidistant projections
-    outputTEXT <- paste(outputTEXT, "<p><b>equidistant world map projections</b></p>", sep = "")
+    # outputTEXT <- paste(outputTEXT, "<p><b>equidistant world map projections</b></p>", sep = "")
 
     # Dropdown menu for equidistant projections
-    outputTEXT <- paste(outputTEXT,
-      "<div><div><select name='worldequidistantMenu' id='worldequidistantMenu'>",
-      "<option value='Polar azimuthal equidistant'><b>Polar azimuthal equidistant</b></option>",
-      "<option value='Oblique azimuthal equidistant'><b>Oblique azimuthal equidistant</b></option>",
-      "<option value='Two-point equidistant'><b>Two-point equidistant</b></option>",
-      "</select></div><div id='worldequidistantBox'></div></div>",
-      sep = ""
-    )
+    # outputTEXT <- paste(outputTEXT,
+    #   "<div><div><select name='worldequidistantMenu' id='worldequidistantMenu'>",
+    #   "<option value='Polar azimuthal equidistant'><b>Polar azimuthal equidistant</b></option>",
+    #   "<option value='Oblique azimuthal equidistant'><b>Oblique azimuthal equidistant</b></option>",
+    #   "<option value='Two-point equidistant'><b>Two-point equidistant</b></option>",
+    #   "</select></div><div id='worldequidistantBox'></div></div>",
+    #   sep = ""
+    # )
 
     # Update active projection and preview
-    outputWorldequidistantOption(center, scale)
+    crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
+                          prj_suggestions = prj_suggestions)
   } else {
     # compromise projections
 
