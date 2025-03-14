@@ -7,34 +7,40 @@
 crs_wizard(
   x,
   distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-  roundCM = FALSE,
+  round_cm = FALSE,
   return_best = TRUE,
   datum = c("WGS84", "ETRS89", "NAD83"),
   unit = c("m", "ft"),
-  lat_check = TRUE
+  lat_check = TRUE,
+  world_equidistant = NULL
 )
 }
 \arguments{
+\item{x}{A vector of four numeric values representing the extent of the map
+(xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.}
+
 \item{distortion}{The type of distortion to be minimized. Options are
 "equal_area", "conformal", "equidistant" and "compromise". Default is
 "equal_area".}
 
-\item{roundCM}{Logical. If TRUE, the central meridian is rounded to the
+\item{round_cm}{Logical. If TRUE, the central meridian is rounded to the
 nearest degree. Default is FALSE.}
 
 \item{return_best}{Logical. If TRUE, only the best projection is returned, otherwise,
 if there are multiple options, a list will be returned}
 
+\item{datum}{The datum to use. Options are "WGS84", "ETRS89" and "NAD83".
+Default is "WGS84".}
+
+\item{unit}{The unit to use. Options are "m" and "ft". Default is "m".}
+
 \item{lat_check}{Logical. If TRUE, the function will check if lat values are within range (-90,90).
 Default is TRUE.}
 
-\item{lonmin}{The minimum longitude of the map. Default is -180.}
-
-\item{lonmax}{The maximum longitude of the map. Default is 180.}
-
-\item{latmin}{The minimum latitude of the map. Default is -90.}
-
-\item{latmax}{The maximum latitude of the map. Default is 90.}
+\item{world_equidistant}{if \code{distortion}="equidistant", then this should
+contain a list with one of the following sets of elements:
+pole_eq, lngP_eq, latC_eq, lngC_eq, lat1_eq, lng1_eq, lat2_eq, lng2_eq.
+THIS needs completing properly.}
 }
 \value{
 Either a list of two strings (proj4 and WKT) for a single projection

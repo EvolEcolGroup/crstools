@@ -15,16 +15,21 @@
 #' @param distortion The type of distortion to be minimized. Options are
 #' "equal_area", "conformal", "equidistant" and "compromise". Default is
 #' "equal_area".
-#' @param lonmin The minimum longitude of the map. Default is -180.
-#' @param lonmax The maximum longitude of the map. Default is 180.
-#' @param latmin The minimum latitude of the map. Default is -90.
-#' @param latmax The maximum latitude of the map. Default is 90.
-#' @param roundCM Logical. If TRUE, the central meridian is rounded to the
+#' @param x A vector of four numeric values representing the extent of the map
+#' (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
+#' @param round_cm Logical. If TRUE, the central meridian is rounded to the
 #' nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned, otherwise,
 #' if there are multiple options, a list will be returned
 #' @param lat_check Logical. If TRUE, the function will check if lat values are within range (-90,90).
 #' Default is TRUE.
+#' @param datum The datum to use. Options are "WGS84", "ETRS89" and "NAD83".
+#' Default is "WGS84".
+#' @param unit The unit to use. Options are "m" and "ft". Default is "m".
+#' @param world_equidistant if `distortion`="equidistant", then this should
+#' contain a list with one of the following sets of elements: 
+#' pole_eq, lngP_eq, latC_eq, lngC_eq, lat1_eq, lng1_eq, lat2_eq, lng2_eq.
+#' THIS needs completing properly.
 #' @return Either a list of two strings (proj4 and WKT) for a single projection
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
@@ -42,8 +47,8 @@
 #'
 
 crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-                       roundCM = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit = c("m", "ft"), lat_check = TRUE) {
+                       round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
+                       unit = c("m", "ft"), lat_check = TRUE, world_equidistant = NULL) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -89,7 +94,7 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
   center$lng <- normalise_lon(center$lng, 0)
 
   # Rounding central meridian
-  if (roundCM) {
+  if (round_cm) {
     center$lng <- round(center$lng)
   }
 
@@ -98,7 +103,7 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
     if (distortion == "conformal") {
       stop("conformal is not available for maps covering the whole world; try equal_area instead")
     }
-    crs_df <- crs_world(distortion, center, scale, roundCM)
+    crs_df <- crs_world(distortion, center, scale, round_cm)
   } else if (scale < 6) { # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {

@@ -3,8 +3,7 @@
 #' @param center The center of the map (named vector with lat and long)
 #' @param scale The scale of the map
 #' @param round_cm The round central meridian.
-#' @param projection The projection to use 
-#' projection suggestions
+#' @param proj_list a list of options defining the desired projection 
 #' @return The projection object
 
 
@@ -17,7 +16,7 @@
 crs_world_equidistant <- function(center,
                                   scale,
                                   round_cm = FALSE,
-                                  projection) {
+                                  proj_list) {
   #outputTEXT <- ""
   
   # Formatting slider steps
