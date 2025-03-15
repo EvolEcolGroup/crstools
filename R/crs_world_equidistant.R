@@ -134,19 +134,23 @@ crs_world_equidistant <- function(center,
     if (!"lat1" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `lat1` element")
     }
-    lat1_eq <- round_world_coords(prj_details$lat1, scale = scale)
+    lat1_eq <- round_world_coords(prj_details$lat1, scale = scale,
+                                  round_cm = round_cm)
     if (!"lng1" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `lng1` element")
     }
-    lng1_eq <- round_world_coords(prj_details$lng1, scale = scale)
+    lng1_eq <- round_world_coords(prj_details$lng1, scale = scale,
+                                  round_cm = round_cm)
     if (!"lat2" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `lat2` element")
     }
-    lat2_eq <-round_world_coords(prj_details$lat2, scale = scale)
+    lat2_eq <-round_world_coords(prj_details$lat2, scale = scale,
+                                 round_cm = round_cm)
     if (!"lng2" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `lng2` element")
     }
-    lng2_eq <- round_world_coords(prj_details$lng2, scale = scale)
+    lng2_eq <- round_world_coords(prj_details$lng2, scale = scale,
+                                  round_cm = round_cm)
     
     crs_suggestions <- data.frame(
       prj = "tpeqd", x0 = NA_real_, lat0 = lat1_eq, lat1 = lng1_eq, lat2 = lat2_eq, lon0 = lng2_eq, k0 = NA_real_,

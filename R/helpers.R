@@ -12,10 +12,10 @@ normalise_lon <- function(lon, lon0) {
 
 ################################################################################
 # Function to round values for world maps
-round_world_coords <- function(value, scale, roundCM) {
+round_world_coords <- function(value, scale, round_cm) {
   val <- NULL
 
-  if (roundCM || scale < 1.15) {
+  if (round_cm || scale < 1.15) {
     val <- round(value)
   } else if (scale < 1.32) {
     val <- round(value * 2) / 2
