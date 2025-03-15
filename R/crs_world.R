@@ -93,7 +93,7 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
     
     
     # Update active projection and preview
-    crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
+    prj_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
                           prj_details = world_equidist)
   } else {
     # compromise projections

@@ -10,7 +10,7 @@ crs_world_equidistant <- function(center,
                                   scale,
                                   round_cm = FALSE,
                                   prj_details) {
-  browser()
+
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details,"list") || !"prj" %in% names(prj_details)) {
     stop("`world_equidistant` must be a list with a `prj` element and the appropriate projection details")
@@ -32,6 +32,10 @@ crs_world_equidistant <- function(center,
     # Polar azimuthal equidistant
     if (!"pole" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `pole` element")
+    }
+    # pole should be either 90 or -90
+    if (prj_details$pole != 90 && prj_details$pole != -90) {
+      stop("`pole` must be either 90 or -90")
     }
     pole_eq <- prj_details$pole
     if (!"lng_central" %in% names(prj_details)) {
@@ -175,7 +179,7 @@ crs_world_equidistant <- function(center,
   else {
     stop("the `prj` element of world_equidistant` should be one of:\n",
     "'polar', 'oblique', 'two_points'")}
-  
+
   return(prj_suggestions)
 }
 

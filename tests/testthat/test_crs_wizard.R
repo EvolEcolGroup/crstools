@@ -143,7 +143,7 @@ testthat::test_that("test whole world", {
   # polar equidistant
   polar_equidist <- crs_wizard(c(-180, 180, -90, 90),
                                distortion = "equidistant",
-                               world_equidist = list(prj = "polar", pole = 90, lng_central = -180))
+                               world_equidist = list(prj = "polar", pole = -90, lng_central = 0))
   ref_proj4_polar_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_polar_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
  GEOGCS["GCS_WGS_1984",
@@ -157,11 +157,10 @@ testthat::test_that("test whole world", {
  PARAMETER["Central_Meridian",0],
  PARAMETER["Latitude_Of_Origin",-90],
  UNIT["Meter",1.0]]'
+  expect_equal(polar_equidist$proj4, ref_proj4_polar_eqd)
+  expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
   
-  #@TODO: need to add test for EQUIDISTANT as for the moment the function does 
-  # not work with the whole world "equidistant for the whole 
-  # world not implemented yet"
-  whole_equidist <- crs_wizard(c(-180, 180, -90, 90), distortion = "equidistant")
+  #@TODO: test the other projections
   
   # COMPROMISE 
   whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)
