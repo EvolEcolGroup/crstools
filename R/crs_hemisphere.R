@@ -39,17 +39,17 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
 
     # Adding projection output
     if (distortion == "equal_area") {
-      prj_suggestions <- data.frame(
+      crs_suggestions <- data.frame(
         prj = "cea", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics"
       )
     } else if (distortion == "conformal") {
-      prj_suggestions <- data.frame(
+      crs_suggestions <- data.frame(
         prj = "merc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Mercator", notes = "Conformal projection for maps showing the tropics"
       )
     } else if (distortion == "equidistant") {
-      prj_suggestions <- data.frame(
+      crs_suggestions <- data.frame(
         prj = "eqc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
       )
@@ -71,12 +71,12 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
 
     # Adding projection output
     if (distortion == "equal_area") {
-      prj_suggestions <- data.frame(
+      crs_suggestions <- data.frame(
         prj = "laea", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Lambert azimuthal equal-area", notes = "Equal-area projection for maps showing a hemisphere"
       )
     } else if (distortion == "equidistant") {
-      prj_suggestions <- data.frame(
+      crs_suggestions <- data.frame(
         prj = "aeqd", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere"
       )
@@ -88,5 +88,5 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
     #    previewMapLat0 <- lat
   }
 
-  return(prj_suggestions)
+  return(crs_suggestions)
 }

@@ -55,7 +55,7 @@ crs_ns_extent <- function(distortion, center, quiet = FALSE) {
   printScaleFactorNote(distortion)
 
   # Additional note for equal-area projection
-  if (distortion == "equal_area") {
+  if (distortion == "equal_area" && !quiet) {
     # outputText <- c(
     #   outputText,
     #   "<p><b>Note:</b> To reduce overall distortion on the map, one can also compress the map in the north-south direction (with a factor <i>s</i>) and expand the map in the east-west direction (with a factor 1 / <i>s</i>). The factor <i>s</i> can be determined with a trial-and-error approach, comparing the distortion patterns along the center and at the border of the map.</p>"

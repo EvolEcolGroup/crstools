@@ -52,7 +52,7 @@ crs_world_equidistant <- function(center,
 #                         pole_str, " - ", stringLinks("aeqd", NA, pole_eq, NA, NA, lngP_eq, NA), "</span><br></p>")
     
     
-    prj_suggestions <- data.frame(
+    crs_suggestions <- data.frame(
       prj = "aeqd", x0 = NA_real_, lat0 = pole_eq, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng_central, k0 = NA_real_,
       description = "Polar azimuthal equidistant",
       notes = paste0("Distance correct through or from the ",pole_str ,
@@ -109,7 +109,7 @@ crs_world_equidistant <- function(center,
 #    outputTEXT <- paste0(outputTEXT, "<p class='outputText'>Distances are correct through or from the center - <span id='aeqd_str'>", 
 #                         stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA), "</span></br></p>")
     
-    prj_suggestions <- data.frame(
+    crs_suggestions <- data.frame(
       prj = "aeqd", x0 = NA_real_, lat0 = lat_center, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng_center, k0 = NA_real_,
       description = "Oblique azimuthal equidistant",
       notes = paste0("Distance correct through or from the center (",lng_center,", ",lat_center,")")
@@ -148,7 +148,7 @@ crs_world_equidistant <- function(center,
     }
     lng2_eq <- prj_details$lng2
     
-    prj_suggestions <- data.frame(
+    crs_suggestions <- data.frame(
       prj = "tpeqd", x0 = NA_real_, lat0 = lat1_eq, lat1 = lng1_eq, lat2 = lat2_eq, lon0 = lng2_eq, k0 = NA_real_,
       description = "Two-point azimuthal equidistant",
       notes = paste0("Distances are correct from two points: ",lng1_eq,", ",lat1_eq," and ",lng2_eq,", ",lat2_eq)
@@ -183,7 +183,7 @@ crs_world_equidistant <- function(center,
     stop("the `prj` element of world_equidistant` should be one of:\n",
     "'polar', 'oblique', 'two_points'")}
 
-  return(prj_suggestions)
+  return(crs_suggestions)
 }
 
 

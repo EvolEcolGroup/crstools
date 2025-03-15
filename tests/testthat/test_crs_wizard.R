@@ -376,7 +376,9 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqa$wkt) == sf::st_crs(ref_wkt_square_eqa))
   
   # CONFORMAL
-  suggested_crs_square_conf <- crs_wizard(c(-22, 57, -37, 36), distortion = "conformal")
+  expect_message(suggested_crs_square_conf <- crs_wizard(c(-22, 57, -37, 36),
+                                                         distortion = "conformal"),
+                 "To reduce overall area")
   ref_proj4_square_conf <- "+proj=stere +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                 GEOGCS["GCS_WGS_1984",

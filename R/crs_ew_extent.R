@@ -21,9 +21,9 @@ crs_ew_extent <- function(distortion, center, scale,
   scaleNote <- FALSE
 
   # Add the initial output based on the distortion
-  if (distortion == "conformal") {
-    message("conformal projection for regional maps with an east-west extent")
-  } else if (distortion == "equal_area") {
+  if (distortion == "conformal" && !quiet) {
+    message("Conformal projection for regional maps with an east-west extent")
+  } else if (distortion == "equal_area"  && !quiet) {
     message("Equal-area projection for regional maps with an east-west extent")
   }
 
@@ -191,7 +191,8 @@ crs_ew_extent <- function(distortion, center, scale,
         # ))
         crs_suggestions <- data.frame(
           prj = "aea", x0 = NA_real_, lat0 = center$lat, lat1 = latmin + interval, lat2 = latmax - interval, lon0 = center$lng, k0 = NA_real_,
-          description = "Albers equal-area conic", notes = "Equal-area projection for regional maps with an east-west extent"
+          description = "Albers equal-area conic",
+          notes = "Equal-area projection for regional maps with an east-west extent"
         )
       } else {
         # previewMapProjection <- activeProjection <- "Lambert azimuthal equal area"
