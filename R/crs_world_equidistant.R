@@ -10,10 +10,10 @@ crs_world_equidistant <- function(center,
                                   scale,
                                   round_cm = FALSE,
                                   prj_details) {
-  
+  browser()
   # make sure that we have a projection element in prj_details
-  if (!"projection" %in% names(prj_details)) {
-    stop("`world_equidistant` must contain a `prj` element")
+  if (!inherits(prj_details,"list") || !"prj" %in% names(prj_details)) {
+    stop("`world_equidistant` must be a list with a `prj` element and the appropriate projection details")
   }
   
   #outputTEXT <- ""

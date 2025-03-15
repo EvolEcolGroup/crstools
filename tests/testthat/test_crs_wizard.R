@@ -128,9 +128,40 @@ testthat::test_that("test whole world", {
   expect_equal(whole_eqa_list$wag7$proj4, ref_proj4_wag7)
   expect_true(sf::st_crs(whole_eqa_list$wag7$wkt) == sf::st_crs(ref_wkt_wag7))
   
+  # EQUIDISTANT
+  # check for error if details of projection are missing
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90), distortion = "equidistant"),
+               "`world_equidist` must be provided for equidistant world map projections")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                            distortion = "equidistant",
+                                            world_equidist = list(blah = "blah")),
+               "`world_equidistant` must be a list with a `prj` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                            distortion = "equidistant",
+                                            world_equidist = "blah"),
+               "`world_equidistant` must be a list with a `prj` element")  
+  # polar equidistant
+  polar_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", pole = 90, lng_central = -180))
+  ref_proj4_polar_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_polar_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
+ GEOGCS["GCS_WGS_1984",
+  DATUM["D_WGS_1984",
+   SPHEROID["WGS_1984",6378137.0,298.257223563]],
+  PRIMEM["Greenwich",0.0],
+  UNIT["Degree",0.0174532925199433]],
+ PROJECTION["Azimuthal_Equidistant"],
+ PARAMETER["False_Easting",0.0],
+ PARAMETER["False_Northing",0.0],
+ PARAMETER["Central_Meridian",0],
+ PARAMETER["Latitude_Of_Origin",-90],
+ UNIT["Meter",1.0]]'
+  
   #@TODO: need to add test for EQUIDISTANT as for the moment the function does 
   # not work with the whole world "equidistant for the whole 
   # world not implemented yet"
+  whole_equidist <- crs_wizard(c(-180, 180, -90, 90), distortion = "equidistant")
   
   # COMPROMISE 
   whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)

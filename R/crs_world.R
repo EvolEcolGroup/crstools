@@ -73,9 +73,6 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
     #    worldCM(lng, outputTEXT)
     # TODO do we want to add central meridian information as an attribute to the prj_suggestions data frame?
   } else if (distortion == "equidistant") {
-    # TODO DEBUG
-    stop("equidistant for the whole world not implemented yet")
-
     if (is.null(world_equidist)) {
       stop("`world_equidist` must be provided for equidistant world map projections")
     }
@@ -91,7 +88,10 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
     #   "</select></div><div id='worldequidistantBox'></div></div>",
     #   sep = ""
     # )
-
+    # TODO DEBUG
+    # stop("equidistant for the whole world not implemented yet")
+    
+    
     # Update active projection and preview
     crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
                           prj_details = world_equidist)
