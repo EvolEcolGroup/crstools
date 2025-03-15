@@ -7,12 +7,15 @@
 #' @param lonmax The maximum longitude of the map. Default is 180.
 #' @param latmin numeric value, minimum latitude of the map.
 #' @param latmax numeric value, maximum latitude of the map.
+#' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 
 ################################################################################
 # maps showing a smaller area
-crs_small_area <- function(distortion, center, scale, lonmin, lonmax, latmin, latmax) {
+crs_small_area <- function(distortion, center, scale,
+                           lonmin, lonmax, latmin, latmax,
+                           quiet = FALSE) {
   # Computing longitude extent
   dlon <- lonmax - lonmin
 

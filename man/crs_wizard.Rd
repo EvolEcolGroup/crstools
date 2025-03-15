@@ -12,7 +12,8 @@ crs_wizard(
   datum = c("WGS84", "ETRS89", "NAD83"),
   unit = c("m", "ft"),
   lat_check = TRUE,
-  world_equidist = NULL
+  world_equidist = NULL,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ E.g. \code{list(prj = "oblique", lat_center = 39, lng_center = 145)}
 longitude of two points on the map from which distances are correct.
 E.g. \code{list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
 }}
+
+\item{quiet}{Logical. If TRUE, suppresses messages. Default is FALSE.}
 }
 \value{
 Either a list of two strings (proj4 and WKT) for a single projection

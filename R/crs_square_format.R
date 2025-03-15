@@ -4,13 +4,16 @@
 #' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
 #' @param latmin The minimum latitude of the map. Default is -90.
 #' @param latmax The maximum latitude of the map. Default is 90.
+#' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 #'
 
 ################################################################################
 ## crs for regional maps with square extent
-crs_square_format <- function(distortion, center, latmin, latmax) {
+crs_square_format <- function(distortion, center,
+                              latmin, latmax,
+                              quiet = FALSE) {
   # Initialize output as an empty vector for storing HTML strings
   # outputText <- c()
 

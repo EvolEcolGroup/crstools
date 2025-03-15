@@ -4,7 +4,7 @@
 \alias{crs_hemisphere}
 \title{Projection of a hemisphere map}
 \usage{
-crs_hemisphere(distortion, center, scale, latmin, latmax)
+crs_hemisphere(distortion, center, scale, latmin, latmax, quiet = FALSE)
 }
 \arguments{
 \item{distortion}{character string (e.g., "equal_area", "equidistant", "compromise").}
@@ -16,6 +16,8 @@ crs_hemisphere(distortion, center, scale, latmin, latmax)
 \item{latmin}{numeric value, minimum latitude of the map.}
 
 \item{latmax}{numeric value, maximum latitude of the map.}
+
+\item{quiet}{logical, whether to suppress messages.}
 }
 \value{
 data.frame with the suggested projection.

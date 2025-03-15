@@ -4,12 +4,15 @@
 #' @param scale The scale of the map
 #' @param round_cm The round central meridian.
 #' @param prj_details a list of options defining the desired projection 
+#' @param quiet Whether to suppress messages and warnings
 #' @return The projection object
+#' @keywords internal
 
 crs_world_equidistant <- function(center,
                                   scale,
                                   round_cm = FALSE,
-                                  prj_details) {
+                                  prj_details,
+                                  quiet = FALSE) {
 
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details,"list") || !"prj" %in% names(prj_details)) {
@@ -107,7 +110,7 @@ crs_world_equidistant <- function(center,
 #                         stringLinks("aeqd", NA, latC_eq, NA, NA, lngC_eq, NA), "</span></br></p>")
     
     prj_suggestions <- data.frame(
-      prj = "aeqd", x0 = NA_real_, lat0 = latC_eq, lat1 = NA_real_, lat2 = NA_real_, lon0 = lngC_eq, k0 = NA_real_,
+      prj = "aeqd", x0 = NA_real_, lat0 = lat_center, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng_center, k0 = NA_real_,
       description = "Oblique azimuthal equidistant",
       notes = paste0("Distance correct through or from the center (",lng_center,", ",lat_center,")")
     )

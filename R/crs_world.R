@@ -6,12 +6,13 @@
 #' @param round_cm The round central meridian.
 #' @param world_equidist The world equidistant parameters (see documentation
 #' for [crs_world()])
+#' @param quiet Whether to suppress messages.
 #' @return A data frame with the suggested world map projections.
 #' @keywords internal
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
+crs_world <- function(distortion, center, scale, round_cm, world_equidist, quiet = FALSE) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points
@@ -94,7 +95,7 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist) {
     
     # Update active projection and preview
     prj_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
-                          prj_details = world_equidist)
+                          prj_details = world_equidist, quiet = quiet)
   } else {
     # compromise projections
 

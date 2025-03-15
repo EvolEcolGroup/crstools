@@ -5,6 +5,7 @@
 #' @param scale numeric value, scale of the map.
 #' @param latmin numeric value, minimum latitude of the map.
 #' @param latmax numeric value, maximum latitude of the map.
+#' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 #'
@@ -12,7 +13,8 @@
 
 ################################################################################
 # maps showing a hemisphere
-crs_hemisphere <- function(distortion, center, scale, latmin, latmax) {
+crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
+                           quiet = FALSE) {
   angUnit <- "degrees" # TODO arbitrarily set to degrees, check where it comes from
   # we probably don't want to do any pretty formatting, so this could be removed.
 

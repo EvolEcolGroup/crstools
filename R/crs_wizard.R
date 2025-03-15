@@ -42,6 +42,7 @@
 #' `lat2`, `lng2`, where `lat1`, `lng1`, `lat2`, `lng2` are the latitude and
 #' longitude of two points on the map from which distances are correct.
 #' E.g. `list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)`
+#' @param quiet Logical. If TRUE, suppresses messages. Default is FALSE.
 #' @return Either a list of two strings (proj4 and WKT) for a single projection
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
@@ -60,7 +61,8 @@
 
 crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
                        round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL) {
+                       unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL,
+                       quiet = FALSE) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -115,7 +117,12 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
     if (distortion == "conformal") {
       stop("conformal is not available for maps covering the whole world; try equal_area instead")
     }
-    crs_df <- crs_world(distortion, center, scale, round_cm, world_equidist)
+    crs_df <- crs_world(distortion = distortion,
+                        center = center,
+                        scale = scale,
+                        round_cm = round_cm,
+                        world_equidist = world_equidist,
+                        quiet = quiet)
   } else if (scale < 6) { # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
@@ -126,13 +133,19 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
     if (distortion == "compromise") {
       stop("compromise is not available for maps covering a whole hemisphere; try equal_area instead")
     }
-    crs_df <- crs_hemisphere(distortion, center, scale, latmin = lat_min, latmax = lat_max)
+    crs_df <- crs_hemisphere(distortion = distortion,
+                             center = center,
+                             scale = scale,
+                             latmin = lat_min,
+                             latmax = lat_max,
+                             quiet = quiet)
   } else { # Continent or a smaller area (large-scale) map
     if (distortion == "compromise") {
       stop("compromise is not available for maps focussing on a single continent or small area; try equal_area instead")
     }
     crs_df <- crs_small_area(distortion, center, scale,
-      lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax = lat_max
+      lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax = lat_max,
+      quiet = quiet
     )
   }
 

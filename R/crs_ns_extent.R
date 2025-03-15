@@ -2,12 +2,13 @@
 #' @description Checking the North-South extent of a regional map
 #' @param distortion character string (e.g., "equal_area", "equidistant", "compromise").
 #' @param center The center of the map projection.
+#' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
 
 ################################################################################
 # regional map with a north-south extent
-crs_ns_extent <- function(distortion, center) {
+crs_ns_extent <- function(distortion, center, quiet = FALSE) {
   # Initialize output as an empty vector for storing HTML strings
   outputText <- c()
 
