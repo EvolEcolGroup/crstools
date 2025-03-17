@@ -160,7 +160,54 @@ testthat::test_that("test whole world", {
   expect_equal(polar_equidist$proj4, ref_proj4_polar_eqd)
   expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
   
-  #@TODO: test the other projections
+  # Oblique Azimuthal equidistant
+  oblique_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                 distortion = "equidistant",
+                                 world_equidist = list(prj = "oblique",
+                                                       lat_center = 0,
+                                                       lng_center = 0))
+  ref_proj4_oblique_eqd <- "+proj=aeqd +lon_0=0 +lat_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_oblique_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
+                                GEOGCS["GCS_WGS_1984",
+                                       DATUM["D_WGS_1984",
+                                             SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                       PRIMEM["Greenwich",0.0],
+                                       UNIT["Degree",0.0174532925199433]],
+                                PROJECTION["Azimuthal_Equidistant"],
+                                PARAMETER["False_Easting",0.0],
+                                PARAMETER["False_Northing",0.0],
+                                PARAMETER["Central_Meridian",0],
+                                PARAMETER["Latitude_Of_Origin",0],
+                                UNIT["Meter",1.0]]'
+  expect_equal(oblique_equidist$proj4, ref_proj4_oblique_eqd)
+  expect_true(sf::st_crs(oblique_equidist$wkt) == sf::st_crs(ref_wkt_oblique_eqd))
+  
+  # Two-points equidistant
+  two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                    distortion = "equidistant",
+                                    world_equidist = list(prj = "two_points",
+                                                          lat1 = 34,
+                                                          lng1 = -117,
+                                                          lat2 = 46,
+                                                          lng2 = 16))
+  
+  ref_proj4_two_points_eqd <- "+proj=tpeqd +lat_1=34 +lon_1=-117 +lat_2=46 +lon_2=16 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_two_points_eqd <- 'PROJCS["ProjWiz_Custom_Two_Point_Equidistant",
+                                   GEOGCS["GCS_WGS_1984",
+                                          DATUM["D_WGS_1984",
+                                                SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                          PRIMEM["Greenwich",0.0],
+                                          UNIT["Degree",0.0174532925199433]],
+                                   PROJECTION["Two_Point_Equidistant"],
+                                   PARAMETER["False_Easting",0.0],
+                                   PARAMETER["False_Northing",0.0],
+                                   PARAMETER["Latitude_Of_1st_Point",34],
+                                   PARAMETER["Latitude_Of_2nd_Point",46],
+                                   PARAMETER["Longitude_Of_1st_Point",-117],
+                                   PARAMETER["Longitude_Of_2nd_Point",16],
+                                   UNIT["Meter",1.0]]'
+  expect_equal(two_points_equidist$proj4, ref_proj4_two_points_eqd)
+  expect_true(sf::st_crs(two_points_equidist$wkt) == sf::st_crs(ref_wkt_two_points_eqd))
   
   # COMPROMISE 
   expect_message(whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), 
