@@ -122,6 +122,7 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
                         scale = scale,
                         round_cm = round_cm,
                         world_equidist = world_equidist,
+                        return_best = return_best,
                         quiet = quiet)
   } else if (scale < 6) { # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics

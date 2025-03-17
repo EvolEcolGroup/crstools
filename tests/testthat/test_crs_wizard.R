@@ -163,7 +163,10 @@ testthat::test_that("test whole world", {
   #@TODO: test the other projections
   
   # COMPROMISE 
-  whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)
+  expect_message(whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), 
+                                               distortion = "compromise", 
+                                               return_best = FALSE),
+                 "Rectangular projections are not generally")
   expect_true(length(whole_comp_list) == 6)
   
   # check Robinson projection
