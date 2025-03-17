@@ -140,6 +140,65 @@ testthat::test_that("test whole world", {
                                             distortion = "equidistant",
                                             world_equidist = "blah"),
                "`world_equidistant` must be a list with a `prj` element")  
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", lng_central = 0)),
+               "`world_equidistant` must contain a `pole` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", pole = -80, lng_central = 0)),
+               "`pole` must be either 90 or -90")
+  
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", pole = -90)),
+               "`world_equidistant` must contain a `lng_central` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "oblique",
+                                                     lng_center = 0)),
+               "`world_equidistant` must contain a `lat_center` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "oblique",
+                                                     lat_center = 0)),
+               "`world_equidistant` must contain a `lng_center` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lng1 = -117,
+                                                                                         lat2 = 46,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lat1` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lat1 = 34,
+                                                                                         lat2 = 46,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lng1` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lat1 = 34,
+                                                                                         lng1 = -117,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lat2` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                  distortion = "equidistant",
+                                                                  world_equidist = list(prj = "two_points",
+                                                                                        lat1 = 34,
+                                                                                        lng1 = -117,
+                                                                                        lat2 = 46)),
+               "`world_equidistant` must contain a `lng2` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "blah", pole = -90, lng_central = 0)),
+               "the `prj` element of world_equidistant` should be one of")
+  
+  
+  
+  
   # polar equidistant
   polar_equidist <- crs_wizard(c(-180, 180, -90, 90),
                                distortion = "equidistant",
