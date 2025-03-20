@@ -5,7 +5,7 @@
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
 #' @param world_equidist The world equidistant parameters (see documentation
-#' for [crs_world()])
+#' for [crs_wizard()])
 #' @param return_best Whether to return the best projection (boolean).
 #' @param quiet Whether to suppress messages.
 #' @return A data frame with the suggested world map projections.
