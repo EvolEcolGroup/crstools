@@ -2,6 +2,7 @@
 % Please edit documentation in R/crs_wizard.R
 \name{crs_wizard}
 \alias{crs_wizard}
+\alias{suggest_crs}
 \title{Suggestions for map projections depending on the extent}
 \usage{
 crs_wizard(
@@ -15,6 +16,8 @@ crs_wizard(
   world_equidist = NULL,
   quiet = FALSE
 )
+
+suggest_crs(...)
 }
 \arguments{
 \item{x}{A vector of four numeric values representing the extent of the map

@@ -52,7 +52,7 @@ crs_ns_extent <- function(distortion, center, quiet = FALSE) {
 
   # Include notes about the scale factor
   # outputText <- c(outputText, printScaleFactorNote(distortion))
-  printScaleFactorNote(distortion)
+  # printScaleFactorNote(distortion)
 
   # Additional note for equal-area projection
   if (distortion == "equal_area" && !quiet) {

@@ -47,6 +47,7 @@
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
 #'  single projection (if multiple projections are available and return_best is FALSE).
+#' @aliases suggest_crs
 #' @examples
 #' # Whole map
 #' crs_wizard(c(-180, 180, -90, 90))
@@ -67,10 +68,14 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
     x_ext <- as.vector(terra::ext(x))
+  } else if (inherits(x, "sf")) {
+    # note that sf::st_bbox returns c(xmin, ymin, xmax, ymax)
+    x_ext <- as.vector(sf::st_bbox(x))[c(1,3,2,4)]
   } else if (inherits(x, "numeric") && length(x) == 4) {
     x_ext <- x
   } else {
-    stop("x must be a vector, a SpatExtent object or a SpatRaster object")
+    stop("x must be a numeric vector (minlon, maxlon, minlat, maxlat), or ",
+         "an object of class SpatExtent, SpatRaster, or sf")
   }
 
   lon_min <- x_ext[1]
@@ -171,6 +176,12 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
 }
 
 
+# temp alias
+#' @rdname crs_wizard
+#' @export
+suggest_crs <- function(...){
+  crs_wizard(...)
+}
 
 
 # Set default point values for equidistant world map projections
