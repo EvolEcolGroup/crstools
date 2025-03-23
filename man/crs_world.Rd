@@ -4,7 +4,15 @@
 \alias{crs_world}
 \title{World map projections}
 \usage{
-crs_world(distortion, center, scale, round_cm, world_equidist, quiet = FALSE)
+crs_world(
+  distortion,
+  center,
+  scale,
+  round_cm,
+  world_equidist,
+  return_best,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
@@ -16,7 +24,9 @@ crs_world(distortion, center, scale, round_cm, world_equidist, quiet = FALSE)
 \item{round_cm}{The round central meridian.}
 
 \item{world_equidist}{The world equidistant parameters (see documentation
-for \code{\link[=crs_world]{crs_world()}})}
+for \code{\link[=crs_wizard]{crs_wizard()}})}
+
+\item{return_best}{Whether to return the best projection (boolean).}
 
 \item{quiet}{Whether to suppress messages.}
 }

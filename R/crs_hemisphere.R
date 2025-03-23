@@ -40,17 +40,17 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
     # Adding projection output
     if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
-        prj = "cea", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        prj = "cea", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics"
       )
     } else if (distortion == "conformal") {
       crs_suggestions <- data.frame(
-        prj = "merc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        prj = "merc", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Mercator", notes = "Conformal projection for maps showing the tropics"
       )
     } else if (distortion == "equidistant") {
       crs_suggestions <- data.frame(
-        prj = "eqc", x0 = NA_real_, lat0 = latStd, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
+        prj = "eqc", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
         description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
       )
     }

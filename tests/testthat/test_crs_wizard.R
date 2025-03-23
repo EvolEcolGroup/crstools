@@ -140,6 +140,65 @@ testthat::test_that("test whole world", {
                                             distortion = "equidistant",
                                             world_equidist = "blah"),
                "`world_equidistant` must be a list with a `prj` element")  
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", lng_central = 0)),
+               "`world_equidistant` must contain a `pole` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", pole = -80, lng_central = 0)),
+               "`pole` must be either 90 or -90")
+  
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "polar", pole = -90)),
+               "`world_equidistant` must contain a `lng_central` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "oblique",
+                                                     lng_center = 0)),
+               "`world_equidistant` must contain a `lat_center` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "oblique",
+                                                     lat_center = 0)),
+               "`world_equidistant` must contain a `lng_center` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lng1 = -117,
+                                                                                         lat2 = 46,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lat1` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lat1 = 34,
+                                                                                         lat2 = 46,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lng1` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                   distortion = "equidistant",
+                                                                   world_equidist = list(prj = "two_points",
+                                                                                         lat1 = 34,
+                                                                                         lng1 = -117,
+                                                                                         lng2 = 16)),
+               "`world_equidistant` must contain a `lat2` element")
+  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                                                  distortion = "equidistant",
+                                                                  world_equidist = list(prj = "two_points",
+                                                                                        lat1 = 34,
+                                                                                        lng1 = -117,
+                                                                                        lat2 = 46)),
+               "`world_equidistant` must contain a `lng2` element")
+  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                               distortion = "equidistant",
+                               world_equidist = list(prj = "blah", pole = -90, lng_central = 0)),
+               "the `prj` element of world_equidistant` should be one of")
+  
+  
+  
+  
   # polar equidistant
   polar_equidist <- crs_wizard(c(-180, 180, -90, 90),
                                distortion = "equidistant",
@@ -160,10 +219,60 @@ testthat::test_that("test whole world", {
   expect_equal(polar_equidist$proj4, ref_proj4_polar_eqd)
   expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
   
-  #@TODO: test the other projections
+  # Oblique Azimuthal equidistant
+  oblique_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                 distortion = "equidistant",
+                                 world_equidist = list(prj = "oblique",
+                                                       lat_center = 0,
+                                                       lng_center = 0))
+  ref_proj4_oblique_eqd <- "+proj=aeqd +lon_0=0 +lat_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_oblique_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
+                                GEOGCS["GCS_WGS_1984",
+                                       DATUM["D_WGS_1984",
+                                             SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                       PRIMEM["Greenwich",0.0],
+                                       UNIT["Degree",0.0174532925199433]],
+                                PROJECTION["Azimuthal_Equidistant"],
+                                PARAMETER["False_Easting",0.0],
+                                PARAMETER["False_Northing",0.0],
+                                PARAMETER["Central_Meridian",0],
+                                PARAMETER["Latitude_Of_Origin",0],
+                                UNIT["Meter",1.0]]'
+  expect_equal(oblique_equidist$proj4, ref_proj4_oblique_eqd)
+  expect_true(sf::st_crs(oblique_equidist$wkt) == sf::st_crs(ref_wkt_oblique_eqd))
+  
+  # Two-points equidistant
+  two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+                                    distortion = "equidistant",
+                                    world_equidist = list(prj = "two_points",
+                                                          lat1 = 34,
+                                                          lng1 = -117,
+                                                          lat2 = 46,
+                                                          lng2 = 16))
+  
+  ref_proj4_two_points_eqd <- "+proj=tpeqd +lat_1=34 +lon_1=-117 +lat_2=46 +lon_2=16 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_two_points_eqd <- 'PROJCS["ProjWiz_Custom_Two_Point_Equidistant",
+                                   GEOGCS["GCS_WGS_1984",
+                                          DATUM["D_WGS_1984",
+                                                SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                          PRIMEM["Greenwich",0.0],
+                                          UNIT["Degree",0.0174532925199433]],
+                                   PROJECTION["Two_Point_Equidistant"],
+                                   PARAMETER["False_Easting",0.0],
+                                   PARAMETER["False_Northing",0.0],
+                                   PARAMETER["Latitude_Of_1st_Point",34],
+                                   PARAMETER["Latitude_Of_2nd_Point",46],
+                                   PARAMETER["Longitude_Of_1st_Point",-117],
+                                   PARAMETER["Longitude_Of_2nd_Point",16],
+                                   UNIT["Meter",1.0]]'
+  expect_equal(two_points_equidist$proj4, ref_proj4_two_points_eqd)
+  expect_true(sf::st_crs(two_points_equidist$wkt) == sf::st_crs(ref_wkt_two_points_eqd))
   
   # COMPROMISE 
-  whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "compromise", return_best = FALSE)
+  expect_message(whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), 
+                                               distortion = "compromise", 
+                                               return_best = FALSE),
+                 "Rectangular projections are not generally")
   expect_true(length(whole_comp_list) == 6)
   
   # check Robinson projection
@@ -269,92 +378,6 @@ testthat::test_that("test whole world", {
 
 })
 
-testthat::test_that("test whole hemisphere", {
-  # EQUAL AREA
-  # check northern hemisphere
-  suggested_crs_north_hem_eqa <- crs_wizard(c(-180, 180, 0, 90), distortion = "equal_area")
-  ref_proj4_north_hem_eqa <- "+proj=laea +lon_0=0 +lat_0=45 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_north_hem_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
-                                  GEOGCS["GCS_WGS_1984",
-                                         DATUM["D_WGS_1984",
-                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                         PRIMEM["Greenwich",0.0],
-                                         UNIT["Degree",0.0174532925199433]],
-                                  PROJECTION["Lambert_Azimuthal_Equal_Area"],
-                                  PARAMETER["False_Easting",0.0],
-                                  PARAMETER["False_Northing",0.0],
-                                  PARAMETER["Central_Meridian",0],
-                                  PARAMETER["Latitude_Of_Origin",45],
-                                  UNIT["Meter",1.0]]'
-  expect_equal(suggested_crs_north_hem_eqa$proj4, ref_proj4_north_hem_eqa)
-  expect_true(sf::st_crs(suggested_crs_north_hem_eqa$wkt) == sf::st_crs(ref_wkt_north_hem_eqa))
-  
-  # check southern hemisphere
-  suggested_crs_south_hem_eqa <- crs_wizard(c(-180, 180, -90, 0), distortion = "equal_area")
-  ref_proj4_south_hem_eqa <- "+proj=laea +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_south_hem_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
-                                  GEOGCS["GCS_WGS_1984",
-                                         DATUM["D_WGS_1984",
-                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                         PRIMEM["Greenwich",0.0],
-                                         UNIT["Degree",0.0174532925199433]],
-                                  PROJECTION["Lambert_Azimuthal_Equal_Area"],
-                                  PARAMETER["False_Easting",0.0],
-                                  PARAMETER["False_Northing",0.0],
-                                  PARAMETER["Central_Meridian",0],
-                                  PARAMETER["Latitude_Of_Origin",-45],
-                                  UNIT["Meter",1.0]]'
-  expect_equal(suggested_crs_south_hem_eqa$proj4, ref_proj4_south_hem_eqa)
-  expect_true(sf::st_crs(suggested_crs_south_hem_eqa$wkt) == sf::st_crs(ref_wkt_south_hem_eqa))
-  
-  # EQUIDISTANT
-  # check northern hemisphere
-  suggested_crs_north_hem_eqd <- crs_wizard(c(-180, 180, 0, 90), distortion = "equidistant")
-  ref_proj4_north_hem_eqd <- "+proj=aeqd +lon_0=0 +lat_0=45 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_north_hem_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
-                                  GEOGCS["GCS_WGS_1984",
-                                         DATUM["D_WGS_1984",
-                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                         PRIMEM["Greenwich",0.0],
-                                         UNIT["Degree",0.0174532925199433]],
-                                  PROJECTION["Azimuthal_Equidistant"],
-                                  PARAMETER["False_Easting",0.0],
-                                  PARAMETER["False_Northing",0.0],
-                                  PARAMETER["Central_Meridian",0],
-                                  PARAMETER["Latitude_Of_Origin",45],
-                                  UNIT["Meter",1.0]]'
-
-  expect_equal(suggested_crs_north_hem_eqd$proj4, ref_proj4_north_hem_eqd)
-  expect_true(sf::st_crs(suggested_crs_north_hem_eqd$wkt) == sf::st_crs(ref_wkt_north_hem_eqd))
-  
-  # check southern hemisphere
-  suggested_crs_south_hem_eqd <- crs_wizard(c(-180, 180, -90, 0), distortion = "equidistant")
-  ref_proj4_south_hem_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_south_hem_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
-                                  GEOGCS["GCS_WGS_1984",
-                                         DATUM["D_WGS_1984",
-                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                         PRIMEM["Greenwich",0.0],
-                                         UNIT["Degree",0.0174532925199433]],
-                                  PROJECTION["Azimuthal_Equidistant"],
-                                  PARAMETER["False_Easting",0.0],
-                                  PARAMETER["False_Northing",0.0],
-                                  PARAMETER["Central_Meridian",0],
-                                  PARAMETER["Latitude_Of_Origin",-45],
-                                  UNIT["Meter",1.0]]'
-  expect_equal(suggested_crs_south_hem_eqd$proj4, ref_proj4_south_hem_eqd)
-  expect_true(sf::st_crs(suggested_crs_south_hem_eqd$wkt) == sf::st_crs(ref_wkt_south_hem_eqd))
-  
-  # COMPROMISE 
-  expect_error(suggested_crs_south_hem_comp <- crs_wizard(c(-180, 180, -90, 0), distortion = "compromise"),
-               "compromise is not available for maps covering a whole hemisphere")
-  
-  # CONFORMAL
-  expect_error(suggested_crs_south_hem_conf <- crs_wizard(c(-180, 180, -90, 0), distortion = "conformal"),
-               "conformal is not available for maps covering a whole hemisphere")
-  
-  })
-
 
 testthat::test_that("test square format", {
   # EQUAL AREA 
@@ -374,6 +397,61 @@ testthat::test_that("test square format", {
                                UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_eqa$proj4, ref_proj4_square_eqa)
   expect_true(sf::st_crs(suggested_crs_square_eqa$wkt) == sf::st_crs(ref_wkt_square_eqa))
+  
+  # Polar Lambert (north)
+  expect_message(suggested_crs_square_eqa_polar <- crs_wizard(c(85, 109, 77, 82), distortion = "equal_area"),
+                 "For maps at this scale")
+  ref_proj4_square_eqa_polar <- "+proj=laea +lon_0=97 +lat_0=90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_eqa_polar <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                                     GEOGCS["GCS_WGS_1984",
+                                            DATUM["D_WGS_1984",
+                                                  SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                            PRIMEM["Greenwich",0.0],
+                                            UNIT["Degree",0.0174532925199433]],
+                                     PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                                     PARAMETER["False_Easting",0.0],
+                                     PARAMETER["False_Northing",0.0],
+                                     PARAMETER["Central_Meridian",97],
+                                     PARAMETER["Latitude_Of_Origin",90],
+                                     UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_eqa_polar$proj4, ref_proj4_square_eqa_polar)
+  expect_true(sf::st_crs(suggested_crs_square_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_eqa_polar))
+  
+  # Polar Lambert (south)
+  suggested_crs_square_conf_eqa_polar <- crs_wizard(c(-56, -39, -81, -77), distortion = "equal_area")
+  ref_proj4_square_conf_eqa_polar <- "+proj=laea +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_conf_eqa_polar <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                                         GEOGCS["GCS_WGS_1984",
+                                                DATUM["D_WGS_1984",
+                                                      SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                                PRIMEM["Greenwich",0.0],
+                                                UNIT["Degree",0.0174532925199433]],
+                                         PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                                         PARAMETER["False_Easting",0.0],
+                                         PARAMETER["False_Northing",0.0],
+                                         PARAMETER["Central_Meridian",-47.5],
+                                         PARAMETER["Latitude_Of_Origin",-90],
+                                         UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_conf_eqa_polar$proj4, ref_proj4_square_conf_eqa_polar)
+  expect_true(sf::st_crs(suggested_crs_square_conf_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_conf_eqa_polar))
+  
+  # Oblique Lambert
+  suggested_crs_square_eqa_obl <- crs_wizard(c(-12, 2, 49, 59), distortion = "equal_area")
+  ref_proj4_square_eqa_obl <- "+proj=laea +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_eqa_obl <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                                   GEOGCS["GCS_WGS_1984",
+                                          DATUM["D_WGS_1984",
+                                                SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                          PRIMEM["Greenwich",0.0],
+                                          UNIT["Degree",0.0174532925199433]],
+                                   PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                                   PARAMETER["False_Easting",0.0],
+                                   PARAMETER["False_Northing",0.0],
+                                   PARAMETER["Central_Meridian",-5],
+                                   PARAMETER["Latitude_Of_Origin",54],
+                                   UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_eqa_obl$proj4, ref_proj4_square_eqa_obl)
+  expect_true(sf::st_crs(suggested_crs_square_eqa_obl$wkt) == sf::st_crs(ref_wkt_square_eqa_obl))
   
   # CONFORMAL
   expect_message(suggested_crs_square_conf <- crs_wizard(c(-22, 57, -37, 36),
@@ -395,6 +473,83 @@ testthat::test_that("test square format", {
                                 UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_conf$proj4, ref_proj4_square_conf)
   expect_true(sf::st_crs(suggested_crs_square_conf$wkt) == sf::st_crs(ref_wkt_square_conf))
+  
+  # Oblique stereographic
+  suggested_crs_square_conf_obl_ste <- crs_wizard(c(-25, -13, 62, 67), distortion = "conformal")
+  ref_proj4_square_conf_obl_ste <- "+proj=stere +lon_0=-19 +lat_0=64.5 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_conf_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                        GEOGCS["GCS_WGS_1984",
+                                               DATUM["D_WGS_1984",
+                                                     SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                               PRIMEM["Greenwich",0.0],
+                                               UNIT["Degree",0.0174532925199433]],
+                                        PROJECTION["Stereographic"],
+                                        PARAMETER["False_Easting",0.0],
+                                        PARAMETER["False_Northing",0.0],
+                                        PARAMETER["Central_Meridian",-19],
+                                        PARAMETER["Scale_Factor",1.0],
+                                        PARAMETER["Latitude_Of_Origin",64.5],
+                                        UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_conf_obl_ste$proj4, ref_proj4_square_conf_obl_ste)
+  expect_true(sf::st_crs(suggested_crs_square_conf_obl_ste$wkt) == sf::st_crs(ref_wkt_square_conf_obl_ste))
+  
+  # Polar stereographic (north)
+  suggested_crs_square_conf_pol_ste <- crs_wizard(c(85, 109, 77, 82), distortion = "conformal")
+  ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=97 +lat_0=90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                        GEOGCS["GCS_WGS_1984",
+                                               DATUM["D_WGS_1984",
+                                                     SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                               PRIMEM["Greenwich",0.0],
+                                               UNIT["Degree",0.0174532925199433]],
+                                        PROJECTION["Stereographic"],
+                                        PARAMETER["False_Easting",0.0],
+                                        PARAMETER["False_Northing",0.0],
+                                        PARAMETER["Central_Meridian",97],
+                                        PARAMETER["Scale_Factor",1.0],
+                                        PARAMETER["Latitude_Of_Origin",90],
+                                        UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_conf_pol_ste$proj4, ref_proj4_square_conf_pol_ste)
+  expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
+  
+  # Polar stereographic (south)
+  suggested_crs_square_conf_pol_ste <- crs_wizard(c(-56, -39, -81, -77), distortion = "conformal")
+  ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                        GEOGCS["GCS_WGS_1984",
+                                               DATUM["D_WGS_1984",
+                                                     SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                               PRIMEM["Greenwich",0.0],
+                                               UNIT["Degree",0.0174532925199433]],
+                                        PROJECTION["Stereographic"],
+                                        PARAMETER["False_Easting",0.0],
+                                        PARAMETER["False_Northing",0.0],
+                                        PARAMETER["Central_Meridian",-47.5],
+                                        PARAMETER["Scale_Factor",1.0],
+                                        PARAMETER["Latitude_Of_Origin",-90],
+                                        UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_conf_pol_ste$proj4, ref_proj4_square_conf_pol_ste)
+  expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
+  
+  # Oblique stereographic
+  suggested_crs_square_obl_ste <- crs_wizard(c(-12, 2, 49, 59), distortion = "conformal")
+  ref_proj4_square_obl_ste <- "+proj=stere +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_square_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                   GEOGCS["GCS_WGS_1984",
+                                          DATUM["D_WGS_1984",
+                                                SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                          PRIMEM["Greenwich",0.0],
+                                          UNIT["Degree",0.0174532925199433]],
+                                   PROJECTION["Stereographic"],
+                                   PARAMETER["False_Easting",0.0],
+                                   PARAMETER["False_Northing",0.0],
+                                   PARAMETER["Central_Meridian",-5],
+                                   PARAMETER["Scale_Factor",1.0],
+                                   PARAMETER["Latitude_Of_Origin",54],
+                                   UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_square_obl_ste$proj4, ref_proj4_square_obl_ste)
+  expect_true(sf::st_crs(suggested_crs_square_obl_ste$wkt) == sf::st_crs(ref_wkt_square_obl_ste))
+  
   
   # EQUIDISTANT
   suggested_crs_square_eqd <- crs_wizard(c(-22, 57, -37, 36), distortion = "equidistant")

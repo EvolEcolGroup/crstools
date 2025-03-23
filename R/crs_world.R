@@ -5,14 +5,16 @@
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
 #' @param world_equidist The world equidistant parameters (see documentation
-#' for [crs_world()])
+#' for [crs_wizard()])
+#' @param return_best Whether to return the best projection (boolean).
 #' @param quiet Whether to suppress messages.
 #' @return A data frame with the suggested world map projections.
 #' @keywords internal
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(distortion, center, scale, round_cm, world_equidist, quiet = FALSE) {
+crs_world <- function(distortion, center, scale, round_cm, world_equidist, 
+                      return_best, quiet = FALSE) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points
@@ -92,7 +94,8 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist, quiet
     
     # Update active projection and preview
     crs_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
-                          prj_details = world_equidist, quiet = quiet)
+                          prj_details = world_equidist,
+                          quiet = quiet)
   } else {
     # compromise projections
 
@@ -123,11 +126,8 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist, quiet
     # TODO are we missing sometihng here???
     # Add central meridian and additional notes
     #    worldCM(lng, outputTEXT)
-    
-    ## TOOD this message only makes sense if we are not using the best projectiong
-    # which is not rectangular. This means that this function needs to receive
-    # param select_best
-    if (!quiet){
+
+    if (!return_best && !quiet){
       message("Rectangular projections are not generally recommended for most world maps.")
     }
   }
