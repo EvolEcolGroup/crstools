@@ -3,7 +3,7 @@ testthat::test_that("test input sanity", {
   site <- data.frame(latitude = c(11,8),
                      longitude = c(5,9))
   expect_error(crs_wizard(site, distortion = "equal_area"), 
-               "x must be a vector, a SpatExtent object or a SpatRaster object")
+               "x must be a numeric vector ")
   
   # check for correct coordinates
   expect_error(
