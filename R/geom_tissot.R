@@ -58,7 +58,6 @@ geom_tissot <- function(
         stop("data must be either an sf object or a SpatRaster object")
         }
     }
-  
   c(
     ggplot2::layer_sf(
       geom = ggplot2::GeomSf,
@@ -69,12 +68,12 @@ geom_tissot <- function(
       show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(
-        na.rm = na.rm, centers = centers,
-        radius = radius, fill = fill,
+        na.rm = na.rm, centers = centers, radius = radius,
+        fill = fill,
         ...
       )
     ),
-    coord_sf(default = TRUE)
+    ggplot2::coord_sf(default = TRUE)
   )
 }
 
@@ -142,6 +141,7 @@ Tissot <- ggplot2::ggproto("Tissot", ggplot2::Stat,
                       PANEL = 1,
                       group = -1
                     )
+                    
                     return(new_data)
                   },
                   

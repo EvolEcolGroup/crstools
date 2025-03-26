@@ -200,7 +200,7 @@ with the equidistant projection:
 ```{r}
 ggplot() +
   geom_sf(data = s_america_sf) +
-  geom_tissot() +
+  geom_tissot(radius = 100000000) +
   coord_sf(crs = s_am_equidist$proj4) +
   theme_minimal()
 ```
@@ -209,9 +209,7 @@ Let us compare this to a simple Mercator projection:
 ```{r}
 ggplot() +
   geom_sf(data = s_america_sf) +
-  geom_tissot(data = s_america_sf,
-    radius = units::as_units(200, "kilometer")
-  ) +
+  geom_tissot() +
   coord_sf(crs = "+proj=merc") +
   theme_minimal()
 ```

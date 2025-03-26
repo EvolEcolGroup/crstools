@@ -1,4 +1,31 @@
+# this works just fine
+
 library(ggplot2)
+
+geom_tissot <- function(mapping = aes(), data = NULL, stat = "Tissot",
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, centers = c(5,5), radius = NULL, fill = "red", ...) {
+  c(
+    layer_sf(
+      geom = GeomSf,
+      data = data,
+      mapping = mapping,
+      stat = Tissot,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
+      params = list(
+        na.rm = na.rm, centers = centers, radius = radius,
+        fill = fill,
+        ...
+      )
+    ),
+    coord_sf(default = TRUE)
+  )
+}
+
+
+
 Tissot <- ggproto("Tissot", Stat,
                   
                   # setup_params = function(data, params){
@@ -90,26 +117,6 @@ Tissot <- ggproto("Tissot", Stat,
 #   )
 # }
 
-geom_tissot <- function(mapping = aes(), data = NULL, stat = "Tissot",
-                    position = "identity", na.rm = FALSE, show.legend = NA,
-                    inherit.aes = TRUE, ...) {
-  c(
-    layer_sf(
-      geom = GeomSf,
-      data = data,
-      mapping = mapping,
-      stat = Tissot,
-      position = position,
-      show.legend = show.legend,
-      inherit.aes = inherit.aes,
-      params = list(
-        na.rm = na.rm,
-        ...
-      )
-    ),
-    coord_sf(default = TRUE)
-  )
-}
 
 geom_column <- function (data) 
 {
@@ -132,7 +139,7 @@ nc <-  st_read(system.file("shape/nc.shp", package="sf"))
 ggplot(nc) + 
   geom_sf() +
   ggtitle('original') +
-  geom_tissot(centers = c(5,5), radius = NULL, fill = 'red')
+  geom_tissot()
   
   
   geom_tissot(centers = c(5,5), radius = NULL, fill = 'red')
