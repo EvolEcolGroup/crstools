@@ -1,71 +1,17 @@
-#' Add Tissot's indicatrix to a map
-#'
-#' This function adds Tissot's indicatrix to a map. Tissot's indicatrix is a
-#' mathematical contrivance used in cartography to characterize local
-#' distortions due to map projection.
-#'
-#' @param mapping Set of aesthetic mappings created by [ggplot2::aes()]. If
-#'   specified and inherit.aes = TRUE (the default), it is combined with the
-#'   default mapping at the top level of the plot. You must supply mapping if
-#'   there is no plot mapping.
-#' @param data The data to be displayed in this layer. There are two options: A
-#'   sf object or a SpatRaster object
-#' @param na.rm If FALSE, the default, missing values are removed with a
-#'   warning. If TRUE, missing values are silently removed.
-#' @param show.legend logical. Should this layer be included in the legends? NA,
-#'   the default, includes if any aesthetics are mapped. FALSE never includes,
-#'   and TRUE always includes. It can also be a named logical vector to finely
-#'   select the aesthetics to display.
-#' @param inherit.aes If FALSE, overrides the default aesthetics, rather than
-#'   combining with them. This is most useful for helper functions that define
-#'   both data and aesthetics and shouldn't inherit behaviour from the default
-#'   plot specification, e.g. [ggplot2::geom_point()].
-#' @param centers Either a list with elements "lng" and "lat" giving the
-#'   longitudes and latitudes of the grid of centers for the tissot's
-#'   indicatrix, or a vector of length 2 with the number of rows and columns to
-#'   generate such a grid automatically. The latter is passed to [pretty()] to
-#'   get pretty breaks, and the exact number of Tissot's circles might differ
-#'   from the input numbers (see [pretty()] for details. It defaults to c(5,5).
-#' @param radius The radius of the circles (see [sf::st_buffer()] for an
-#'   explanation of how units are created; we reccomend that you explicitely
-#'   state your using with the `units::as_units()`, e.g `units::as_units(100,
-#'   "km")`
-#' @param fill The fill color of the circles
-#' @param ... Other arguments passed on to [ggplot2::geom_sf()]
-#' @return A ggplot2 object
-#' @export
+# this works just fine
 
-geom_tissot <- function(
-    mapping = ggplot2::aes(),
-    data = NULL,
-    na.rm = FALSE,
-    show.legend = NA,
-    inherit.aes = TRUE,
-    centers = c(5, 5),
-    radius = NULL,
-    fill = "red",
-    ...) {
+library(ggplot2)
 
-    # if data is not null or an sf
-    if (!is.null(data) &&!inherits(data, "sf")) {
-      # we can convert it if it is a SpatRaster or SpatVector
-      if (inherits(data, "SpatRaster") || inherits(data, "SpatVector")){
-        data_bbox <- sf::st_bbox(terra::ext(data))
-        # get crs from the data
-        sf::st_crs(data_bbox) <- terra::crs(data)
-        # create an sf object
-        data <- sf::st_as_sf(sf::st_as_sfc(data_bbox))
-      } else {
-        stop("data must be either an sf object or a SpatRaster object")
-        }
-    }
+geom_tissot <- function(mapping = aes(), data = NULL, stat = "Tissot",
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, centers = c(5,5), radius = NULL, fill = "red", ...) {
   c(
-    ggplot2::layer_sf(
-      geom = ggplot2::GeomSf,
+    layer_sf(
+      geom = GeomSf,
       data = data,
       mapping = mapping,
       stat = Tissot,
-      position = "identity",
+      position = position,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(
@@ -74,28 +20,35 @@ geom_tissot <- function(
         ...
       )
     ),
-    ggplot2::coord_sf(default = TRUE)
+    coord_sf(default = TRUE)
   )
 }
 
-Tissot <- ggplot2::ggproto("Tissot", ggplot2::Stat,
+
+
+
+Tissot <- ggproto("Tissot", Stat,
                   compute_layer = function(self, data, params, layout) {
                     # add coord to the params, so it can be forwarded to compute_group()
                     params$coord <- layout$coord
-                    ggplot2::ggproto_parent(Stat, self)$compute_layer(data, params, layout)
+                    ggproto_parent(Stat, self)$compute_layer(data, params, layout)
                   },
                   
                   compute_panel = function(data, scales, coord, centers, radius) {
-                    
-                    # create new data with the indicatrix
+                    data_old <- data
                     data <- create_indicatrix(data, scales, coord, centers, radius)
+                    # The issue here is that the original data are already projected!!!!
+                    # but the data we create are not!!!
+                    
+                    data$geometry <- sf::st_transform(data$geometry,crs= coord$crs)
+                    
                     geometry_data <- data[[ geom_column(data) ]]
                     geometry_crs <- sf::st_crs(geometry_data)
                     
                     bbox <- sf::st_bbox(geometry_data)
+                
                     
-                    
-                    
+                     
                     
                     if (inherits(coord, "CoordSf")) {
                       # if the coord derives from CoordSf, then it
@@ -134,17 +87,16 @@ Tissot <- ggplot2::ggproto("Tissot", ggplot2::Stat,
                     
                     data
                   },
-                  
-                  
+
+
                   required_aes = c("geometry")
 )
 
 create_indicatrix <- function(data, scales,coord, centers, radius) {
   
   data_bbox <- sf::st_bbox(data[[ geom_column(data) ]])
-  orig_crs <- sf::st_crs(data_bbox)
   # if the bbox is not in crs 4326, we should reproject it
-  if (orig_crs != sf::st_crs("EPSG:4326")) {
+  if (sf::st_crs(data) != sf::st_crs("EPSG:4326")) {
     data_bbox <- sf::st_transform(data_bbox, sf::st_crs("EPSG:4326"))
   }
   
@@ -186,9 +138,6 @@ create_indicatrix <- function(data, scales,coord, centers, radius) {
   
   # create a buffer around the points
   coord_grid_sf_buffer <- sf::st_buffer(coord_grid_sf, radius)
-  
-  coord_grid_sf_buffer <- sf::st_transform(coord_grid_sf_buffer, orig_crs)
-  
   new_data <- data.frame(
     geometry = coord_grid_sf_buffer,
     PANEL = 1,
@@ -198,7 +147,25 @@ create_indicatrix <- function(data, scales,coord, centers, radius) {
 }
 
 
-# copy of the ggplot2 internal function to find the geometry column in a data.frame
+# stat_tissot <- function(mapping = NULL, data = NULL, 
+#                         geom = "rect", position = "identity", 
+#                         na.rm = FALSE, show.legend = NA, 
+#                         inherit.aes = TRUE, centers = NULL,
+#                         radius = NULL, ...) {
+#   layer(
+#     stat = Tissot, 
+#     data = data, 
+#     mapping = mapping, 
+#     geom = geom, 
+#     position = position, 
+#     show.legend = show.legend, 
+#     inherit.aes = inherit.aes, 
+#     params = list(na.rm = na.rm, centers = centers,
+#                   radius = radius, ...)
+#   )
+# }
+
+
 geom_column <- function (data) 
 {
   w <- which(vapply(data, inherits, TRUE, what = "sfc"))
@@ -212,3 +179,30 @@ geom_column <- function (data)
   }
 }
 
+
+
+library(sf)
+library(ggplot2)
+nc <-  st_read(system.file("shape/nc.shp", package="sf"))
+ggplot(nc) + 
+  geom_sf() +
+  ggtitle('original') +
+  geom_tissot() +
+  coord_sf(crs = "+proj=merc")
+
+
+
+  geom_sf(stat=Tissot, fill='red', centers = c(5,5), radius = NULL) +
+  coord_sf(crs = "+proj=merc")
+
+
+  geom_tissot()
+  
+  
+  geom_tissot(centers = c(5,5), radius = NULL, fill = 'red')
+  
+  
+  #  stat_sf2()
+  # geom_sf(stat=TissotIndicatrix, color='red', size=0.5, centers = c(-80, 35), radius = 1)
+  geom_tissot(centers = c(5,5), radius = 100000, fill = 'red')+
+  coord_sf()

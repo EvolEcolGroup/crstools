@@ -198,17 +198,17 @@ adds Tissot's indicatrix to a map, showing how circles are distorted by the
 projection. Let's use it to add Tissot's indicatrix to the map of South America
 with the equidistant projection:
 ```{r}
-ggplot() +
-  geom_sf(data = s_america_sf) +
-  geom_tissot(radius = 100000000) +
+ggplot(data = s_america_sf) +
+  geom_sf() +
+  geom_tissot() +
   coord_sf(crs = s_am_equidist$proj4) +
   theme_minimal()
 ```
 
 Let us compare this to a simple Mercator projection:
 ```{r}
-ggplot() +
-  geom_sf(data = s_america_sf) +
+ggplot(data = s_america_sf) +
+  geom_sf() +
   geom_tissot() +
   coord_sf(crs = "+proj=merc") +
   theme_minimal()
@@ -295,9 +295,7 @@ projections is:
 ggplot() +
   geom_spatraster(data = europe_r) +
   scale_fill_viridis_c(na.value = "transparent") +
-  geom_tissot(data = europe_r,
-    radius = units::as_units(200, "kilometer")
-  ) +
+  geom_tissot(data = europe_r) +
   coord_sf(crs = europe_r_equal_area$proj4) +
   theme_minimal()
 ```

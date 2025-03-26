@@ -25,8 +25,30 @@ geom_tissot <- function(mapping = aes(), data = NULL, stat = "Tissot",
 }
 
 
+Tissot2 <- ggproto("Tissot2", StatSf,
+                   setup_params = function(data, params){
+                     # do stuff to params
+                     browser()
+                     
+                     
+                     return(params)
+                   },
+                   setup_data = function(data, params, centers radius) {
+                     # do stuff to data with a PANEL and group column
+                     browser()
+                     return(data)
+                   },
+                   required_aes = c("geometry")
+                   
+)
+
 
 Tissot <- ggproto("Tissot", Stat,
+                  compute_layer = function(self, data, params, layout) {
+                    # add coord to the params, so it can be forwarded to compute_group()
+                    params$coord <- layout$coord
+                    ggproto_parent(Stat, self)$compute_layer(data, params, layout)
+                  },
                   
                   # setup_params = function(data, params){
                   #   # do stuff to params
@@ -40,8 +62,9 @@ Tissot <- ggproto("Tissot", Stat,
                   #   browser()
                   #   return(data)
                   # },
-                  compute_group = function(data, scales, centers, radius) {
+                  compute_panel = function(data, scales,coord, centers, radius) {
                     
+                    browser()
                     data_bbox <- sf::st_bbox(data[[ geom_column(data) ]])
                     # if the bbox is not in crs 4326, we should reproject it
                     if (sf::st_crs(data) != sf::st_crs("EPSG:4326")) {
@@ -139,6 +162,10 @@ nc <-  st_read(system.file("shape/nc.shp", package="sf"))
 ggplot(nc) + 
   geom_sf() +
   ggtitle('original') +
+  geom_sf(stat=Tissot2, fill='red', centers = c(5,5), radius = NULL) +
+  coord_sf(crs = "+proj=merc")
+
+
   geom_tissot()
   
   

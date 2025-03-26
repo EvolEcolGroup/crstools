@@ -22,32 +22,34 @@ specified and inherit.aes = TRUE (the default), it is combined with the
 default mapping at the top level of the plot. You must supply mapping if
 there is no plot mapping.}
 
-\item{data}{The data to be displayed in this layer. There are two options:
-A sf object or a SpatRaster object}
+\item{data}{The data to be displayed in this layer. There are two options: A
+sf object or a SpatRaster object}
 
 \item{na.rm}{If FALSE, the default, missing values are removed with a
 warning. If TRUE, missing values are silently removed.}
 
-\item{show.legend}{logical. Should this layer be included in the legends?
-NA, the default, includes if any aesthetics are mapped. FALSE never
-includes, and TRUE always includes. It can also be a named logical vector
-to finely select the aesthetics to display.}
+\item{show.legend}{logical. Should this layer be included in the legends? NA,
+the default, includes if any aesthetics are mapped. FALSE never includes,
+and TRUE always includes. It can also be a named logical vector to finely
+select the aesthetics to display.}
 
 \item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than
 combining with them. This is most useful for helper functions that define
 both data and aesthetics and shouldn't inherit behaviour from the default
-plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.
-@param centers Either a list with elements "lng" and "lat" giving the
-longitudes and latitudes of the grid of centers for the tissot's indicatrix,
-or
-a vector of length 2 with the number of rows
-and columns to generate such a grid automatically. The latter is passed
-to \code{\link[=pretty]{pretty()}} to get pretty breaks, and the exact number of
-tissot circiles might differ from the input numbers. It defaults to c(5,5).}
+plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
+
+\item{centers}{Either a list with elements "lng" and "lat" giving the
+longitudes and latitudes of the grid of centers for the tissot's
+indicatrix, or a vector of length 2 with the number of rows and columns to
+generate such a grid automatically. The latter is passed to \code{\link[=pretty]{pretty()}} to
+get pretty breaks, and the exact number of Tissot's circles might differ
+from the input numbers (see \code{\link[=pretty]{pretty()}} for details. It defaults to c(5,5).}
 
 \item{radius}{The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
 explanation of how units are created; we reccomend that you explicitely
 state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
+
+\item{fill}{The fill color of the circles}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}}
 }
