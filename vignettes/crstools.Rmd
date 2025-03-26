@@ -254,13 +254,13 @@ europe_r
 
 We can inspect in more detail the CRS for a terra object with:
 ```{r}
-terra::crs(s_america_r)
+terra::crs(europe_r)
 ```
 which gives a WKT.
 
 We can ask for the "Proj4" string with:
 ```{r}
-terra::crs(s_america_r, proj = TRUE)
+terra::crs(europe_r, proj = TRUE)
 ```
 
 There is also a parameter "describe" which returns the EPSG code.
@@ -287,6 +287,31 @@ ggplot() +
   geom_spatraster(data = europe_r) +
   scale_fill_viridis_c(na.value = "transparent") +
   coord_sf(crs = europe_r_equal_area$proj4) +
+  theme_minimal()
+```
+
+Let us use the Tissot indicatrix to assess how effective the equal area
+projections is:
+```{r}
+ggplot() +
+  geom_spatraster(data = europe_r) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  geom_tissot(data = europe_r,
+    radius = units::as_units(200, "kilometer")
+  ) +
+  coord_sf(crs = europe_r_equal_area$proj4) +
+  theme_minimal()
+```
+
+Comparing it to the Mercator projection:
+```{r}
+ggplot() +
+  geom_spatraster(data = europe_r) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  geom_tissot(data = europe_r,
+    radius = units::as_units(200, "kilometer")
+  ) +
+  coord_sf(crs = "+proj=merc") +
   theme_minimal()
 ```
 

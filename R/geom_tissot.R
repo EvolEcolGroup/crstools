@@ -49,7 +49,7 @@ geom_tissot <- function(
   if (inherits(data, "sf")) {
     data_bbox <- sf::st_bbox(data)
   } else if (inherits(data, "SpatRaster") || inherits(data, "SpatVector")) {
-    data_bbox <- terra::ext(data) # BUG TODO reorder to match between sf and terra
+    data_bbox <- sf::st_bbox(terra::ext(data))
   } else {
     stop("data must be either an sf object or a SpatRaster object")
   }
