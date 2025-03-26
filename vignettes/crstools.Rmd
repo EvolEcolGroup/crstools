@@ -22,9 +22,8 @@ The `crstools` package provide 3 main functionalities:
 1) `suggest_crs` provides suggestions for CRS for different types of maps, such
 as equal area maps, conformal maps, and equidistant maps, depending on the
 extent and location of the are of interest.
-2) `inspect_crs` visualises the distortion associated with a given crs, by
-plotting a grid of lines that show how the CRS distorts the map as well as the
-Tissot indicatrix (the distortion of circles on the map).
+2) `geom_tissot` visualises the distortion associated with a given crs, by
+adding Tissot indicatrix to a `ggplot2` map(the distortion of circles on the map).
 3) `add_crs` help to add CRS to an image; it does so by defining Ground Control
 Points (GCPs) and using GDAL to warp the image to a desired CRS.
 
@@ -33,7 +32,7 @@ Points (GCPs) and using GDAL to warp the image to a desired CRS.
 Currently, `crstools` is only available on GitHub. You can install it using the
 `devtools` package:
 
-```{r setup}
+```{r setup eval=FALSE}
 devtools::install_github("EvolEcolGroup/crswizard")
 ```
 
@@ -185,9 +184,40 @@ by plotting the map with the new CRS:
 ```{r plot_s_america_equidist}
 ggplot() +
   geom_sf(data = s_america_sf) +
-  coord_sf (crs = s_am_equidist$proj4) +
+  coord_sf(crs = s_am_equidist$proj4) +
+  theme_minimal()
+
+```
+
+The Tissot indicatrix is a mathematical contrivance used in cartography to
+characterize local distortions due to map projection. The `geom_tissot()` function
+adds Tissot's indicatrix to a map, showing how circles are distorted by the
+projection. Let's use it to add Tissot's indicatrix to the map of South America
+with the equidistant projection:
+```{r}
+ggplot() +
+  geom_sf(data = s_america_sf) +
+  geom_tissot(data = s_america_sf,
+    radius = units::as_units(200, "kilometer")
+  ) +
+  coord_sf(crs = s_am_equidist$proj4) +
   theme_minimal()
 ```
+
+Let us compare this to a simple Mercator projection:
+```{r}
+ggplot() +
+  geom_sf(data = s_america_sf) +
+  geom_tissot(data = s_america_sf,
+    radius = units::as_units(200, "kilometer")
+  ) +
+  coord_sf(crs = "+proj=merc") +
+  theme_minimal()
+```
+
+We can see how the area of the circles is distorted in the Mercator projection
+as we move further away from the equator, while the equidistant projection
+preserves the area of the circles better.
 
 We could use the CRS to also project the `sf` object, and check that the new
 CRS was indeed adopted:
