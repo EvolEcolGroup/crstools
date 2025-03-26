@@ -6,12 +6,13 @@
 \usage{
 geom_tissot(
   mapping = ggplot2::aes(),
-  data,
+  data = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  centers = c(3, 3),
+  centers = c(5, 5),
   radius = NULL,
+  fill = "red",
   ...
 )
 }
@@ -25,12 +26,14 @@ there is no plot mapping.}
 A sf object or a SpatRaster object}
 
 \item{na.rm}{If FALSE, the default, missing values are removed with a
-warning. If TRUE, missing values are silently removed.
-@param show.legend logical. Should this layer be included in the legends?
+warning. If TRUE, missing values are silently removed.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
 NA, the default, includes if any aesthetics are mapped. FALSE never
 includes, and TRUE always includes. It can also be a named logical vector
-to finely select the aesthetics to display.
-@param inherit.aes If FALSE, overrides the default aesthetics, rather than
+to finely select the aesthetics to display.}
+
+\item{inherit.aes}{If FALSE, overrides the default aesthetics, rather than
 combining with them. This is most useful for helper functions that define
 both data and aesthetics and shouldn't inherit behaviour from the default
 plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.
@@ -38,13 +41,18 @@ plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}
 longitudes and latitudes of the grid of centers for the tissot's indicatrix,
 or
 a vector of length 2 with the number of rows
-and columns to generate such a grid automatically. It defaults to c(3,3).
-@param radius The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
+and columns to generate such a grid automatically. The latter is passed
+to \code{\link[=pretty]{pretty()}} to get pretty breaks, and the exact number of
+tissot circiles might differ from the input numbers. It defaults to c(5,5).}
+
+\item{radius}{The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
 explanation of how units are created; we reccomend that you explicitely
-state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}
-@param ... Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}
-@return A ggplot2 object
-@export}
+state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
+
+\item{...}{Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}}
+}
+\value{
+A ggplot2 object
 }
 \description{
 This function adds Tissot's indicatrix to a map. Tissot's indicatrix is a
