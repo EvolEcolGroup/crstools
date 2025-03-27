@@ -19,12 +19,14 @@ Reference System (CRS) in R. CRSs are essential for mapping, as they define how
 geographic data are projected onto a flat surface. The choice of CRS depends on
 the type of map, the extent of the map, and the purpose of the map.
 The `crstools` package provide 3 main functionalities:
+
 1) `suggest_crs` provides suggestions for CRS for different types of maps, such
 as equal area maps, conformal maps, and equidistant maps, depending on the
 extent and location of the are of interest.
-2) `inspect_crs` visualises the distortion associated with a given crs, by
-plotting a grid of lines that show how the CRS distorts the map as well as the
-Tissot indicatrix (the distortion of circles on the map).
+
+2) `geom_tissot` visualises the distortion associated with a given crs, by
+adding Tissot indicatrix to a `ggplot2` map(the distortion of circles on the map).
+
 3) `add_crs` help to add CRS to an image; it does so by defining Ground Control
 Points (GCPs) and using GDAL to warp the image to a desired CRS.
 
@@ -33,7 +35,7 @@ Points (GCPs) and using GDAL to warp the image to a desired CRS.
 Currently, `crstools` is only available on GitHub. You can install it using the
 `devtools` package:
 
-```{r setup}
+```{r setup, eval=FALSE}
 devtools::install_github("EvolEcolGroup/crswizard")
 ```
 
@@ -169,9 +171,12 @@ the Proj4 code, we can use the `sf::st_crs()` and extract the `$proj4string` slo
 sf::st_crs(s_america_sf)$proj4string
 ```
 
+# TODO we shoudl use an equal area here, but currently this breaks the vignette
+
 Now, let's use `suggest_crs()` to get a suggestion for an equidistant CRS 
 for this map:
 ```{r}
+library(crswizard)
 s_am_equidist <- suggest_crs(s_america_sf, distortion = "equidistant")
 ```
 
@@ -185,9 +190,36 @@ by plotting the map with the new CRS:
 ```{r plot_s_america_equidist}
 ggplot() +
   geom_sf(data = s_america_sf) +
-  coord_sf (crs = s_am_equidist$proj4) +
+  coord_sf(crs = s_am_equidist$proj4) +
+  theme_minimal()
+
+```
+
+The Tissot indicatrix is a mathematical contrivance used in cartography to
+characterize local distortions due to map projection. The `geom_tissot()` function
+adds Tissot's indicatrix to a map, showing how circles are distorted by the
+projection. Let's use it to add Tissot's indicatrix to the map of South America
+with the equidistant projection:
+```{r}
+ggplot(data = s_america_sf) +
+  geom_sf() +
+  geom_tissot() +
+  coord_sf(crs = s_am_equidist$proj4) +
   theme_minimal()
 ```
+
+Let us compare this to a simple Mercator projection:
+```{r}
+ggplot(data = s_america_sf) +
+  geom_sf() +
+  geom_tissot() +
+  coord_sf(crs = "+proj=merc") +
+  theme_minimal()
+```
+
+We can see how the area of the circles is distorted in the Mercator projection
+as we move further away from the equator, while the equidistant projection
+preserves the area of the circles better.
 
 We could use the CRS to also project the `sf` object, and check that the new
 CRS was indeed adopted:
@@ -197,7 +229,7 @@ sf::st_crs(s_america_sf_equidist)$proj4string
 ```
 
 Now we can plot it, and the new CRS will be used automatically:
-```{r plot_s_america_equidist}
+```{r plot_sa_equidist_proj}
 ggplot() +
   geom_sf(data = s_america_sf_equidist) +
   theme_minimal()
@@ -224,13 +256,13 @@ europe_r
 
 We can inspect in more detail the CRS for a terra object with:
 ```{r}
-terra::crs(s_america_r)
+terra::crs(europe_r)
 ```
 which gives a WKT.
 
 We can ask for the "Proj4" string with:
 ```{r}
-terra::crs(s_america_r, proj = TRUE)
+terra::crs(europe_r, proj = TRUE)
 ```
 
 There is also a parameter "describe" which returns the EPSG code.
@@ -252,11 +284,32 @@ europe_r_equal_area
 ```
 
 Let's use it:
-```{r plot_raster_europe_equal_area}
+```{r plot_raster_europe_ea}
 ggplot() +
   geom_spatraster(data = europe_r) +
   scale_fill_viridis_c(na.value = "transparent") +
   coord_sf(crs = europe_r_equal_area$proj4) +
+  theme_minimal()
+```
+
+Let us use the Tissot indicatrix to assess how effective the equal area
+projections is:
+```{r}
+ggplot() +
+  geom_spatraster(data = europe_r) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  geom_tissot(data = europe_r) +
+  coord_sf(crs = europe_r_equal_area$proj4) +
+  theme_minimal()
+```
+
+Comparing it to the Mercator projection:
+```{r}
+ggplot() +
+  geom_spatraster(data = europe_r) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  geom_tissot(data = europe_r) +
+  coord_sf(crs = "+proj=merc") +
   theme_minimal()
 ```
 
@@ -268,7 +321,7 @@ terra::crs(europe_r_equal_area, proj = TRUE)
 ```
 
 If we now plot the raster, the CRS is automatically added:
-```{r plot_raster_europe_equal_area}
+```{r plot_raster_europe_ea_proj}
 ggplot() +
   geom_spatraster(data = europe_r_equal_area) +
   scale_fill_viridis_c(na.value = "transparent") +
