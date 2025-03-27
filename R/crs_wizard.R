@@ -47,20 +47,19 @@
 #' (if either only one projection is available or return_best is TRUE),
 #'  or a list of lists, each containing two strings (proj4 and WKT) for a
 #'  single projection (if multiple projections are available and return_best is FALSE).
-#' @aliases suggest_crs
 #' @examples
 #' # Whole map
-#' crs_wizard(c(-180, 180, -90, 90))
+#' suggest_crs(c(-180, 180, -90, 90))
 #' # Northen Hemisphere
-#' crs_wizard(c(-180, 180, 21, 70))
+#' suggest_crs(c(-180, 180, 21, 70))
 #' # Hemisphere showing the tropics
-#' crs_wizard(c(-180, 180, -7, 21))
+#' suggest_crs(c(-180, 180, -7, 21))
 #' # Regional map for EW extent
-#' crs_wizard(c(-60, 20, 40, 70))
+#' suggest_crs(c(-60, 20, 40, 70))
 #' @export
 #'
 
-crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
+suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
                        round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
                        unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL,
                        quiet = FALSE) {
@@ -176,13 +175,6 @@ crs_wizard <- function(x, distortion = c("equal_area", "conformal", "equidistant
   }
 }
 
-
-# temp alias
-#' @rdname crs_wizard
-#' @export
-suggest_crs <- function(...){
-  crs_wizard(...)
-}
 
 
 # Set default point values for equidistant world map projections

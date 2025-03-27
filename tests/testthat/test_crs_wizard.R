@@ -2,20 +2,20 @@ testthat::test_that("test input sanity", {
   # check if input is not an expected class
   site <- data.frame(latitude = c(11,8),
                      longitude = c(5,9))
-  expect_error(crs_wizard(site, distortion = "equal_area"), 
+  expect_error(suggest_crs(site, distortion = "equal_area"), 
                "x must be a numeric vector ")
   
   # check for correct coordinates
   expect_error(
-    crs_wizard(c(-180, 180, 90, -90), distortion = "equal_area", return_best = FALSE),
+    suggest_crs(c(-180, 180, 90, -90), distortion = "equal_area", return_best = FALSE),
     "lat_min must be smaller than lat_max"
   )
   expect_error(
-    crs_wizard(c(180, -180, -90, 90), distortion = "equal_area", return_best = FALSE),
+    suggest_crs(c(180, -180, -90, 90), distortion = "equal_area", return_best = FALSE),
     "lon_min must be smaller than lon_max"
   )
   expect_error(
-    crs_wizard(c(-180, 180, -91, 90), distortion = "equal_area"),
+    suggest_crs(c(-180, 180, -91, 90), distortion = "equal_area"),
     "Latitude values must be between -90 and 90"
   )
 })
@@ -23,7 +23,7 @@ testthat::test_that("test input sanity", {
 testthat::test_that("test whole world", {
   # EQUAL AREA
   # check Equal Earth projection
-  suggested_crs <- crs_wizard(c(-180, 180, -90, 90), distortion = "equal_area")
+  suggested_crs <- suggest_crs(c(-180, 180, -90, 90), distortion = "equal_area")
   ref_proj4 <- "+proj=eqearth +lon_0=0 +datum=WGS84 +units=m +no_defs"
   ref_wkt <- 'PROJCS["ProjWiz_Custom_Equal_Earth",
  GEOGCS["GCS_WGS_1984",
@@ -40,7 +40,7 @@ testthat::test_that("test whole world", {
   expect_equal(suggested_crs$proj4, ref_proj4)
   expect_true(sf::st_crs(suggested_crs$wkt) == sf::st_crs(ref_wkt))
 
-  whole_eqa_list <- crs_wizard(c(-180, 180, -90, 90), distortion = "equal_area", return_best = FALSE)
+  whole_eqa_list <- suggest_crs(c(-180, 180, -90, 90), distortion = "equal_area", return_best = FALSE)
   expect_true(length(whole_eqa_list) == 6)
 
   # check Mollweide projection
@@ -130,68 +130,68 @@ testthat::test_that("test whole world", {
   
   # EQUIDISTANT
   # check for error if details of projection are missing
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90), distortion = "equidistant"),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90), distortion = "equidistant"),
                "`world_equidist` must be provided for equidistant world map projections")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                             distortion = "equidistant",
                                             world_equidist = list(blah = "blah")),
                "`world_equidistant` must be a list with a `prj` element")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                             distortion = "equidistant",
                                             world_equidist = "blah"),
                "`world_equidistant` must be a list with a `prj` element")  
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "polar", lng_central = 0)),
                "`world_equidistant` must contain a `pole` element")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "polar", pole = -80, lng_central = 0)),
                "`pole` must be either 90 or -90")
   
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "polar", pole = -90)),
                "`world_equidistant` must contain a `lng_central` element")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "oblique",
                                                      lng_center = 0)),
                "`world_equidistant` must contain a `lat_center` element")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "oblique",
                                                      lat_center = 0)),
                "`world_equidistant` must contain a `lng_center` element")
-  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                    distortion = "equidistant",
                                                                    world_equidist = list(prj = "two_points",
                                                                                          lng1 = -117,
                                                                                          lat2 = 46,
                                                                                          lng2 = 16)),
                "`world_equidistant` must contain a `lat1` element")
-  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                    distortion = "equidistant",
                                                                    world_equidist = list(prj = "two_points",
                                                                                          lat1 = 34,
                                                                                          lat2 = 46,
                                                                                          lng2 = 16)),
                "`world_equidistant` must contain a `lng1` element")
-  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                    distortion = "equidistant",
                                                                    world_equidist = list(prj = "two_points",
                                                                                          lat1 = 34,
                                                                                          lng1 = -117,
                                                                                          lng2 = 16)),
                "`world_equidistant` must contain a `lat2` element")
-  expect_error(whole_equidist <- two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                   distortion = "equidistant",
                                                                   world_equidist = list(prj = "two_points",
                                                                                         lat1 = 34,
                                                                                         lng1 = -117,
                                                                                         lat2 = 46)),
                "`world_equidistant` must contain a `lng2` element")
-  expect_error(whole_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "blah", pole = -90, lng_central = 0)),
                "the `prj` element of world_equidistant` should be one of")
@@ -200,7 +200,7 @@ testthat::test_that("test whole world", {
   
   
   # polar equidistant
-  polar_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  polar_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                distortion = "equidistant",
                                world_equidist = list(prj = "polar", pole = -90, lng_central = 0))
   ref_proj4_polar_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
@@ -220,7 +220,7 @@ testthat::test_that("test whole world", {
   expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
   
   # Oblique Azimuthal equidistant
-  oblique_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  oblique_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                  distortion = "equidistant",
                                  world_equidist = list(prj = "oblique",
                                                        lat_center = 0,
@@ -242,7 +242,7 @@ testthat::test_that("test whole world", {
   expect_true(sf::st_crs(oblique_equidist$wkt) == sf::st_crs(ref_wkt_oblique_eqd))
   
   # Two-points equidistant
-  two_points_equidist <- crs_wizard(c(-180, 180, -90, 90),
+  two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                     distortion = "equidistant",
                                     world_equidist = list(prj = "two_points",
                                                           lat1 = 34,
@@ -269,7 +269,7 @@ testthat::test_that("test whole world", {
   expect_true(sf::st_crs(two_points_equidist$wkt) == sf::st_crs(ref_wkt_two_points_eqd))
   
   # COMPROMISE 
-  expect_message(whole_comp_list <- crs_wizard(c(-180, 180, -90, 90), 
+  expect_message(whole_comp_list <- suggest_crs(c(-180, 180, -90, 90), 
                                                distortion = "compromise", 
                                                return_best = FALSE),
                  "Rectangular projections are not generally")
@@ -373,7 +373,7 @@ testthat::test_that("test whole world", {
   expect_true(sf::st_crs(whole_comp_list$mill$wkt) == sf::st_crs(ref_wkt_mill))
   
   # CONFORMAL
-  expect_error(whole_conf <- crs_wizard(c(-180, 180, -90, 90), distortion = "conformal"),
+  expect_error(whole_conf <- suggest_crs(c(-180, 180, -90, 90), distortion = "conformal"),
                  "conformal is not available for maps covering the whole world")
 
 })
@@ -381,7 +381,7 @@ testthat::test_that("test whole world", {
 
 testthat::test_that("test square format", {
   # EQUAL AREA 
-  suggested_crs_square_eqa <- crs_wizard(c(-22, 57, -37, 36), distortion = "equal_area")
+  suggested_crs_square_eqa <- suggest_crs(c(-22, 57, -37, 36), distortion = "equal_area")
   ref_proj4_square_eqa <- "+proj=laea +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_eqa <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                                GEOGCS["GCS_WGS_1984",
@@ -399,7 +399,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqa$wkt) == sf::st_crs(ref_wkt_square_eqa))
   
   # Polar Lambert (north)
-  expect_message(suggested_crs_square_eqa_polar <- crs_wizard(c(85, 109, 77, 82), distortion = "equal_area"),
+  expect_message(suggested_crs_square_eqa_polar <- suggest_crs(c(85, 109, 77, 82), distortion = "equal_area"),
                  "For maps at this scale")
   ref_proj4_square_eqa_polar <- "+proj=laea +lon_0=97 +lat_0=90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_eqa_polar <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
@@ -418,7 +418,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_eqa_polar))
   
   # Polar Lambert (south)
-  suggested_crs_square_conf_eqa_polar <- crs_wizard(c(-56, -39, -81, -77), distortion = "equal_area")
+  suggested_crs_square_conf_eqa_polar <- suggest_crs(c(-56, -39, -81, -77), distortion = "equal_area")
   ref_proj4_square_conf_eqa_polar <- "+proj=laea +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_eqa_polar <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                                          GEOGCS["GCS_WGS_1984",
@@ -436,7 +436,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_conf_eqa_polar))
   
   # Oblique Lambert
-  suggested_crs_square_eqa_obl <- crs_wizard(c(-12, 2, 49, 59), distortion = "equal_area")
+  suggested_crs_square_eqa_obl <- suggest_crs(c(-12, 2, 49, 59), distortion = "equal_area")
   ref_proj4_square_eqa_obl <- "+proj=laea +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_eqa_obl <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                                    GEOGCS["GCS_WGS_1984",
@@ -454,7 +454,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqa_obl$wkt) == sf::st_crs(ref_wkt_square_eqa_obl))
   
   # CONFORMAL
-  expect_message(suggested_crs_square_conf <- crs_wizard(c(-22, 57, -37, 36),
+  expect_message(suggested_crs_square_conf <- suggest_crs(c(-22, 57, -37, 36),
                                                          distortion = "conformal"),
                  "To reduce overall area")
   ref_proj4_square_conf <- "+proj=stere +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"
@@ -475,7 +475,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf$wkt) == sf::st_crs(ref_wkt_square_conf))
   
   # Oblique stereographic
-  suggested_crs_square_conf_obl_ste <- crs_wizard(c(-25, -13, 62, 67), distortion = "conformal")
+  suggested_crs_square_conf_obl_ste <- suggest_crs(c(-25, -13, 62, 67), distortion = "conformal")
   ref_proj4_square_conf_obl_ste <- "+proj=stere +lon_0=-19 +lat_0=64.5 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -494,7 +494,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf_obl_ste$wkt) == sf::st_crs(ref_wkt_square_conf_obl_ste))
   
   # Polar stereographic (north)
-  suggested_crs_square_conf_pol_ste <- crs_wizard(c(85, 109, 77, 82), distortion = "conformal")
+  suggested_crs_square_conf_pol_ste <- suggest_crs(c(85, 109, 77, 82), distortion = "conformal")
   ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=97 +lat_0=90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -513,7 +513,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
   
   # Polar stereographic (south)
-  suggested_crs_square_conf_pol_ste <- crs_wizard(c(-56, -39, -81, -77), distortion = "conformal")
+  suggested_crs_square_conf_pol_ste <- suggest_crs(c(-56, -39, -81, -77), distortion = "conformal")
   ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -532,7 +532,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
   
   # Oblique stereographic
-  suggested_crs_square_obl_ste <- crs_wizard(c(-12, 2, 49, 59), distortion = "conformal")
+  suggested_crs_square_obl_ste <- suggest_crs(c(-12, 2, 49, 59), distortion = "conformal")
   ref_proj4_square_obl_ste <- "+proj=stere +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                    GEOGCS["GCS_WGS_1984",
@@ -552,7 +552,7 @@ testthat::test_that("test square format", {
   
   
   # EQUIDISTANT
-  suggested_crs_square_eqd <- crs_wizard(c(-22, 57, -37, 36), distortion = "equidistant")
+  suggested_crs_square_eqd <- suggest_crs(c(-22, 57, -37, 36), distortion = "equidistant")
   ref_proj4_square_eqd <- "+proj=eqc +lon_0=17.5 +lat_ts=18.5 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_eqd <- 'PROJCS["ProjWiz_Custom_Equidistant_Cylindrical",
                                GEOGCS["GCS_WGS_1984",
@@ -570,7 +570,7 @@ testthat::test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqd$wkt) == sf::st_crs(ref_wkt_square_eqd))
   
   # COMPROMISE
-  expect_error(suggested_crs_square_comp <- crs_wizard(c(-22, 57, -37, 36), distortion = "compromise"),
+  expect_error(suggested_crs_square_comp <- suggest_crs(c(-22, 57, -37, 36), distortion = "compromise"),
                "compromise is not available for maps focussing on a single continent")
   
 })  

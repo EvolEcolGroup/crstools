@@ -24,7 +24,7 @@ crs_world(
 \item{round_cm}{The round central meridian.}
 
 \item{world_equidist}{The world equidistant parameters (see documentation
-for \code{\link[=crs_wizard]{crs_wizard()}})}
+for \code{\link[=suggest_crs]{suggest_crs()}})}
 
 \item{return_best}{Whether to return the best projection (boolean).}
 
