@@ -31,6 +31,7 @@
 #'   state your using with the `units::as_units()`, e.g `units::as_units(100,
 #'   "km")`
 #' @param fill The fill color of the circles
+#' @param alpha The transparency of the circles
 #' @param ... Other arguments passed on to [ggplot2::geom_sf()]
 #' @return A ggplot2 object
 #' @export
@@ -44,6 +45,7 @@ geom_tissot <- function(
     centers = c(5, 5),
     radius = NULL,
     fill = "red",
+    alpha = 0.7,
     ...) {
   # if data is not null or an sf
   if (!is.null(data) && !inherits(data, "sf")) {
@@ -69,7 +71,7 @@ geom_tissot <- function(
       inherit.aes = inherit.aes,
       params = list(
         na.rm = na.rm, centers = centers, radius = radius,
-        fill = fill,
+        fill = fill, alpha = alpha,
         ...
       )
     ),

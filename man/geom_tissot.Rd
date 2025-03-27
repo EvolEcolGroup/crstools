@@ -13,6 +13,7 @@ geom_tissot(
   centers = c(5, 5),
   radius = NULL,
   fill = "red",
+  alpha = 0.7,
   ...
 )
 }
@@ -50,6 +51,8 @@ explanation of how units are created; we reccomend that you explicitely
 state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
 
 \item{fill}{The fill color of the circles}
+
+\item{alpha}{The transparency of the circles}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}}
 }
