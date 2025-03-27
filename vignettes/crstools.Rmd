@@ -19,11 +19,14 @@ Reference System (CRS) in R. CRSs are essential for mapping, as they define how
 geographic data are projected onto a flat surface. The choice of CRS depends on
 the type of map, the extent of the map, and the purpose of the map.
 The `crstools` package provide 3 main functionalities:
+
 1) `suggest_crs` provides suggestions for CRS for different types of maps, such
 as equal area maps, conformal maps, and equidistant maps, depending on the
 extent and location of the are of interest.
+
 2) `geom_tissot` visualises the distortion associated with a given crs, by
 adding Tissot indicatrix to a `ggplot2` map(the distortion of circles on the map).
+
 3) `add_crs` help to add CRS to an image; it does so by defining Ground Control
 Points (GCPs) and using GDAL to warp the image to a desired CRS.
 
