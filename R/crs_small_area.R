@@ -92,6 +92,17 @@ crs_small_area <- function(distortion, center, scale,
         prj = "eqdc", x0 = NA_real_, lat0 = center$lat, lat1 = latmin + interval, lat2 = latmax - interval, lon0 = center$lng, k0 = NA_real_,
         description = "Equidistant conic", notes = "Distance correct along meridians"
       )
+      # TODO add projection
+      # outputTEXT.append("<p class='outputText'><br><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'><span data-proj-name='Azimuthal equidistant' ><b>Oblique azimuthal equidistant</b></span>" +
+      #                     stringLinks("aeqd", NaN, center.lat, NaN, NaN, center.lng, NaN) +
+      #                     " - distance correct along any line passing through the center of the map (i.e., great circle)</span></p>");
+      # outputTEXT.append("<p class='outputText'><span onmouseover='updateEquidistantMap(\"Azimuthal equidistant\")'>Center latitude: " + outputLAT(center.lat, false) + "<br>Center longitude: " + lng + "</span></p>");     
+      crs_suggestions <- rbind(crs_suggestions,
+                               data.frame(
+                                 prj = "aeqd", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+                                 description = "Azimuthal equidistant", notes = "Distance correct along meridians"
+                               ))
+      
     }
   } else if ((latmin >= 84 && distortion == "conformal") || (latmax <= -80 && distortion == "conformal")) {
     # case: very large scale, Universal Polar Stereographic - North Pole
