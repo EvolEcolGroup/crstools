@@ -95,7 +95,7 @@ crs_ew_extent <- function(distortion, center, scale,
       #   activeProjection, stringLinks("merc", NA, NA, latS, NA, center$lng, NA)
       # ))
       crs_suggestions <- data.frame(
-        prj = "merc", x0 = NA_real_, lat0 = latS, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        prj = "merc", x0 = NA_real_, lat0 = NA_real_, lat1 = latS, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Mercator", notes = "Conformal projection for regional maps with an east-west extent"
       )
     } else if (distortion == "equal_area") {
