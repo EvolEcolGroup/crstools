@@ -1,4 +1,4 @@
-testthat::test_that("test square format", {
+test_that("test square format", {
   # EQUAL AREA 
   suggested_crs_square_eqa <- suggest_crs(c(-22, 57, -37, 36), distortion = "equal_area")
   ref_proj4_square_eqa <- "+proj=laea +lon_0=17.5 +lat_0=0 +datum=WGS84 +units=m +no_defs"

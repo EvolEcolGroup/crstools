@@ -1,4 +1,4 @@
-testthat::test_that("test small area", {
+test_that("test small area", {
   # EQUIDISTANT 
   # Azimuthal equidistant north 
   expect_message(suggested_crs_small_eqd_north <- suggest_crs(c(18, 27, 79, 80), distortion = "equidistant"),

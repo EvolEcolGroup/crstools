@@ -1,4 +1,4 @@
-testthat::test_that("test whole hemisphere", {
+test_that("test whole hemisphere", {
   # EQUAL AREA
   # check northern hemisphere
   suggested_crs_north_hem_eqa <- suggest_crs(c(-180, 180, 0, 90), distortion = "equal_area")
@@ -84,7 +84,7 @@ testthat::test_that("test whole hemisphere", {
   
 })
 
-testthat::test_that("test if area in tropics", {
+test_that("test if area in tropics", {
   # equal area projection
   suggested_crs_trop_eqa <- suggest_crs(c(-180, 180, -22, 22), distortion = "equal_area")
   ref_proj4_trop_eqa <- "+proj=cea +lon_0=0 +lat_ts=0 +datum=WGS84 +units=m +no_defs"

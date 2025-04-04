@@ -1,4 +1,4 @@
-testthat::test_that("test ew extent", {
+test_that("test ew extent", {
   # CONFORMAL
   # conic projection 
   expect_message(suggested_crs_ew_conic <- suggest_crs(c(25, 76, 48, 56), distortion = "conformal"),

@@ -1,4 +1,4 @@
-testthat::test_that("generate crs string correctly", {
+test_that("generate crs string correctly", {
   # test error for non-exising projectsion
   expect_error(
     crs_string("blah", NA, NA, NA, NA, 0, NA, "WGS84", "m"),

@@ -1,4 +1,4 @@
-testthat::test_that("test whole world", {
+test_that("test whole world", {
   # EQUAL AREA
   # check Equal Earth projection
   suggested_crs <- suggest_crs(c(-180, 180, -90, 90), distortion = "equal_area")

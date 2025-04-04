@@ -1,4 +1,4 @@
-testthat::test_that("test input sanity", {
+test_that("test input sanity", {
   # check if input is not an expected class
   site <- data.frame(latitude = c(11,8),
                      longitude = c(5,9))
