@@ -20,6 +20,7 @@ Suggests:
     rmarkdown,
     pastclim,
     rnaturalearth,
-    tidyterra
+    tidyterra,
+    svglite
 Config/testthat/edition: 3
 VignetteBuilder: knitr
