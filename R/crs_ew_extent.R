@@ -105,7 +105,7 @@ crs_ew_extent <- function(distortion, center, scale,
       #   activeProjection, stringLinks("cea", NA, NA, latS, NA, center$lng, NA)
       # ))
       crs_suggestions <- data.frame(
-        prj = "cea", x0 = NA_real_, lat0 = latS, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        prj = "cea", x0 = NA_real_, lat0 = latS, lat1 = latS, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Cylindrical equal-area", notes = "Equal-area projection for regional maps with an east-west extent"
       )
     }
