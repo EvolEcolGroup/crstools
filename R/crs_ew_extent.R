@@ -173,7 +173,17 @@ crs_ew_extent <- function(distortion, center, scale,
     } else if (distortion == "equal_area") {
       previewMapProjection <- activeProjection <- "Albers equal area conic"
 
-
+      # Create the CRS of the conic projection that we want to test
+      conic_crs_to_test <- data.frame(
+        prj = "aea", x0 = NA_real_, lat0 = center$lat, lat1 = latmin + interval, lat2 = latmax - interval, lon0 = center$lng, k0 = NA_real_,
+        description = "Albers equal-area conic",
+        notes = "Equal-area projection for regional maps with an east-west extent"
+      )
+      # extract the proj4 string from the conic_crs_to_test data frame
+      conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
+      # Check if the cone opens at a pole
+      conicTest <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
+      
       # TODO the crs_check_conic function is not working yet
       # conicTest <- crs_check_conic(center$lat, center$lng, previewMapProjection)
       conicTest <- TRUE # DEBUG this is currently set to TRUE without checking
@@ -252,16 +262,25 @@ crs_ew_extent <- function(distortion, center, scale,
 
 ################################################################################
 # Checking if the fan of the selected extent exposes a cone opening at a pole
-crs_check_conic <- function(lat0, lon0, projectionString) {
+crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, latmax) {
   # Define projection function
-  projection <- pickProjection(lat0, lon0, projectionString)
+#  projection <- pickProjection(lat0, lon0, proj4_string)
 
+  browser()
   # Initialize min and max values for y
   ymin <- Inf
   ymax <- -Inf
   res <- 1
 
-  # Define test points
+  # Define test points as an sf object
+  test_pts <- sf::st_as_sf(data.frame(
+    lon = c(lon0, lon0, normalise_lon(lonmin, lon0), normalise_lon(lonmax, lon0)),
+    lat = c(-90, 90, latmin, latmax)),
+    coords = c("lon", "lat"),
+    crs = 4326)
+  
+  # STOP HERE
+  
   test_pts <- list(
     c(lon0, -90),
     c(lon0, 90),
@@ -279,7 +298,7 @@ crs_check_conic <- function(lat0, lon0, projectionString) {
   # Check if the fan of the selected extent exposes a cone opening at a pole
   if (((ymax - test_pts[[1]][2]) > 1e-6) ||
     ((ymin - test_pts[[2]][2]) < -1e-6)) {
-    if (projectionString == "Lambert conformal conic") {
+    if (proj4_string == "Lambert conformal conic") {
       res <- -1
     }
     # Case of Albers when the fan of the selected extent spans less than 180deg around a pole
