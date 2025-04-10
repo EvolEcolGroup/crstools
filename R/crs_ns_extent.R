@@ -64,5 +64,5 @@ crs_ns_extent <- function(distortion, center, quiet = FALSE) {
   }
 
   # Return the complete output
-  return(paste(outputText, collapse = "\n"))
+  return(crs_suggestions)
 }
