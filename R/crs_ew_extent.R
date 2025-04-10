@@ -179,10 +179,12 @@ crs_ew_extent <- function(distortion, center, scale,
         description = "Albers equal-area conic",
         notes = "Equal-area projection for regional maps with an east-west extent"
       )
+      # temporarly commented out, need to finish it
+      # remember to turn off conicTest default TRUE
       # extract the proj4 string from the conic_crs_to_test data frame
-      conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
+      # conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
       # Check if the cone opens at a pole
-      conicTest <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
+      # conicTest <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
       
       # TODO the crs_check_conic function is not working yet
       # conicTest <- crs_check_conic(center$lat, center$lng, previewMapProjection)
@@ -266,7 +268,6 @@ crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, la
   # Define projection function
 #  projection <- pickProjection(lat0, lon0, proj4_string)
 
-  browser()
   # Initialize min and max values for y
   ymin <- Inf
   ymax <- -Inf
