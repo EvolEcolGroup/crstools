@@ -56,7 +56,6 @@ test_that("test small area", {
   expect_equal(suggested_crs_small_cassini$proj4, ref_proj4_small_cassini)
   expect_true(sf::st_crs(suggested_crs_small_cassini$wkt) == sf::st_crs(ref_wkt_small_cassini))
   
-  #TODO below should provide two different projections (website), but it doesn't
   suggested_crs_small_eqd <- suggest_crs(c(24, 34, -23, -14), distortion = "equidistant", return_best = FALSE)
   # check Equidistant conic
   ref_proj4_small_eqdc <- "+proj=eqdc +lon_0=29 +lat_1=-21.5 +lat_2=-15.5 +lat_0=-18.5 +datum=WGS84 +units=m +no_defs"
@@ -93,5 +92,63 @@ test_that("test small area", {
                                UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_small_eqd$aeqd$proj4, ref_proj4_small_aeqd)
   expect_true(sf::st_crs(suggested_crs_small_eqd$aeqd$wkt) == sf::st_crs(ref_wkt_small_aeqd))
+  
+  # CONFORMAL
+  ## Polar stereographic
+  suggested_crs_small_conf_pol <- suggest_crs(c(-32, -23, 84, 85), distortion = "conformal")
+  ref_proj4_small_conf_pol <- "+proj=stere +lon_0=-27.5 +lat_0=90 +k_0=0.994 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_small_conf_pol <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                                   GEOGCS["GCS_WGS_1984",
+                                          DATUM["D_WGS_1984",
+                                                SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                          PRIMEM["Greenwich",0.0],
+                                          UNIT["Degree",0.0174532925199433]],
+                                   PROJECTION["Stereographic"],
+                                   PARAMETER["False_Easting",0.0],
+                                   PARAMETER["False_Northing",0.0],
+                                   PARAMETER["Central_Meridian",-27.5],
+                                   PARAMETER["Scale_Factor",0.994],
+                                   PARAMETER["Latitude_Of_Origin",90],
+                                   UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_small_conf_pol$proj4, ref_proj4_small_conf_pol)
+  expect_true(sf::st_crs(suggested_crs_small_conf_pol$wkt) == sf::st_crs(ref_wkt_small_conf_pol))
+  
+  ## Transverse Mercator (scale factor 0.9996)
+  suggested_crs_small_conf_tm <- suggest_crs(c(27, 32, 10, 20), distortion = "conformal")
+  ref_proj4_small_conf_tm <- "+proj=tmerc +x_0=500000 +lon_0=29.5 +k_0=0.9996 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_small_conf_tm <- 'PROJCS["ProjWiz_Custom_Transverse_Mercator",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Transverse_Mercator"],
+                                  PARAMETER["False_Easting",500000],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",29.5],
+                                  PARAMETER["Scale_Factor",0.9996],
+                                  PARAMETER["Latitude_Of_Origin",0.0],
+                                  UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_small_conf_tm$proj4, ref_proj4_small_conf_tm)
+  expect_true(sf::st_crs(suggested_crs_small_conf_tm$wkt) == sf::st_crs(ref_wkt_small_conf_tm))
+  
+  ## Transverse Mercator (scale factor 0.9999)
+  suggested_crs_small_conf_tm <- suggest_crs(c(32, 34, 10, 20), distortion = "conformal")
+  ref_proj4_small_conf_tm <- "+proj=tmerc +x_0=500000 +lon_0=33 +k_0=0.9999 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_small_conf_tm <- 'PROJCS["ProjWiz_Custom_Transverse_Mercator",
+                                  GEOGCS["GCS_WGS_1984",
+                                         DATUM["D_WGS_1984",
+                                               SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                         PRIMEM["Greenwich",0.0],
+                                         UNIT["Degree",0.0174532925199433]],
+                                  PROJECTION["Transverse_Mercator"],
+                                  PARAMETER["False_Easting",500000],
+                                  PARAMETER["False_Northing",0.0],
+                                  PARAMETER["Central_Meridian",33],
+                                  PARAMETER["Scale_Factor",0.9999],
+                                  PARAMETER["Latitude_Of_Origin",0.0],
+                                  UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_small_conf_tm$proj4, ref_proj4_small_conf_tm)
+  expect_true(sf::st_crs(suggested_crs_small_conf_tm$wkt) == sf::st_crs(ref_wkt_small_conf_tm))
   
 })
