@@ -117,19 +117,21 @@ crs_small_area <- function(distortion, center, scale,
       prj = "stere", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
       description = "Polar stereographic", notes = "Conformal projection at very large map scale"
     )
-  } else if (dlon <= 3 && distortion == "conformal") {
-    # case: very large scale, Universal Polar Stereographic - South Pole
-    # previewMapProjection <- "Transverse Mercator"
-    previewMapLat0 <- 0
-    scaleFactor <- 0.9999
-    # outputText <- c(outputText, sprintf(
-    #   "<p><b>conformal projection at very large map scale</b></p><p><span data-proj-name='%s'>Transverse Mercator</span><br>Central meridian: %s<br>Scale factor: %.4f</p>",
-    #   previewMapProjection, lng, scaleFactor
-    # ))
-    crs_suggestions <- data.frame(
-      prj = "tmerc", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
-      description = "Transverse Mercator", notes = "Conformal projection at very large map scale"
-    )
+  # code below seems to be duplicated!!
+  # } else if (dlon <= 3 && distortion == "conformal") {
+  #   # case: very large scale, Universal Polar Stereographic - South Pole
+  #   # previewMapProjection <- "Transverse Mercator"
+  #   previewMapLat0 <- 0
+  #   scaleFactor <- 0.9999
+  #   # outputText <- c(outputText, sprintf(
+  #   #   "<p><b>conformal projection at very large map scale</b></p><p><span data-proj-name='%s'>Transverse Mercator</span><br>Central meridian: %s<br>Scale factor: %.4f</p>",
+  #   #   previewMapProjection, lng, scaleFactor
+  #   # ))
+  #   crs_suggestions <- data.frame(
+  #     prj = "tmerc", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
+  #     description = "Transverse Mercator", notes = "Conformal projection at very large map scale"
+  # )
+  # value of x0 changed from NA to 500000 based on the jave script from projectionwizard
   } else if (dlon <= 3 && distortion == "conformal") {
     #    previewMapProjection <- "Transverse Mercator"
     previewMapLat0 <- 0
@@ -139,9 +141,10 @@ crs_small_area <- function(distortion, center, scale,
     #   previewMapProjection, lng, scaleFactor
     # ))
     crs_suggestions <- data.frame(
-      prj = "tmerc", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
+      prj = "tmerc", x0 = 500000, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
       description = "Transverse Mercator", notes = "Conformal projection at very large map scale"
     )
+  # value of x0 changed from NA to 500000 based on the jave script from projectionwizard
   } else if (dlon <= 6 && distortion == "conformal") {
     #    previewMapProjection <- "Transverse Mercator"
     previewMapLat0 <- 0
@@ -151,7 +154,7 @@ crs_small_area <- function(distortion, center, scale,
     #   previewMapProjection, lng, scaleFactor
     # ))
     crs_suggestions <- data.frame(
-      prj = "tmerc", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
+      prj = "tmerc", x0 = 500000, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
       description = "Transverse Mercator", notes = "Conformal projection at very large map scale"
     )
   } else {

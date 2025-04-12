@@ -108,7 +108,7 @@ crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
 
   # Formatting Projection Parameters
   if (!is.na(x0)) {
-    PROJstr <- paste0(PROJstr, " +x_0=", x0)
+    PROJstr <- paste0(PROJstr, " +x_0=", as.integer(x0))
     WKTstr <- paste0(WKTstr, 'PARAMETER["False_Easting",', x0, '],PARAMETER["False_Northing",0.0],')
   } else {
     WKTstr <- paste0(WKTstr, 'PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],')
