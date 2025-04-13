@@ -280,30 +280,41 @@ crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, la
     coords = c("lon", "lat"),
     crs = 4326)
   
-  # STOP HERE
+  test_pts <- data.frame(
+    lon = c(lon0, lon0, normalise_lon(lonmin, lon0), normalise_lon(lonmax, lon0)),
+    lat = c(-90, 90, latmin, latmax))
+  # cast to sf object
+  test_pts <- sf::st_as_sf(test_pts, coords = c("lon", "lat"), crs = 4326)
+  #project to the proj4 string
+  test_pts <- sf::st_transform(test_pts, crs = proj4_string)
+  # get y min and y max
+  test_pts <- sf::st_coordinates(test_pts)
+  y_min <- min(test_pts[,2])
+  y_max <- max(test_pts[,2])
   
-  test_pts <- list(
-    c(lon0, -90),
-    c(lon0, 90),
-    c(normalise_lon(lonmin, lon0), latmin),
-    c(normalise_lon(lonmax, lon0), latmax)
-  )
-
-  # Projecting sample points
-  for (i in seq_along(test_pts)) {
-    test_pts[[i]] <- projection(test_pts[[i]])
-    ymin <- min(ymin, test_pts[[i]][2])
-    ymax <- max(ymax, test_pts[[i]][2])
-  }
+  
+  # test_pts <- list(
+  #   c(lon0, -90),
+  #   c(lon0, 90),
+  #   c(normalise_lon(lonmin, lon0), latmin),
+  #   c(normalise_lon(lonmax, lon0), latmax)
+  # )
+  # 
+  # # Projecting sample points
+  # for (i in seq_along(test_pts)) {
+  #   test_pts[[i]] <- projection(test_pts[[i]])
+  #   ymin <- min(ymin, test_pts[[i]][2])
+  #   ymax <- max(ymax, test_pts[[i]][2])
+  # }
 
   # Check if the fan of the selected extent exposes a cone opening at a pole
-  if (((ymax - test_pts[[1]][2]) > 1e-6) ||
-    ((ymin - test_pts[[2]][2]) < -1e-6)) {
-    if (proj4_string == "Lambert conformal conic") {
+  if (((ymax - test_pts[1,2]) > 1e-6) ||
+    ((ymin - test_pts[2,2]) < -1e-6)) {
+    if (proj4_string == "Lambert conformal conic") { # @BUG @TODO we should grep the proj4_string for the right projection code
       res <- -1
     }
     # Case of Albers when the fan of the selected extent spans less than 180deg around a pole
-    else if (test_pts[[3]][2] > test_pts[[4]][2]) {
+    else if (test_pts[3,2] > test_pts[4,2]) {
       res <- 0
     } else {
       res <- -1
