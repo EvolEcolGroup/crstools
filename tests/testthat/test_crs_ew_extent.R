@@ -1,8 +1,7 @@
 test_that("test ew extent", {
   # CONFORMAL
   # conic projection 
-  expect_message(suggested_crs_ew_conic <- suggest_crs(c(25, 76, 48, 56), distortion = "conformal"),
-                 "Conformal projection for regional maps")
+  suggested_crs_ew_conic <- suggest_crs(c(25, 76, 48, 56), distortion = "conformal")
   ref_proj4_ew_conic <- "+proj=lcc +lon_0=50.5 +lat_1=49.3333333 +lat_2=54.6666667 +lat_0=52 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_conic <- 'PROJCS["ProjWiz_Custom_Lambert_Conformal_Conic",
                              GEOGCS["GCS_WGS_1984",
@@ -102,8 +101,7 @@ test_that("test ew extent", {
   
   # EQUAL AREA
   # Albers equal area
-  expect_message(suggested_crs_ew_eql <- suggest_crs(c(25, 76, 48, 56), distortion = "equal_area"),
-                 "Equal-area projection for regional maps with an east-west extent")
+  suggested_crs_ew_eql <- suggest_crs(c(25, 76, 48, 56), distortion = "equal_area")
   ref_proj4_ew_eql <- "+proj=aea +lon_0=50.5 +lat_1=49.3333333 +lat_2=54.6666667 +lat_0=52 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_eql <- 'PROJCS["ProjWiz_Custom_Albers",
                              GEOGCS["GCS_WGS_1984",
