@@ -126,11 +126,23 @@ crs_ew_extent <- function(distortion, center, scale,
 
     if (distortion == "conformal") {
       previewMapProjection <- activeProjection <- "Lambert conformal conic"
+      
+      
+      # Create the CRS of the conic projection that we want to test
+      conic_crs_to_test <- data.frame(
+        prj = "lcc", x0 = NA_real_, lat0 = center$lat, lat1 = latmin + interval, lat2 = latmax - interval, lon0 = center$lng, k0 = NA_real_,
+        description = "Lambert conformal conic", notes = "Conformal projection for regional maps with an east-west extent"
+      )
+      # extract the proj4 string from the conic_crs_to_test data frame
+      conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
+      # Check if the cone opens at a pole
+      conic_check <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
+      
 
       # Check if the cone opens at a pole
       # TODO the crs_check_conic function is not working yet
       #conic_check <- crs_check_conic(center$lat, center$lng, previewMapProjection)
-      conic_check <- 1 # DEBUG this is currently set to TRUE without checking
+      #conic_check <- 1 # DEBUG this is currently set to TRUE without checking
       if (conic_check > 0) {
         # outputText <- c(outputText, sprintf(
         #   "<p class='outputText'><span data-proj-name='%s'>Lambert conformal conic</span>%s</p>",
@@ -179,15 +191,10 @@ crs_ew_extent <- function(distortion, center, scale,
         description = "Albers equal-area conic",
         notes = "Equal-area projection for regional maps with an east-west extent"
       )
-      # temporarly commented out, need to finish it
-      # remember to turn off conicTest default TRUE
       # extract the proj4 string from the conic_crs_to_test data frame
       conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
       # Check if the cone opens at a pole
       conicTest <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
-      # TODO the crs_check_conic function is not working yet
-      # conicTest <- crs_check_conic(center$lat, center$lng, previewMapProjection)
-      conicTest <- 1 # DEBUG this is currently set to TRUE without checking
 
 
 
@@ -273,12 +280,6 @@ crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, la
   res <- 1
 
   # Define test points as an sf object
-  test_pts <- sf::st_as_sf(data.frame(
-    lon = c(lon0, lon0, normalise_lon(lonmin, lon0), normalise_lon(lonmax, lon0)),
-    lat = c(-90, 90, latmin, latmax)),
-    coords = c("lon", "lat"),
-    crs = 4326)
-  
   test_pts <- data.frame(
     lon = c(lon0, lon0, normalise_lon(lonmin, lon0), normalise_lon(lonmax, lon0)),
     lat = c(-90, 90, latmin, latmax))
@@ -288,31 +289,27 @@ crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, la
   test_pts <- sf::st_transform(test_pts, crs = proj4_string)
   # get y min and y max
   test_pts <- sf::st_coordinates(test_pts)
+  # flip coordinates to match the screen coordiantes (for which the rules below have been designed)
+  test_pts[,2] = - test_pts[,2]
   ymin <- min(test_pts[,2])
   ymax <- max(test_pts[,2])
-  
-  # test_pts <- list(
-  #   c(lon0, -90),
-  #   c(lon0, 90),
-  #   c(normalise_lon(lonmin, lon0), latmin),
-  #   c(normalise_lon(lonmax, lon0), latmax)
-  # )
-  # 
-  # # Projecting sample points
-  # for (i in seq_along(test_pts)) {
-  #   test_pts[[i]] <- projection(test_pts[[i]])
-  #   ymin <- min(ymin, test_pts[[i]][2])
-  #   ymax <- max(ymax, test_pts[[i]][2])
-  # }
 
+  # hack to avoid NaN values
+  if (is.nan(test_pts[1,2])||is.nan(test_pts[2,2])){
+    return (1)
+  }
+  
+  
   # Check if the fan of the selected extent exposes a cone opening at a pole
-  browser()
+  # Note: up is negative and down is positive in graphics
   if (((ymax - test_pts[1,2]) > 1e-6) ||
     ((ymin - test_pts[2,2]) < -1e-6)) {
-    if (proj4_string == "Lambert conformal conic") { # @BUG @TODO we should grep the proj4_string for the right projection code lcc
+
+    if (substr(proj4_string,1,9) == "+proj=lcc") { # Check that this is an lcc projection
       res <- -1
     }
     # Case of Albers when the fan of the selected extent spans less than 180deg around a pole
+    # Note: up is negative and down is positive in graphics
     else if (test_pts[3,2] > test_pts[4,2]) {
       res <- 0
     } else {

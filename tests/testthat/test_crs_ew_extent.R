@@ -182,21 +182,21 @@ test_that("test ew extent", {
   # need to fix the function
   # Oblique Lambert azimuthal equal-area
   suggested_crs_fail <- suggest_crs(c(-157, 20, -56, -45), distortion = "equal_area")
-  ref_proj4_fail <- "+proj=laea +lon_0=68.5 +lat_0=-50.5 +datum=WGS84 +units=m +no_defs"
+  ref_proj4_fail <- "+proj=laea +lon_0=-68.5 +lat_0=-50.5 +datum=WGS84 +units=m +no_defs"
   ref_wkt_fail <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
-                         GEOGCS["GCS_WGS_1984",
-                                DATUM["D_WGS_1984",
-                                      SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                PRIMEM["Greenwich",0.0],
-                                UNIT["Degree",0.0174532925199433]],
-                         PROJECTION["Lambert_Azimuthal_Equal_Area"],
-                         PARAMETER["False_Easting",0.0],
-                         PARAMETER["False_Northing",0.0],
-                         PARAMETER["Central_Meridian",68.5],
-                         PARAMETER["Latitude_Of_Origin",-50.5],
-                         UNIT["Meter",1.0]]'
-  expect_failure(expect_equal(suggested_crs_fail$proj4, ref_proj4_fail))
-  expect_false(sf::st_crs(suggested_crs_fail$wkt) == sf::st_crs(ref_wkt_fail))
+ GEOGCS["GCS_WGS_1984",
+  DATUM["D_WGS_1984",
+   SPHEROID["WGS_1984",6378137.0,298.257223563]],
+  PRIMEM["Greenwich",0.0],
+  UNIT["Degree",0.0174532925199433]],
+ PROJECTION["Lambert_Azimuthal_Equal_Area"],
+ PARAMETER["False_Easting",0.0],
+ PARAMETER["False_Northing",0.0],
+ PARAMETER["Central_Meridian",-68.5],
+ PARAMETER["Latitude_Of_Origin",-50.5],
+ UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_fail$proj4, ref_proj4_fail)
+  expect_true(sf::st_crs(suggested_crs_fail$wkt) == sf::st_crs(ref_wkt_fail))
   
   
 
