@@ -97,6 +97,48 @@ test_that("test ew extent", {
   expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
   expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
   
+  # The following two test fails 
+  # returns Lambert conformal conic projection rather then polar stereographic
+  # conic test positive while it should be negative!
+  
+  # Polar stereographic (south, negative conic)
+  suggested_crs_ew_ps <- suggest_crs(c(-126, 90, -77, -57), distortion = "conformal")
+  ref_proj4_ew_ps <- "+proj=stere +lon_0=-18 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                            GEOGCS["GCS_WGS_1984",
+                                   DATUM["D_WGS_1984",
+                                         SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                   PRIMEM["Greenwich",0.0],
+                                   UNIT["Degree",0.0174532925199433]],
+                            PROJECTION["Stereographic"],
+                            PARAMETER["False_Easting",0.0],
+                            PARAMETER["False_Northing",0.0],
+                            PARAMETER["Central_Meridian",-18],
+                            PARAMETER["Scale_Factor",1.0],
+                            PARAMETER["Latitude_Of_Origin",-90],
+                            UNIT["Meter",1.0]]'
+  expect_failure(expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps))
+  expect_false(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  
+  # Polar stereographic (north, negative conic)
+  suggested_crs_ew_ps <- suggest_crs(c(-126, 90, 57, 77), distortion = "conformal")
+  ref_proj4_ew_ps <- "+proj=stere +lon_0=-18 +lat_0=90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
+                            GEOGCS["GCS_WGS_1984",
+                                   DATUM["D_WGS_1984",
+                                         SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                   PRIMEM["Greenwich",0.0],
+                                   UNIT["Degree",0.0174532925199433]],
+                            PROJECTION["Stereographic"],
+                            PARAMETER["False_Easting",0.0],
+                            PARAMETER["False_Northing",0.0],
+                            PARAMETER["Central_Meridian",-18],
+                            PARAMETER["Scale_Factor",1.0],
+                            PARAMETER["Latitude_Of_Origin",90],
+                            UNIT["Meter",1.0]]'
+  expect_failure(expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps))
+  expect_false(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  
   
   
   # EQUAL AREA
@@ -175,15 +217,10 @@ test_that("test ew extent", {
   expect_equal(suggested_crs_cyl$proj4, ref_proj4_cyl)
   expect_true(sf::st_crs(suggested_crs_cyl$wkt) == sf::st_crs(ref_wkt_cyl))
   
-  # test fail cone
-  library(crswizard)
-  library(testthat)
-  library(sf)
-  # need to fix the function
   # Oblique Lambert azimuthal equal-area
-  suggested_crs_fail <- suggest_crs(c(-157, 20, -56, -45), distortion = "equal_area")
-  ref_proj4_fail <- "+proj=laea +lon_0=-68.5 +lat_0=-50.5 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_fail <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+  suggested_crs_ew_obl <- suggest_crs(c(-157, 20, -56, -45), distortion = "equal_area")
+  ref_proj4_ew_obl <- "+proj=laea +lon_0=-68.5 +lat_0=-50.5 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_obl <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
  GEOGCS["GCS_WGS_1984",
   DATUM["D_WGS_1984",
    SPHEROID["WGS_1984",6378137.0,298.257223563]],
@@ -195,9 +232,63 @@ test_that("test ew extent", {
  PARAMETER["Central_Meridian",-68.5],
  PARAMETER["Latitude_Of_Origin",-50.5],
  UNIT["Meter",1.0]]'
-  expect_equal(suggested_crs_fail$proj4, ref_proj4_fail)
-  expect_true(sf::st_crs(suggested_crs_fail$wkt) == sf::st_crs(ref_wkt_fail))
+  expect_equal(suggested_crs_ew_obl$proj4, ref_proj4_ew_obl)
+  expect_true(sf::st_crs(suggested_crs_ew_obl$wkt) == sf::st_crs(ref_wkt_ew_obl))
   
+  # Albers equal-area conic 
+  suggested_crs_ew_alb <- suggest_crs(c(-112, 105, -34, -14), distortion = "equal_area")
+  ref_proj4_ew_alb <- "+proj=aea +lon_0=-3.5 +lat_1=-30.6666667 +lat_2=-17.3333333 +lat_0=-24 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_alb <- 'PROJCS["ProjWiz_Custom_Albers",
+                           GEOGCS["GCS_WGS_1984",
+                                  DATUM["D_WGS_1984",
+                                        SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                  PRIMEM["Greenwich",0.0],
+                                  UNIT["Degree",0.0174532925199433]],
+                           PROJECTION["Albers"],
+                           PARAMETER["False_Easting",0.0],
+                           PARAMETER["False_Northing",0.0],
+                           PARAMETER["Central_Meridian",-3.5],
+                           PARAMETER["Standard_Parallel_1",-30.6666667],
+                           PARAMETER["Standard_Parallel_2",-17.3333333],
+                           PARAMETER["Latitude_Of_Origin",-24],
+                           UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_ew_alb$proj4, ref_proj4_ew_alb)
+  expect_true(sf::st_crs(suggested_crs_ew_alb$wkt) == sf::st_crs(ref_wkt_ew_alb))
   
-
+  # Polar Lambert azimuthal (south, negative conic)
+  suggested_crs_ew_pole <- suggest_crs(c(-126, 90, -77, -57), distortion = "equal_area")
+  ref_proj4_ew_pole <- "+proj=laea +lon_0=-18 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_pole <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                            GEOGCS["GCS_WGS_1984",
+                                   DATUM["D_WGS_1984",
+                                         SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                   PRIMEM["Greenwich",0.0],
+                                   UNIT["Degree",0.0174532925199433]],
+                            PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                            PARAMETER["False_Easting",0.0],
+                            PARAMETER["False_Northing",0.0],
+                            PARAMETER["Central_Meridian",-18],
+                            PARAMETER["Latitude_Of_Origin",-90],
+                            UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_ew_pole$proj4, ref_proj4_ew_pole)
+  expect_true(sf::st_crs(suggested_crs_ew_pole$wkt) == sf::st_crs(ref_wkt_ew_pole))
+  
+  # Polar Lambert azimuthal (north, negative conic)
+  suggested_crs_ew_pole <- suggest_crs(c(-126, 90, 57, 77), distortion = "equal_area")
+  ref_proj4_ew_pole <- "+proj=laea +lon_0=-18 +lat_0=90 +datum=WGS84 +units=m +no_defs"
+  ref_wkt_ew_pole <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
+                            GEOGCS["GCS_WGS_1984",
+                                   DATUM["D_WGS_1984",
+                                         SPHEROID["WGS_1984",6378137.0,298.257223563]],
+                                   PRIMEM["Greenwich",0.0],
+                                   UNIT["Degree",0.0174532925199433]],
+                            PROJECTION["Lambert_Azimuthal_Equal_Area"],
+                            PARAMETER["False_Easting",0.0],
+                            PARAMETER["False_Northing",0.0],
+                            PARAMETER["Central_Meridian",-18],
+                            PARAMETER["Latitude_Of_Origin",90],
+                            UNIT["Meter",1.0]]'
+  expect_equal(suggested_crs_ew_pole$proj4, ref_proj4_ew_pole)
+  expect_true(sf::st_crs(suggested_crs_ew_pole$wkt) == sf::st_crs(ref_wkt_ew_pole))
+  
 })
