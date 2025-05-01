@@ -1,19 +1,27 @@
 Package: crswizard
-Title: What the Package Does (One Line, Title Case)
+Title: Tools to Choose Projections
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Authors@R: c(
+    person("Andrea", "Manica", , "am315@cam.ac.uk", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-1895-450X")),
+    person("Andrea", "Pozzi", role = c("aut")),
+    person("Cecilia", "Padilla-Iglesias", role =  c("aut")),
+    person("Michela", "Leonardi", role = c("aut")),
+    person("Aramish", "Fatima", role = c("aut")),
+    person("Ondrej", "Pelanek", role = c("aut")),
+    person("Nile", "Stephenson", role = c("aut")),
+    person("Margherita", "Colucci", role = c("aut"))
+    )
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-  sf,
-  ggplot2,
-  terra,
-  cli
+    sf,
+    ggplot2,
+    terra,
+    cli
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

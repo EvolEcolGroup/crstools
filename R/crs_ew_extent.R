@@ -282,22 +282,27 @@ crs_check_conic <- function(lat0, lon0, proj4_string, lonmin, lonmax, latmin, la
   # Define test points as an sf object
   test_pts <- data.frame(
     lon = c(lon0, lon0, normalise_lon(lonmin, lon0), normalise_lon(lonmax, lon0)),
-    lat = c(-90, 90, latmin, latmax))
+    lat = c(-89.9, 89.9, latmin, latmax))
   # cast to sf object
   test_pts <- sf::st_as_sf(test_pts, coords = c("lon", "lat"), crs = 4326)
   #project to the proj4 string
   test_pts <- sf::st_transform(test_pts, crs = proj4_string)
   # get y min and y max
   test_pts <- sf::st_coordinates(test_pts)
+  
+  # 
+  
+  
+  
   # flip coordinates to match the screen coordiantes (for which the rules below have been designed)
   test_pts[,2] = - test_pts[,2]
   ymin <- min(test_pts[,2])
   ymax <- max(test_pts[,2])
 
-  # hack to avoid NaN values
-  if (is.nan(test_pts[1,2])||is.nan(test_pts[2,2])){
-    return (1)
-  }
+  # # hack to avoid NaN values
+  # if (is.nan(test_pts[1,2])||is.nan(test_pts[2,2])){
+  #   return (1)
+  # }
   
   
   # Check if the fan of the selected extent exposes a cone opening at a pole

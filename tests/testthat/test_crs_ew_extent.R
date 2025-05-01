@@ -97,10 +97,6 @@ test_that("test ew extent", {
   expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
   expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
   
-  # The following two test fails 
-  # returns Lambert conformal conic projection rather then polar stereographic
-  # conic test positive while it should be negative!
-  
   # Polar stereographic (south, negative conic)
   suggested_crs_ew_ps <- suggest_crs(c(-126, 90, -77, -57), distortion = "conformal")
   ref_proj4_ew_ps <- "+proj=stere +lon_0=-18 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
@@ -117,8 +113,8 @@ test_that("test ew extent", {
                             PARAMETER["Scale_Factor",1.0],
                             PARAMETER["Latitude_Of_Origin",-90],
                             UNIT["Meter",1.0]]'
-  expect_failure(expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps))
-  expect_false(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
+  expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
   
   # Polar stereographic (north, negative conic)
   suggested_crs_ew_ps <- suggest_crs(c(-126, 90, 57, 77), distortion = "conformal")
@@ -136,8 +132,8 @@ test_that("test ew extent", {
                             PARAMETER["Scale_Factor",1.0],
                             PARAMETER["Latitude_Of_Origin",90],
                             UNIT["Meter",1.0]]'
-  expect_failure(expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps))
-  expect_false(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
+  expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
   
   
   
