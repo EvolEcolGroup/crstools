@@ -27,44 +27,44 @@ suggest_crs(
 \item{round_cm}{Logical. If TRUE, the central meridian is rounded to the
 nearest degree. Default is FALSE.}
 
-\item{return_best}{Logical. If TRUE, only the best projection is returned, otherwise,
-if there are multiple options, a list will be returned}
+\item{return_best}{Logical. If TRUE, only the best projection is returned,
+otherwise, if there are multiple options, a list will be returned}
 
 \item{datum}{The datum to use. Options are "WGS84", "ETRS89" and "NAD83".
 Default is "WGS84".}
 
 \item{unit}{The unit to use. Options are "m" and "ft". Default is "m".}
 
-\item{lat_check}{Logical. If TRUE, the function will check if lat values are within range (-90,90).
-Default is TRUE.}
+\item{lat_check}{Logical. If TRUE, the function will check if lat values are
+within range (-90,90). Default is TRUE.}
 
 \item{world_equidist}{if \code{distortion}="equidistant" for a whole world
-projection, then this parameter should
-be a list with one of the following sets of elements:
+projection, then this parameter should be a list with one of the following
+sets of elements:
 \itemize{
-\item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \verb{lng_central``, where }pole\verb{is either -90 or 90 for the South and North Pole, respectively,  from or through which distances are correct, and}lng_central\verb{is the central meridian.  E.g.}list(prj = "polar", pole = 90, lng_central = -180)`
+\item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \verb{lng_central``, where }pole\verb{is either -90 or 90 for the South and North Pole, respectively, from or through which distances are correct, and}lng_central\verb{is the central meridian. E.g.}list(prj = "polar", pole = 90, lng_central = -180)`
 \item "Oblique azimuthal equidistant": \code{prj} = "oblique", \code{lat_center}, \code{lng_center},
-where \code{lat_center} and \code{lng_center} are the latitude and longitude
-of the center from or through which distances are correct.
-E.g. \code{list(prj = "oblique", lat_center = 39, lng_center = 145)}
+where \code{lat_center} and \code{lng_center} are the latitude and longitude of the
+center from or through which distances are correct. E.g. \code{list(prj = "oblique", lat_center = 39, lng_center = 145)}
 \item "Two-point azimuthal": \code{prj} = "two_points", \code{lat1}, \code{lng1},
 \code{lat2}, \code{lng2}, where \code{lat1}, \code{lng1}, \code{lat2}, \code{lng2} are the latitude and
-longitude of two points on the map from which distances are correct.
-E.g. \code{list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
+longitude of two points on the map from which distances are correct. E.g.
+\code{list(prj = "two_points", lat1 = 34, lng1 = -117, lat2 = 46, lng2 = 16)}
 }}
 
 \item{quiet}{Logical. If TRUE, suppresses messages. Default is FALSE.}
 }
 \value{
 Either a list of two strings (proj4 and WKT) for a single projection
-(if either only one projection is available or return_best is TRUE),
-or a list of lists, each containing two strings (proj4 and WKT) for a
-single projection (if multiple projections are available and return_best is FALSE).
+(if either only one projection is available or return_best is TRUE), or a
+list of lists, each containing two strings (proj4 and WKT) for a single
+projection (if multiple projections are available and return_best is
+FALSE).
 }
 \description{
-This function provides suggestions for map projections depending on the extent
-of the map. For SDMs, an equal area projection is generally favoured, but
-it is also possible to get suggestions for conformal, equidistant or
+This function provides suggestions for map projections depending on the
+extent of the map. For SDMs, an equal area projection is generally favoured,
+but it is also possible to get suggestions for conformal, equidistant or
 compromise projections. The algorithm is a reimplementation in R of
 Projection Wizard (Bojan et al., 2016), version 2.1.
 }
@@ -84,6 +84,6 @@ suggest_crs(c(-60, 20, 40, 70))
 }
 \references{
 Bojan, S, Bernhard, J, & Helen, J (2016) Projection Wizard - An
-Online Map Projection Selection Tool. The Cartographic Journal 53(2):177-185
-DOI: 10.1080/00087041.2015.1131938
+Online Map Projection Selection Tool. The Cartographic Journal
+53(2):177-185 DOI: 10.1080/00087041.2015.1131938
 }

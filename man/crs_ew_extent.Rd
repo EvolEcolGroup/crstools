@@ -7,7 +7,6 @@
 crs_ew_extent(
   distortion,
   center,
-  scale,
   lonmin,
   lonmax,
   latmin,
@@ -16,16 +15,13 @@ crs_ew_extent(
 )
 }
 \arguments{
-\item{distortion}{character string (e.g., "equal_area", "equidistant",
-"compromise").}
+\item{distortion}{character string (e.g., "equal_area", "conformal").}
 
-\item{center}{The center of the map projection.}
+\item{center}{numeric value, center of the map projection.}
 
-\item{scale}{numeric value, scale of the map.}
+\item{lonmin}{numeric value, minimum longitude of the map.}
 
-\item{lonmin}{The minimum longitude of the map. Default is -180.}
-
-\item{lonmax}{The maximum longitude of the map. Default is 180.}
+\item{lonmax}{numeric value, maximum longitude of the map.}
 
 \item{latmin}{numeric value, minimum latitude of the map.}
 

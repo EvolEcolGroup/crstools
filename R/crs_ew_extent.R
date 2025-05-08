@@ -17,7 +17,6 @@ crs_ew_extent <- function(distortion, center,
                           quiet = FALSE) {
   # Flag to determine if scale note should be included
   scaleNote <- FALSE
-
   # Case: Close to poles
   if (center$lat > 70) {
     if (distortion == "conformal") {
@@ -89,7 +88,7 @@ crs_ew_extent <- function(distortion, center,
       # extract the proj4 string from the conic_crs_to_test data frame
       conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
       # Check if the cone opens at a pole
-      conic_check <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
+      conic_check <- crs_check_conic(center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
       
       # Check if the cone opens at a pole
       if (conic_check > 0) {
@@ -116,7 +115,7 @@ crs_ew_extent <- function(distortion, center,
         }
       }
     } else if (distortion == "equal_area") {
-      previewMapProjection <- activeProjection <- "Albers equal area conic"
+      #previewMapProjection <- activeProjection <- "Albers equal area conic"
 
       # Create the CRS of the conic projection that we want to test
       conic_crs_to_test <- data.frame(
@@ -127,8 +126,8 @@ crs_ew_extent <- function(distortion, center,
       # extract the proj4 string from the conic_crs_to_test data frame
       conic_crs_to_test <- crs_string_row(conic_crs_to_test[1, ], "WGS84", "m")$proj4
       # Check if the cone opens at a pole
-      conicTest <- crs_check_conic(center$lat, center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
-
+      conicTest <- crs_check_conic(center$lng, conic_crs_to_test, lonmin, lonmax, latmin, latmax)
+      #center$lat
 
 
       if (conicTest > 0) {
