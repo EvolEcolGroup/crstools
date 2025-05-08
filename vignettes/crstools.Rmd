@@ -236,8 +236,10 @@ ggplot() +
 ```
 
 We can do the same with a raster object. We'll use a raster from the package
-`pastclim`, which allows the easy retrieval of climate data. Let's get the
-annual mean temperature (variable "bio01") for Europe:
+`pastclim`, which allows the easy retrieval of climate data. First, ensure
+pastclim is installed and the data_path is set, using `set_data_path()`.
+
+Let's get the annual mean temperature (variable "bio01") for Europe:
 ```{r get_raster_europe}
 library(terra)
 library(pastclim)
