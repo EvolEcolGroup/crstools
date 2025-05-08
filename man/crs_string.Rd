@@ -4,10 +4,24 @@
 \alias{crs_string}
 \title{Function to format the PROJ.4 and WKT strings}
 \usage{
-crs_string(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit)
+crs_string(
+  prj,
+  x0,
+  lat0,
+  lat1,
+  lat2,
+  lon0,
+  k0,
+  datum = c("WGS84", "ETRS89", "NAD83"),
+  unit = c("m", "ft")
+)
 }
 \arguments{
-\item{prj}{Character string. The projection type. Options are "aeqd" (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere" (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic), "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc" (Mercator), "eqc" (Equidistant Cylindrical).}
+\item{prj}{Character string. The projection type. Options are "aeqd"
+(Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere"
+(Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic),
+"lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc"
+(Mercator), "eqc" (Equidistant Cylindrical).}
 
 \item{x0}{Numeric. The false easting value.}
 
@@ -21,18 +35,24 @@ crs_string(prj, x0, lat0, lat1, lat2, lon0, k0, datum, unit)
 
 \item{k0}{Numeric. The scale factor at the central meridian.}
 
-\item{datum}{Character string. The datum. Options are "WGS84", "ETRS89", "NAD83".}
+\item{datum}{Character string. The datum. Options are "WGS84", "ETRS89",
+"NAD83".}
 
-\item{unit}{Character string. The linear unit. Options are "m" (meters) and "ft" (feet).}
+\item{unit}{Character string. The linear unit. Options are "m" (meters) and
+"ft" (feet).}
 }
 \value{
-A list with two elements: "proj4" and "wkt". The "proj4" element contains the PROJ.4 string, while the "wkt" element contains the WKT string.
+A list with two elements: "proj4" and "wkt". The "proj4" element
+contains the PROJ.4 string, while the "wkt" element contains the WKT
+string.
 }
 \description{
-This function takes the parameters of a custom projection and returns the PROJ.4 and WKT strings.
+This function takes the parameters of a custom projection and returns the
+PROJ.4 and WKT strings.
 }
 \details{
-Note that the WKT string contains a few special characters to define indentation; these should not
-impact the parsing of the wkt string (eg. by \code{sf})
+Note that the WKT string contains a few special characters to define
+indentation; these should not impact the parsing of the wkt string (eg. by
+\code{sf})
 }
 \keyword{internal}

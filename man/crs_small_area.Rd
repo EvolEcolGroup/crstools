@@ -4,10 +4,19 @@
 \alias{crs_small_area}
 \title{Projection of a small area (region or country)}
 \usage{
-crs_small_area(distortion, center, scale, lonmin, lonmax, latmin, latmax)
+crs_small_area(
+  distortion,
+  center,
+  scale,
+  lonmin,
+  lonmax,
+  latmin,
+  latmax,
+  quiet = FALSE
+)
 }
 \arguments{
-\item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant", "compromise").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 
@@ -20,6 +29,8 @@ crs_small_area(distortion, center, scale, lonmin, lonmax, latmin, latmax)
 \item{latmin}{numeric value, minimum latitude of the map.}
 
 \item{latmax}{numeric value, maximum latitude of the map.}
+
+\item{quiet}{logical, whether to suppress messages.}
 }
 \value{
 data.frame with the suggested projection.

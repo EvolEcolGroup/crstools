@@ -4,12 +4,14 @@
 \alias{crs_ns_extent}
 \title{North-South extent}
 \usage{
-crs_ns_extent(distortion, center)
+crs_ns_extent(distortion, center, quiet = FALSE)
 }
 \arguments{
-\item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant", "compromise").}
 
 \item{center}{The center of the map projection.}
+
+\item{quiet}{logical, whether to suppress messages.}
 }
 \value{
 data.frame with the suggested projection.

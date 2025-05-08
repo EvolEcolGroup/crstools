@@ -4,10 +4,20 @@
 \alias{crs_ew_extent}
 \title{East-West extent}
 \usage{
-crs_ew_extent(distortion, center, scale, lonmin, lonmax, latmin, latmax)
+crs_ew_extent(
+  distortion,
+  center,
+  scale,
+  lonmin,
+  lonmax,
+  latmin,
+  latmax,
+  quiet = FALSE
+)
 }
 \arguments{
-\item{distortion}{character string (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant",
+"compromise").}
 
 \item{center}{The center of the map projection.}
 
@@ -20,6 +30,8 @@ crs_ew_extent(distortion, center, scale, lonmin, lonmax, latmin, latmax)
 \item{latmin}{numeric value, minimum latitude of the map.}
 
 \item{latmax}{numeric value, maximum latitude of the map.}
+
+\item{quiet}{logical, whether to suppress messages.}
 }
 \value{
 data.frame with the suggested projection.

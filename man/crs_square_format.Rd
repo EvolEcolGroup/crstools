@@ -4,16 +4,18 @@
 \alias{crs_square_format}
 \title{Projection of a square map}
 \usage{
-crs_square_format(distortion, center, latmin, latmax)
+crs_square_format(distortion, center, latmin, latmax, quiet = FALSE)
 }
 \arguments{
-\item{distortion}{The distortion of the world map projection (e.g., "Equalarea", "Equidistant", "Compromise").}
+\item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 
 \item{latmin}{The minimum latitude of the map. Default is -90.}
 
 \item{latmax}{The maximum latitude of the map. Default is 90.}
+
+\item{quiet}{logical, whether to suppress messages.}
 }
 \value{
 data.frame with the suggested projection.
