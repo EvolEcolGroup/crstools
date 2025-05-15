@@ -26,9 +26,7 @@
 #'   contains the PROJ.4 string, while the "wkt" element contains the WKT
 #'   string.
 #' @keywords internal
-#' @examples
-#' # An example of how to use crs_string:
-#' crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
+
 ################################################################################
 # Function to format the PROJ.4 and WKT strings
 crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,

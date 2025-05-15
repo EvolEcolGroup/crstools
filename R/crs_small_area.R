@@ -1,6 +1,6 @@
 #' @title Projection of a small area (region or country)
 #' @description maps showing a smaller area
-#' @param distortion character string (e.g., "equal_area", "equidistant", "compromise").
+#' @param distortion character string (e.g., "equal_area", "equidistant", "conformal").
 #' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
 #' @param scale numeric value, scale of the map.
 #' @param lonmin The minimum longitude of the map.

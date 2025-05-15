@@ -1,6 +1,6 @@
 #' @title Projection of a hemisphere map
 #' @description Function to suggest a projection for maps showing a hemisphere
-#' @param distortion character string (e.g., "equal_area", "equidistant", "compromise").
+#' @param distortion character string (e.g., "equal_area", "equidistant", "conformal").
 #' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
 #' @param scale numeric value, scale of the map.
 #' @param latmin numeric value, minimum latitude of the map.

@@ -16,15 +16,15 @@ crs_small_area(
 )
 }
 \arguments{
-\item{distortion}{character string (e.g., "equal_area", "equidistant", "compromise").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant", "conformal").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 
 \item{scale}{numeric value, scale of the map.}
 
-\item{lonmin}{The minimum longitude of the map. Default is -180.}
+\item{lonmin}{The minimum longitude of the map.}
 
-\item{lonmax}{The maximum longitude of the map. Default is 180.}
+\item{lonmax}{The maximum longitude of the map.}
 
 \item{latmin}{numeric value, minimum latitude of the map.}
 

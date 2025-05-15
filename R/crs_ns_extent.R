@@ -1,6 +1,6 @@
 #' @title North-South extent
 #' @description Checking the North-South extent of a regional map
-#' @param distortion character string (e.g., "equal_area", "equidistant", "compromise").
+#' @param distortion character string (e.g., "equal_area", "equidistant", "conformal").
 #' @param center The center of the map projection.
 #' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
