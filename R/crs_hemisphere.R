@@ -15,8 +15,6 @@
 # maps showing a hemisphere
 crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
                            quiet = FALSE) {
-  angUnit <- "degrees" # TODO arbitrarily set to degrees, check where it comes from
-  # we probably don't want to do any pretty formatting, so this could be removed.
 
   # Formatting central meridian
   lon <- round(center$lng * 100) / 100
@@ -54,11 +52,7 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
         description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
       )
     }
-    # TODO do we add these as attributed to the prj_summary data frame?
-    #    outputText <- append(outputText, paste0("<p class='outputText'>Standard parallel: ", latStr, "</p>"))
-    #    outputText <- append(outputText, paste0("<p class='outputText'>Central meridian: ", lonStr, "</p>"))
 
-    #    previewMapLat0 <- 0
   } else {
     # Formatting central latitude
     lat <- if (center$lat > 85) {
@@ -81,11 +75,7 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
         description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere"
       )
     }
-    # TODO do we add these as attributed to the prj_summary data frame?
-    #    outputText <- append(outputText, paste0("<p class='outputText'>Center latitude: ", latStr, "</p>"))
-    #    outputText <- append(outputText, paste0("<p class='outputText'>Center longitude: ", lonStr, "</p>"))
 
-    #    previewMapLat0 <- lat
   }
 
   return(crs_suggestions)
