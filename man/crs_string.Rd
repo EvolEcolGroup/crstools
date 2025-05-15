@@ -55,4 +55,8 @@ Note that the WKT string contains a few special characters to define
 indentation; these should not impact the parsing of the wkt string (eg. by
 \code{sf})
 }
+\examples{
+# An example of how to use crs_string:
+crs_string("aeqd", 5000, 40, 50, 60, 30, NA, "WGS84", "m")
+}
 \keyword{internal}

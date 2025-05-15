@@ -9,13 +9,16 @@ crs_string_row(x, datum, unit)
 \arguments{
 \item{x}{a vector from a row of a crs_df}
 
-\item{datum}{Character string. The datum. Options are "WGS84", "ETRS89", "NAD83".}
+\item{datum}{Character string. The datum. Options are "WGS84", "ETRS89",
+"NAD83".}
 
-\item{unit}{Character string. The linear unit. Options are "m" (meters) and "ft" (feet).}
+\item{unit}{Character string. The linear unit. Options are "m" (meters) and
+"ft" (feet).}
 }
 \value{
 A list with two elements: "proj4" and "wkt". The "proj4" element
-contains the PROJ.4 string, while the "wkt" element contains the WKT string.
+contains the PROJ.4 string, while the "wkt" element contains the WKT
+string.
 }
 \description{
 function to feed the row of a crs_df to crs_string

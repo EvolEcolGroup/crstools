@@ -7,7 +7,7 @@
 crs_square_format(distortion, center, latmin, latmax, quiet = FALSE)
 }
 \arguments{
-\item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
+\item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "conformal").}
 
 \item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
 
