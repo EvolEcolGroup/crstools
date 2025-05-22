@@ -11,7 +11,13 @@
 #'   (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere"
 #'   (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic),
 #'   "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc"
-#'   (Mercator), "eqc" (Equidistant Cylindrical).
+#'   (Mercator), "eqc" (Equidistant Cylindrical), "eqearth" (Equal Earth), 
+#'   "moll" (Mollweide), "hammer" (Hammer), "eck4" (Eckert IV), "wag4" (Wagner IV),
+#'   "wag7" (Wagner VII), "tpeqd" (Two Point Equidistant), "robin" (Robinson),
+#'   "natearth" (Natural Earth), "wintri" (Winkel Tripel), "patterson" (Patterson),
+#'   "latlong" (Latitude/Longitude), "mill" (Miller Cylindrical), "tmerc" (Transverse
+#'   Mercator), "cass" (Cassini), "tcea" (Transverse Cylindrical Equal Area).
+#'   .
 #' @param x0 Numeric. The false easting value.
 #' @param lat0 Numeric. The latitude of origin.
 #' @param lat1 Numeric. The first standard parallel.
@@ -29,20 +35,24 @@
 
 ################################################################################
 # Function to format the PROJ.4 and WKT strings
-crs_string <- function(prj, x0, lat0, lat1, lat2, lon0, k0,
+crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
+                               "lcc", "cea", "merc", "eqc", "eqearth", 
+                               "moll", "hammer", "eck4", "wag4", "wag7", 
+                               "tpeqd", "robin", "natearth", "wintri", 
+                               "patterson", "latlong", "mill", "tmerc", "cass", 
+                               "tcea"),
+                       x0, lat0, lat1, lat2, lon0, k0,
                        datum = c("WGS84", "ETRS89", "NAD83"),
                        unit = c("m", "ft")) {
+  
   # Check if the input is correct
-  #  TODO prj <- match.arg(prj) #nolint
+  prj <- match.arg(prj)
   datum <- match.arg(datum)
 
   proj_str <- "+proj="
   wkt_str <- "PROJCS[\"ProjWiz_Custom_"
 
   # Formatting Geographic/Geodetic Datum
-  # BUG we need to get both gcs_str and datum_str, but currently failing to
-  # write gcs_str
-
   gcs_datum_str <- switch(datum,
     "WGS84" = {
       c(
