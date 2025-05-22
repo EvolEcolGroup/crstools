@@ -41,9 +41,6 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
     description = character(), notes = character()
   )
 
-  # Cleaning the output (initialize output text)
-  # outputTEXT <- ""
-
   # Formatting central meridian
   lng <- round_world_coords(center$lng, scale, round_cm)
 
@@ -72,25 +69,12 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
         )
       )
     }
-    # Add central meridian information
-    #    worldCM(lng, outputTEXT)
-    # TODO do we want to add central meridian information as an attribute to the crs_suggestions data frame?
   } else if (distortion == "equidistant") {
     if (is.null(world_equidist)) {
       stop("`world_equidist` must be provided for equidistant world map projections")
     }
-    # equidistant projections
-    # outputTEXT <- paste(outputTEXT, "<p><b>equidistant world map projections</b></p>", sep = "")
-
-    # Dropdown menu for equidistant projections
-    # outputTEXT <- paste(outputTEXT,
-    #   "<div><div><select name='worldequidistantMenu' id='worldequidistantMenu'>",
-    #   "<option value='Polar azimuthal equidistant'><b>Polar azimuthal equidistant</b></option>",
-    #   "<option value='Oblique azimuthal equidistant'><b>Oblique azimuthal equidistant</b></option>",
-    #   "<option value='Two-point equidistant'><b>Two-point equidistant</b></option>",
-    #   "</select></div><div id='worldequidistantBox'></div></div>",
-    #   sep = ""
-    # )
+    
+    # Equidistant projections
     
     # Update active projection and preview
     crs_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
@@ -122,10 +106,6 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
         )
       )
     }
-
-    # TODO are we missing sometihng here???
-    # Add central meridian and additional notes
-    #    worldCM(lng, outputTEXT)
 
     if (!return_best && !quiet){
       message("Rectangular projections are not generally recommended for most world maps.")
