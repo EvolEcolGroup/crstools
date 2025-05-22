@@ -15,6 +15,7 @@
 crs_ew_extent <- function(distortion, center,
                           lonmin, lonmax, latmin, latmax,
                           quiet = FALSE) {
+  
   # Flag to determine if scale note should be included
   scaleNote <- FALSE
   # Case: Close to poles
@@ -166,9 +167,7 @@ crs_ew_extent <- function(distortion, center,
 
   # Include the scale factor note if necessary
   if (scaleNote) {
-    #@TODO check if any proj creates a scaleNote
-    # outputText <- c(outputText, printScaleFactorNote(distortion))
-    # printScaleFactorNote(distortion)
+    message("To reduce overall area distortion on the map, one can also apply a scale factor k. Various values for k can be applied and the area distortion patterns along the center and at the border of the map are compared to select most appropriate value.")
   }
 
   # Return the complete output
