@@ -180,16 +180,3 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
     return(crs_list)
   }
 }
-
-
-
-# Set default point values for equidistant world map projections
-# # move it to where needed
-# pole_eq <- -90
-# lngP_eq <- -180
-# latC_eq <- -39
-# lngC_eq <- 145
-# lat1_eq <- 34
-# lng1_eq <- -117
-# lat2_eq <- 46
-# lng2_eq <- 16
