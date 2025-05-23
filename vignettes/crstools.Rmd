@@ -171,13 +171,11 @@ the Proj4 code, we can use the `sf::st_crs()` and extract the `$proj4string` slo
 sf::st_crs(s_america_sf)$proj4string
 ```
 
-# TODO we shoudl use an equal area here, but currently this breaks the vignette
-
 Now, let's use `suggest_crs()` to get a suggestion for an equidistant CRS 
 for this map:
 ```{r}
 library(crswizard)
-s_am_equidist <- suggest_crs(s_america_sf, distortion = "equidistant")
+s_am_equidist <- suggest_crs(s_america_sf, distortion = "equal_area")
 ```
 
 The function returns a list with two elements: `proj4` and `wkt`. Let's see:
