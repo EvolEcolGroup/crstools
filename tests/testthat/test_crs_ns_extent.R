@@ -1,7 +1,8 @@
 test_that("test ns extent", {
   # CONFORMAL
   ## Transverse Mercator
-  suggested_crs_ns_mercator <- suggest_crs(c(12, 24, 2, 22), distortion = "conformal")
+  expect_message(suggested_crs_ns_mercator <- suggest_crs(c(12, 24, 2, 22), distortion = "conformal"), 
+                 "To reduce overall area distortion on the map")
   ref_proj4_ns_mercator <- "+proj=tmerc +lon_0=18 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ns_mercator <- 'PROJCS["ProjWiz_Custom_Transverse_Mercator",
                                 GEOGCS["GCS_WGS_1984",

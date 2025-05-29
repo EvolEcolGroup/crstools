@@ -37,7 +37,8 @@ test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_eqa_polar))
   
   # Polar Lambert (south)
-  suggested_crs_square_conf_eqa_polar <- suggest_crs(c(-56, -39, -81, -77), distortion = "equal_area")
+  expect_message(suggested_crs_square_conf_eqa_polar <- suggest_crs(c(-56, -39, -81, -77), distortion = "equal_area"),
+                 "For maps at this scale")
   ref_proj4_square_conf_eqa_polar <- "+proj=laea +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_eqa_polar <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                                          GEOGCS["GCS_WGS_1984",
@@ -55,7 +56,8 @@ test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf_eqa_polar$wkt) == sf::st_crs(ref_wkt_square_conf_eqa_polar))
   
   # Oblique Lambert
-  suggested_crs_square_eqa_obl <- suggest_crs(c(-12, 2, 49, 59), distortion = "equal_area")
+  expect_message(suggested_crs_square_eqa_obl <- suggest_crs(c(-12, 2, 49, 59), distortion = "equal_area"),
+                 "For maps at this scale")
   ref_proj4_square_eqa_obl <- "+proj=laea +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_eqa_obl <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                                    GEOGCS["GCS_WGS_1984",
@@ -94,7 +96,7 @@ test_that("test square format", {
   expect_true(sf::st_crs(suggested_crs_square_conf$wkt) == sf::st_crs(ref_wkt_square_conf))
   
   # Oblique stereographic
-  suggested_crs_square_conf_obl_ste <- suggest_crs(c(-25, -13, 62, 67), distortion = "conformal")
+  message <- capture_messages(suggested_crs_square_conf_obl_ste <- suggest_crs(c(-25, -13, 62, 67), distortion = "conformal"))
   ref_proj4_square_conf_obl_ste <- "+proj=stere +lon_0=-19 +lat_0=64.5 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -111,9 +113,12 @@ test_that("test square format", {
                                         UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_conf_obl_ste$proj4, ref_proj4_square_conf_obl_ste)
   expect_true(sf::st_crs(suggested_crs_square_conf_obl_ste$wkt) == sf::st_crs(ref_wkt_square_conf_obl_ste))
+  ### check for messages 
+  expect_true(any(grepl("To reduce overall area", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   # Polar stereographic (north)
-  suggested_crs_square_conf_pol_ste <- suggest_crs(c(85, 109, 77, 82), distortion = "conformal")
+  message <- capture_messages(suggested_crs_square_conf_pol_ste <- suggest_crs(c(85, 109, 77, 82), distortion = "conformal"))
   ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=97 +lat_0=90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -130,9 +135,12 @@ test_that("test square format", {
                                         UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_conf_pol_ste$proj4, ref_proj4_square_conf_pol_ste)
   expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
+  ### check for messages
+  expect_true(any(grepl("To reduce overall area", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   # Polar stereographic (south)
-  suggested_crs_square_conf_pol_ste <- suggest_crs(c(-56, -39, -81, -77), distortion = "conformal")
+  message <- capture_messages(suggested_crs_square_conf_pol_ste <- suggest_crs(c(-56, -39, -81, -77), distortion = "conformal"))
   ref_proj4_square_conf_pol_ste <- "+proj=stere +lon_0=-47.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_conf_pol_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                         GEOGCS["GCS_WGS_1984",
@@ -149,9 +157,12 @@ test_that("test square format", {
                                         UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_conf_pol_ste$proj4, ref_proj4_square_conf_pol_ste)
   expect_true(sf::st_crs(suggested_crs_square_conf_pol_ste$wkt) == sf::st_crs(ref_wkt_square_conf_pol_ste))
+  ### check for messages
+  expect_true(any(grepl("To reduce overall area", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   # Oblique stereographic
-  suggested_crs_square_obl_ste <- suggest_crs(c(-12, 2, 49, 59), distortion = "conformal")
+  message <- capture_messages(suggested_crs_square_obl_ste <- suggest_crs(c(-12, 2, 49, 59), distortion = "conformal"))
   ref_proj4_square_obl_ste <- "+proj=stere +lon_0=-5 +lat_0=54 +datum=WGS84 +units=m +no_defs"
   ref_wkt_square_obl_ste <- 'PROJCS["ProjWiz_Custom_Stereographic",
                                    GEOGCS["GCS_WGS_1984",
@@ -168,6 +179,9 @@ test_that("test square format", {
                                    UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_square_obl_ste$proj4, ref_proj4_square_obl_ste)
   expect_true(sf::st_crs(suggested_crs_square_obl_ste$wkt) == sf::st_crs(ref_wkt_square_obl_ste))
+  ### check for messages
+  expect_true(any(grepl("To reduce overall area", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   
   # EQUIDISTANT

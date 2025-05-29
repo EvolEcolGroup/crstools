@@ -21,7 +21,8 @@ test_that("test ew extent", {
   expect_true(sf::st_crs(suggested_crs_ew_conic$wkt) == sf::st_crs(ref_wkt_ew_conic))
   
   # Mercator projection
-  suggested_crs_ew_mercator <- suggest_crs(c(-13, 37, 8, 16), distortion = "conformal")
+  expect_message(suggested_crs_ew_mercator <- suggest_crs(c(-13, 37, 8, 16), distortion = "conformal"), 
+                 "To reduce overall area distortion on the map")
   ref_proj4_ew_mercator <- "+proj=merc +lon_0=12 +lat_ts=12 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_mercator <- 'PROJCS["ProjWiz_Custom_Mercator",
                                 GEOGCS["GCS_WGS_1984",
@@ -60,7 +61,7 @@ test_that("test ew extent", {
   expect_true(sf::st_crs(suggested_crs_ew_lcc$wkt) == sf::st_crs(ref_wkt_ew_lcc))
   
   # Polar stereographic (north)
-  suggested_crs_ew_ps <- suggest_crs(c(6, 35, 75, 81), distortion = "conformal")
+  message <- capture_messages(suggested_crs_ew_ps <- suggest_crs(c(6, 35, 75, 81), distortion = "conformal"))
   ref_proj4_ew_ps <- "+proj=stere +lon_0=20.5 +lat_0=90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
                           GEOGCS["GCS_WGS_1984",
@@ -77,9 +78,12 @@ test_that("test ew extent", {
                           UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
   expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  ### check messages 
+  expect_true(any(grepl("To reduce overall area distortion on the map", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   # Polar stereographic (south)
-  suggested_crs_ew_ps <- suggest_crs(c(6, 35, -81, -75), distortion = "conformal")
+  message <- capture_messages(suggested_crs_ew_ps <- suggest_crs(c(6, 35, -81, -75), distortion = "conformal"))
   ref_proj4_ew_ps <- "+proj=stere +lon_0=20.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
                           GEOGCS["GCS_WGS_1984",
@@ -96,9 +100,13 @@ test_that("test ew extent", {
                           UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_ew_ps$proj4, ref_proj4_ew_ps)
   expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
+  ### check messages 
+  expect_true(any(grepl("To reduce overall area distortion on the map", message)))
+  expect_true(any(grepl("For maps at this scale", message)))
   
   # Polar stereographic (south, negative conic)
-  suggested_crs_ew_ps <- suggest_crs(c(-126, 90, -77, -57), distortion = "conformal")
+  expect_message(suggested_crs_ew_ps <- suggest_crs(c(-126, 90, -77, -57), distortion = "conformal"), 
+                 "To reduce overall area distortion on the map")
   ref_proj4_ew_ps <- "+proj=stere +lon_0=-18 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
                             GEOGCS["GCS_WGS_1984",
@@ -117,7 +125,8 @@ test_that("test ew extent", {
   expect_true(sf::st_crs(suggested_crs_ew_ps$wkt) == sf::st_crs(ref_wkt_ew_ps))
   
   # Polar stereographic (north, negative conic)
-  suggested_crs_ew_ps <- suggest_crs(c(-126, 90, 57, 77), distortion = "conformal")
+  expect_message(suggested_crs_ew_ps <- suggest_crs(c(-126, 90, 57, 77), distortion = "conformal"), 
+                 "To reduce overall area distortion on the map")
   ref_proj4_ew_ps <- "+proj=stere +lon_0=-18 +lat_0=90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_ps <- 'PROJCS["ProjWiz_Custom_Stereographic",
                             GEOGCS["GCS_WGS_1984",
@@ -178,7 +187,8 @@ test_that("test ew extent", {
   expect_true(sf::st_crs(suggested_crs_ew_pole$wkt) == sf::st_crs(ref_wkt_ew_pole))
   
   # Polar Lambert equal area (south)
-  suggested_crs_ew_pole <- suggest_crs(c(6, 35, -81, -75), distortion = "equal_area")
+  expect_message(suggested_crs_ew_pole <- suggest_crs(c(6, 35, -81, -75), distortion = "equal_area"), 
+                 "For maps at this scale")
   ref_proj4_ew_pole <- "+proj=laea +lon_0=20.5 +lat_0=-90 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ew_pole <- 'PROJCS["ProjWiz_Custom_Lambert_Azimuthal",
                             GEOGCS["GCS_WGS_1984",
@@ -196,7 +206,8 @@ test_that("test ew extent", {
   expect_true(sf::st_crs(suggested_crs_ew_pole$wkt) == sf::st_crs(ref_wkt_ew_pole))
   
   # Cylindrical 
-  suggested_crs_cyl <- suggest_crs(c(25, 45, 3, 8), distortion = "equal_area")
+  expect_message(suggested_crs_cyl <- suggest_crs(c(25, 45, 3, 8), distortion = "equal_area"), 
+                 "For maps at this scale")
   ref_proj4_cyl <- "+proj=cea +lon_0=35 +lat_ts=5.5 +datum=WGS84 +units=m +no_defs"
   ref_wkt_cyl <- 'PROJCS["ProjWiz_Custom_Cylindrical_Equal_Area",
                         GEOGCS["GCS_WGS_1984",
