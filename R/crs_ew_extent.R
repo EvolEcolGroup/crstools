@@ -16,11 +16,11 @@ crs_ew_extent <- function(distortion, center,
                           lonmin, lonmax, latmin, latmax,
                           quiet = FALSE) {
   # Flag to determine if scale note should be included
-  scaleNote <- FALSE
+  scale_note <- FALSE
   # Case: Close to poles
   if (center$lat > 70) {
     if (distortion == "conformal") {
-      scaleNote <- TRUE
+      scale_note <- TRUE
 
       crs_suggestions <- data.frame(
         prj = "stere", x0 = NA_real_, lat0 = 90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
@@ -34,7 +34,7 @@ crs_ew_extent <- function(distortion, center,
     }
   } else if (center$lat < -70) {
     if (distortion == "conformal") {
-      scaleNote <- TRUE
+      scale_note <- TRUE
 
       crs_suggestions <- data.frame(
         prj = "stere", x0 = NA_real_, lat0 = -90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
@@ -50,21 +50,21 @@ crs_ew_extent <- function(distortion, center,
   } else if (abs(center$lat) < 15) {
     # Determine the standard parallel
     if ((latmax * latmin) <= 0) {
-      latS <- max(abs(latmax), abs(latmin)) / 2
+      lat_s <- max(abs(latmax), abs(latmin)) / 2
     } else {
-      latS <- center$lat
+      lat_s <- center$lat
     }
 
     if (distortion == "conformal") {
-      scaleNote <- TRUE
+      scale_note <- TRUE
 
       crs_suggestions <- data.frame(
-        prj = "merc", x0 = NA_real_, lat0 = NA_real_, lat1 = latS, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        prj = "merc", x0 = NA_real_, lat0 = NA_real_, lat1 = lat_s, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Mercator", notes = "Conformal projection for regional maps with an east-west extent"
       )
     } else if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
-        prj = "cea", x0 = NA_real_, lat0 = latS, lat1 = latS, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+        prj = "cea", x0 = NA_real_, lat0 = lat_s, lat1 = lat_s, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
         description = "Cylindrical equal-area", notes = "Equal-area projection for regional maps with an east-west extent"
       )
     }
@@ -95,7 +95,7 @@ crs_ew_extent <- function(distortion, center,
         )
       } else {
         # If the cone opens at the pole, switch to stereographic
-        scaleNote <- TRUE
+        scale_note <- TRUE
         if (center$lat > 0) {
           crs_suggestions <- data.frame(
             prj = "stere", x0 = NA_real_, lat0 = 90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
@@ -150,7 +150,7 @@ crs_ew_extent <- function(distortion, center,
   # Add central meridian information
 
   # Include the scale factor note if necessary
-  if (scaleNote) {
+  if (scale_note) {
     message("To reduce overall area distortion on the map, one can also apply a scale factor k. Various values for k can be applied and the area distortion patterns along the center and at the border of the map are compared to select most appropriate value.")
   }
 
