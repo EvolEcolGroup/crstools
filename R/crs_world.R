@@ -13,7 +13,7 @@
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(distortion, center, scale, round_cm, world_equidist, 
+crs_world <- function(distortion, center, scale, round_cm, world_equidist,
                       return_best, quiet = FALSE) {
   # Global list of world map projections
   listWorld <- list(
@@ -73,13 +73,15 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
     if (is.null(world_equidist)) {
       stop("`world_equidist` must be provided for equidistant world map projections")
     }
-    
+
     # Equidistant projections
-    
+
     # Update active projection and preview
-    crs_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
-                          prj_details = world_equidist,
-                          quiet = quiet)
+    crs_suggestions <- crs_world_equidistant(
+      center = center, scale = scale, round_cm = round_cm,
+      prj_details = world_equidist,
+      quiet = quiet
+    )
   } else {
     # compromise projections
 
@@ -107,7 +109,7 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
       )
     }
 
-    if (!return_best && !quiet){
+    if (!return_best && !quiet) {
       message("Rectangular projections are not generally recommended for most world maps.")
     }
   }

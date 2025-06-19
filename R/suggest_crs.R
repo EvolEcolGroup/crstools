@@ -57,7 +57,7 @@
 #' # Regional map for EW extent
 #' suggest_crs(c(-60, 20, 40, 70))
 #' @export
-#' 
+#'
 
 suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
                         round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),

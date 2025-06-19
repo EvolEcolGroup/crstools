@@ -4,7 +4,7 @@
 #' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
 #' @param scale numeric value, scale of the map.
 #' @param lonmin The minimum longitude of the map.
-#' @param lonmax The maximum longitude of the map. 
+#' @param lonmax The maximum longitude of the map.
 #' @param latmin numeric value, minimum latitude of the map.
 #' @param latmax numeric value, maximum latitude of the map.
 #' @param quiet logical, whether to suppress messages.
@@ -29,7 +29,6 @@ crs_small_area <- function(distortion, center, scale,
 
   # Handling various map properties and conditions
   if (distortion == "equidistant") {
-
     if (center$lat > 70) {
       crs_suggestions <- data.frame(
         prj = "aeqd", x0 = NA_real_, lat0 = 90, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
@@ -57,13 +56,14 @@ crs_small_area <- function(distortion, center, scale,
         prj = "eqdc", x0 = NA_real_, lat0 = center$lat, lat1 = latmin + interval, lat2 = latmax - interval, lon0 = center$lng, k0 = NA_real_,
         description = "Equidistant conic", notes = "Distance correct along meridians"
       )
-      
-      crs_suggestions <- rbind(crs_suggestions,
-                               data.frame(
-                                 prj = "aeqd", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
-                                 description = "Azimuthal equidistant", notes = "distance correct along any line passing through the center of the map (i.e., great circle)"
-                               ))
-      
+
+      crs_suggestions <- rbind(
+        crs_suggestions,
+        data.frame(
+          prj = "aeqd", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
+          description = "Azimuthal equidistant", notes = "distance correct along any line passing through the center of the map (i.e., great circle)"
+        )
+      )
     }
   } else if ((latmin >= 84 && distortion == "conformal") || (latmax <= -80 && distortion == "conformal")) {
     # case: very large scale, Universal Polar Stereographic - North Pole
@@ -73,7 +73,6 @@ crs_small_area <- function(distortion, center, scale,
       prj = "stere", x0 = NA_real_, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
       description = "Polar stereographic", notes = "Conformal projection at very large map scale"
     )
-
   } else if (dlon <= 3 && distortion == "conformal") {
     previewMapLat0 <- 0
     scaleFactor <- 0.9999
@@ -81,7 +80,6 @@ crs_small_area <- function(distortion, center, scale,
       prj = "tmerc", x0 = 500000, lat0 = previewMapLat0, lat1 = NA_real_, lat2 = NA_real_, lon0 = center$lng, k0 = scaleFactor,
       description = "Transverse Mercator", notes = "Conformal projection at very large map scale"
     )
-
   } else if (dlon <= 6 && distortion == "conformal") {
     previewMapLat0 <- 0
     scaleFactor <- 0.9996

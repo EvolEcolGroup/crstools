@@ -15,7 +15,6 @@
 # maps showing a hemisphere
 crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
                            quiet = FALSE) {
-
   # Formatting central meridian
   lon <- round(center$lng * 100) / 100
   lonStr <- ""
@@ -52,7 +51,6 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
         description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
       )
     }
-
   } else {
     # Formatting central latitude
     lat <- if (center$lat > 85) {
@@ -75,7 +73,6 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
         description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere"
       )
     }
-
   }
 
   return(crs_suggestions)

@@ -190,7 +190,6 @@ ggplot() +
   geom_sf(data = s_america_sf) +
   coord_sf(crs = s_am_equidist$proj4) +
   theme_minimal()
-
 ```
 
 The Tissot indicatrix is a mathematical contrivance used in cartography to

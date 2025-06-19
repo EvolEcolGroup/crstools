@@ -17,7 +17,7 @@ test_that("test whole hemisphere", {
                                   UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_north_hem_eqa$proj4, ref_proj4_north_hem_eqa)
   expect_true(sf::st_crs(suggested_crs_north_hem_eqa$wkt) == sf::st_crs(ref_wkt_north_hem_eqa))
-  
+
   # check southern hemisphere
   suggested_crs_south_hem_eqa <- suggest_crs(c(-180, 180, -90, 0), distortion = "equal_area")
   ref_proj4_south_hem_eqa <- "+proj=laea +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
@@ -35,7 +35,7 @@ test_that("test whole hemisphere", {
                                   UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_south_hem_eqa$proj4, ref_proj4_south_hem_eqa)
   expect_true(sf::st_crs(suggested_crs_south_hem_eqa$wkt) == sf::st_crs(ref_wkt_south_hem_eqa))
-  
+
   # EQUIDISTANT
   # check northern hemisphere
   suggested_crs_north_hem_eqd <- suggest_crs(c(-180, 180, 0, 90), distortion = "equidistant")
@@ -52,10 +52,10 @@ test_that("test whole hemisphere", {
                                   PARAMETER["Central_Meridian",0],
                                   PARAMETER["Latitude_Of_Origin",45],
                                   UNIT["Meter",1.0]]'
-  
+
   expect_equal(suggested_crs_north_hem_eqd$proj4, ref_proj4_north_hem_eqd)
   expect_true(sf::st_crs(suggested_crs_north_hem_eqd$wkt) == sf::st_crs(ref_wkt_north_hem_eqd))
-  
+
   # check southern hemisphere
   suggested_crs_south_hem_eqd <- suggest_crs(c(-180, 180, -90, 0), distortion = "equidistant")
   ref_proj4_south_hem_eqd <- "+proj=aeqd +lon_0=0 +lat_0=-45 +datum=WGS84 +units=m +no_defs"
@@ -73,15 +73,18 @@ test_that("test whole hemisphere", {
                                   UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_south_hem_eqd$proj4, ref_proj4_south_hem_eqd)
   expect_true(sf::st_crs(suggested_crs_south_hem_eqd$wkt) == sf::st_crs(ref_wkt_south_hem_eqd))
-  
-  # COMPROMISE 
-  expect_error(suggested_crs_south_hem_comp <- suggest_crs(c(-180, 180, -90, 0), distortion = "compromise"),
-               "compromise is not available for maps covering a whole hemisphere")
-  
+
+  # COMPROMISE
+  expect_error(
+    suggested_crs_south_hem_comp <- suggest_crs(c(-180, 180, -90, 0), distortion = "compromise"),
+    "compromise is not available for maps covering a whole hemisphere"
+  )
+
   # CONFORMAL
-  expect_error(suggested_crs_south_hem_conf <- suggest_crs(c(-180, 180, -90, 0), distortion = "conformal"),
-               "conformal is not available for maps covering a whole hemisphere")
-  
+  expect_error(
+    suggested_crs_south_hem_conf <- suggest_crs(c(-180, 180, -90, 0), distortion = "conformal"),
+    "conformal is not available for maps covering a whole hemisphere"
+  )
 })
 
 test_that("test if area in tropics", {
@@ -102,7 +105,7 @@ test_that("test if area in tropics", {
                              UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_trop_eqa$proj4, ref_proj4_trop_eqa)
   expect_true(sf::st_crs(suggested_crs_trop_eqa$wkt) == sf::st_crs(ref_wkt_trop_eqa))
-  
+
   # conformal projection
   suggested_crs_trop_conf <- suggest_crs(c(-180, 180, -22, 22), distortion = "conformal")
   ref_proj4_trop_conf <- "+proj=merc +lon_0=0 +lat_ts=0 +datum=WGS84 +units=m +no_defs"
@@ -120,7 +123,7 @@ test_that("test if area in tropics", {
                               UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_trop_conf$proj4, ref_proj4_trop_conf)
   expect_true(sf::st_crs(suggested_crs_trop_conf$wkt) == sf::st_crs(ref_wkt_trop_conf))
-  
+
   # equidistant projection
   suggested_crs_trop_eqd <- suggest_crs(c(-180, 180, -22, 22), distortion = "equidistant")
   ref_proj4_trop_eqd <- "+proj=eqc +lon_0=0 +lat_ts=0 +datum=WGS84 +units=m +no_defs"
@@ -138,5 +141,4 @@ test_that("test if area in tropics", {
                              UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_trop_eqd$proj4, ref_proj4_trop_eqd)
   expect_true(sf::st_crs(suggested_crs_trop_eqd$wkt) == sf::st_crs(ref_wkt_trop_eqd))
-  
 })
