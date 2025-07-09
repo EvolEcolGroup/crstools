@@ -7,7 +7,8 @@
 crs_ns_extent(distortion, center, quiet = FALSE)
 }
 \arguments{
-\item{distortion}{character string (e.g., "equal_area", "equidistant", "conformal").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant",
+"conformal").}
 
 \item{center}{The center of the map projection.}
 

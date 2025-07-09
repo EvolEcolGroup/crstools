@@ -7,7 +7,7 @@ normalise_lon <- function(lon, lon0) {
   while (lon > (lon0 + 180.0)) {
     lon <- lon - 360.0
   }
-  return(lon)
+  return(lon) # nolint
 }
 
 ################################################################################
@@ -23,5 +23,5 @@ round_world_coords <- function(value, scale, round_cm) {
     val <- round(value * 10) / 10
   }
 
-  return(val)
+  return(val) # nolint
 }

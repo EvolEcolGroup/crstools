@@ -39,9 +39,9 @@
 geom_tissot <- function(
     mapping = ggplot2::aes(),
     data = NULL,
-    na.rm = FALSE,
-    show.legend = NA,
-    inherit.aes = TRUE,
+    na.rm = FALSE, # nolint
+    show.legend = NA, # nolint
+    inherit.aes = TRUE, # nolint
     centers = c(5, 5),
     radius = NULL,
     fill = "red",
@@ -65,12 +65,12 @@ geom_tissot <- function(
       geom = ggplot2::GeomSf,
       data = data,
       mapping = mapping,
-      stat = Tissot,
+      stat = Tissot, # nolint
       position = "identity",
-      show.legend = show.legend,
-      inherit.aes = inherit.aes,
+      show.legend = show.legend, # nolint
+      inherit.aes = inherit.aes, # nolint
       params = list(
-        na.rm = na.rm, centers = centers, radius = radius,
+        na.rm = na.rm, centers = centers, radius = radius, # nolint
         fill = fill, alpha = alpha,
         ...
       )
@@ -79,7 +79,7 @@ geom_tissot <- function(
   )
 }
 
-Tissot <- ggplot2::ggproto("Tissot", ggplot2::StatSf,
+Tissot <- ggplot2::ggproto("Tissot", ggplot2::StatSf, # nolint
   compute_panel = function(data, scales, coord, centers, radius) {
     # create new data with the indicatrix
     data <- create_indicatrix(data, scales, coord, centers, radius)
@@ -96,7 +96,8 @@ create_indicatrix <- function(data, scales, coord, centers, radius) {
     data_bbox <- sf::st_transform(data_bbox, sf::st_crs("EPSG:4326"))
   }
 
-  # if centers is a vector of two elements (and NOT a list), then we generate the grid of centers
+  # if centers is a vector of two elements (and NOT a list),
+  # then we generate the grid of centers
   if (!inherits(centers, "list") && length(centers) == 2) {
     # Generate sequences
     lon_seq <- pretty(c(data_bbox$xmin, data_bbox$xmax),
@@ -111,10 +112,12 @@ create_indicatrix <- function(data, scales, coord, centers, radius) {
 
     coord_grid <- as.matrix(expand.grid(lon_seq, lat_seq))
     # if we have a list, we use the values in the list
-  } else if (inherits(centers, "list") && all(c("lng", "lat") %in% names(centers))) {
+  } else if (inherits(centers, "list") &&
+               all(c("lng", "lat") %in% names(centers))) {
     coord_grid <- as.matrix(expand.grid(centers$lng, centers$lat))
   } else {
-    stop("centers must be either a list with elements 'lng' and 'lat' or a vector of length 2")
+    stop(paste0("centers must be either a list with elements ",
+                "'lng' and 'lat' or a vector of length 2"))
   }
 
   # create an sf of coord_grid with a lonlat crs
@@ -144,11 +147,12 @@ create_indicatrix <- function(data, scales, coord, centers, radius) {
     PANEL = 1,
     group = -1
   )
-  return(new_data)
+  return(new_data) # nolint
 }
 
 
-# copy of the ggplot2 internal function to find the geometry column in a data.frame
+# copy of the ggplot2 internal function to find
+# the geometry column in a data.frame
 geom_column <- function(data) {
   w <- which(vapply(data, inherits, TRUE, what = "sfc"))
   if (length(w) == 0) {

@@ -15,16 +15,10 @@ crs_world_equidistant <- function(center,
                                   quiet = FALSE) {
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details, "list") || !"prj" %in% names(prj_details)) {
-    stop("`world_equidistant` must be a list with a `prj` element and the appropriate projection details")
-  }
-
-  # Formatting slider steps
-  if (round_cm || scale < 1.15) {
-    steps <- 1.0
-  } else if (scale < 1.32) {
-    steps <- 0.5
-  } else {
-    steps <- 0.1
+    stop(paste0(
+      "`world_equidistant` must be a list with a `prj` element",
+      "and the appropriate projection details"
+    ))
   }
 
   # Formatting output
@@ -45,7 +39,8 @@ crs_world_equidistant <- function(center,
     pole_str <- ifelse(pole_eq > 0, "North Pole", "South Pole")
 
     crs_suggestions <- data.frame(
-      prj = "aeqd", x0 = NA_real_, lat0 = pole_eq, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng_central, k0 = NA_real_,
+      prj = "aeqd", x0 = NA_real_, lat0 = pole_eq, lat1 = NA_real_,
+      lat2 = NA_real_, lon0 = lng_central, k0 = NA_real_,
       description = "Polar azimuthal equidistant",
       notes = paste0(
         "Distance correct through or from the ", pole_str,
@@ -64,9 +59,13 @@ crs_world_equidistant <- function(center,
     lng_center <- prj_details$lng_center
 
     crs_suggestions <- data.frame(
-      prj = "aeqd", x0 = NA_real_, lat0 = lat_center, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng_center, k0 = NA_real_,
+      prj = "aeqd", x0 = NA_real_, lat0 = lat_center, lat1 = NA_real_,
+      lat2 = NA_real_, lon0 = lng_center, k0 = NA_real_,
       description = "Oblique azimuthal equidistant",
-      notes = paste0("Distance correct through or from the center (", lng_center, ", ", lat_center, ")")
+      notes = paste0(
+        "Distance correct through or from the center (",
+        lng_center, ", ", lat_center, ")"
+      )
     )
   } else if (prj_details$prj == "two_points") {
     # Two-point azimuthal equidistant
@@ -100,9 +99,13 @@ crs_world_equidistant <- function(center,
     )
 
     crs_suggestions <- data.frame(
-      prj = "tpeqd", x0 = NA_real_, lat0 = lat1_eq, lat1 = lng1_eq, lat2 = lat2_eq, lon0 = lng2_eq, k0 = NA_real_,
+      prj = "tpeqd", x0 = NA_real_, lat0 = lat1_eq, lat1 = lng1_eq,
+      lat2 = lat2_eq, lon0 = lng2_eq, k0 = NA_real_,
       description = "Two-point azimuthal equidistant",
-      notes = paste0("Distances are correct from two points: ", lng1_eq, ", ", lat1_eq, " and ", lng2_eq, ", ", lat2_eq)
+      notes = paste0(
+        "Distances are correct from two points: ",
+        lng1_eq, ", ", lat1_eq, " and ", lng2_eq, ", ", lat2_eq
+      )
     )
   } else {
     stop(
