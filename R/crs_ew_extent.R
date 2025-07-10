@@ -103,7 +103,6 @@ crs_ew_extent <- function(distortion, center,
     interval <- (latmax - latmin) / 6
 
     if (distortion == "conformal") {
-      previewMapProjection <- activeProjection <- "Lambert conformal conic"
 
       # Create the CRS of the conic projection that we want to test
       conic_crs_to_test <- data.frame(
@@ -180,12 +179,12 @@ crs_ew_extent <- function(distortion, center,
         "WGS84", "m"
       )$proj4
       # Check if the cone opens at a pole
-      conicTest <- crs_check_conic(
+      conic_test <- crs_check_conic(
         center$lng, conic_crs_to_test,
         lonmin, lonmax, latmin, latmax
       )
 
-      if (conicTest > 0) {
+      if (conic_test > 0) {
         crs_suggestions <- data.frame(
           prj = "aea", x0 = NA_real_, lat0 = center$lat,
           lat1 = latmin + interval, lat2 = latmax - interval,
@@ -197,7 +196,7 @@ crs_ew_extent <- function(distortion, center,
           )
         )
       } else {
-        if (conicTest == 0) {
+        if (conic_test == 0) {
           crs_suggestions <- data.frame(
             prj = "laea", x0 = NA_real_, lat0 = center$lat, lat1 = NA_real_,
             lat2 = NA_real_, lon0 = center$lng, k0 = NA_real_,
@@ -284,8 +283,7 @@ crs_check_conic <- function(lon0, proj4_string, lonmin, lonmax,
 
   # Check if the fan of the selected extent exposes a cone opening at a pole
   # Note: up is negative and down is positive in graphics
-  if (((ymax - test_pts[1, 2]) > 1e-6) ||
-    ((ymin - test_pts[2, 2]) < -1e-6)) {
+  if (((ymax - test_pts[1, 2]) > 1e-6) || ((ymin - test_pts[2, 2]) < -1e-6)) {
     if (substr(proj4_string, 1, 9) == "+proj=lcc") { # Check is lcc projection
       res <- -1
     } else if (test_pts[3, 2] > test_pts[4, 2]) {
