@@ -5,7 +5,7 @@
 #' @returns A data frame with the GCPs, including their image coordinates and corresponding geographic coordinates.
 #' @export
 
-find_gcp_coords <- function(gcp, extent, sf_obj) {
+find_gcp_coords <- function(gcp, sf_obj) {
   if (!is.data.frame(gcp) || !all(c("id", "x", "y", "longitude", "latitude") %in% colnames(gcp))) {
     stop("gcp must be a data frame with columns: id, x, y, longitude, latitude.")
   }
@@ -15,6 +15,7 @@ find_gcp_coords <- function(gcp, extent, sf_obj) {
     stop("sf_obj must be an sf object.")
   }
   # plot the reference map
+  x11()
   plot(sf_obj, add = TRUE)
   
   # if some gcp already have coordinates, plot them on this map (TODO)

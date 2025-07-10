@@ -43,6 +43,15 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
       stop("gcp dataframe must contain columns: ", paste(required_cols, collapse = ", "))
     }
     last_id <- max(gcp$id, na.rm = TRUE)
+    # check that the image dimensions are stored as an attribute
+    if (!is.null(attr(gcp, "image_dims"))) {
+      img_dims <- attr(gcp, "image_dims")
+      if (!all(img_dims == dim(img))) {
+        stop("Image dimensions do not match the dimensions stored in gcp.")
+      }
+    } else {
+      attr(gcp, "image_dims") <- dim(img)
+    }
     
   } else {
     gcp <- data.frame(id = integer(0), x = numeric(0), y = numeric(0), longitude = numeric(0), latitude = numeric(0))
@@ -76,6 +85,8 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   
   # combine the gcp tables
   gcp <- rbind(gcp, gcp_df_new)
+  # readd the dims of the image as an attribute
+  attr(gcp, "image_dims") <- dim(img)
   
  text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
  
