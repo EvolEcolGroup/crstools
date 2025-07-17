@@ -22,3 +22,8 @@ new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 # 2. Choose a further 2 points
 # etc
 # Add a testthat operation to check number of points total
+
+
+
+# Georeference the image using the created GCPs
+georeference_img(image_obj = img_path, gcp = new_gcp_europe, output_path = NULL)
