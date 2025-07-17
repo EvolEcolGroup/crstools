@@ -29,7 +29,7 @@
 #' warped_image <- georeference_image(image_path = "image.jpg", gcp_df = gcp_df)
 #' }
 
-georeference_image <- function(image_obj, gcp, output_path = NULL) {
+georeference_img <- function(image_obj, gcp, output_path = NULL) {
   warning("this function is untested yet!")
   
   # check if image is a file path or an array
@@ -54,8 +54,11 @@ georeference_image <- function(image_obj, gcp, output_path = NULL) {
   } else {
     stop("Image must be a file path or an array.")
   }  
+  
+  # Get dimensions without fully loading image
+  img_height <- dim(jpeg::readJPEG(image_obj))[1]
   # Flip Y axis to match GDAL coordinate origin
-  gcp$y <- abs(gcp$y - dim(img)[2])
+  gcp$y <- abs(gcp$y - img_height)
   
   # Prepare output file names
   map_tif <- paste0(output_path, ".tif")
