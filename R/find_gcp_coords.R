@@ -14,17 +14,31 @@ find_gcp_coords <- function(gcp, sf_obj) {
   if (!inherits(sf_obj, "sf")) {
     stop("sf_obj must be an sf object.")
   }
+
+  # find the first point that has no coordinates
+  first_missing <- which(is.na(gcp$longitude) | is.na(gcp$latitude))[1]
+  
+  # return if we have coordinates for all gcp
+  if (is.na(first_missing)){
+    stop ("all GCPs already have coordinates")
+  }
+  
   # plot the reference map
   x11()
-  plot(sf_obj, add = TRUE)
-  
+  plot(sf::st_geometry(sf_obj))
+
   # if some gcp already have coordinates, plot them on this map (TODO)
+  if (first_missing > 1) {
+    points(gcp$longitude, gcp$latitude, col = "blue", pch = 19)
+    text(gcp$longitude, gcp$latitude, labels = gcp$id, col = "blue", pos = 2)
+  }
   
   # get coordinates of additional points
   coords <- locator(n = nrow(gcp), type = "p", col = "red", pch = 19)
   
-  #TODO add the coordinates to the gcp dataframe
-
+  #add the coordinates to the gcp dataframe
+  gcp$longitude[first_missing:length(coords$x)] <- coords$x
+  gcp$latitude[first_missing:length(coords$y)] <- coords$y
   
   return(gcp)
 }
