@@ -59,7 +59,11 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   }
 
   # open a new window to plot the image
-  x11()
+  if (capabilities("X11")) {
+    x11()
+  } else {
+    quartz()
+  }
   # plot the image
   plot(0,0, xlim=c(0,dim(img)[1]), ylim=c(0,dim(img)[2]), type="n", xlab="x_pixels", ylab="y_pixels")
   # add the image to the plot

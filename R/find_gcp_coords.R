@@ -24,7 +24,11 @@ find_gcp_coords <- function(gcp, sf_obj) {
   }
   
   # plot the reference map
-  x11()
+  if (capabilities("X11")) {
+    x11()
+  } else {
+    quartz()
+  }
   plot(sf::st_geometry(sf_obj))
 
   # if some gcp already have coordinates, plot them on this map (TODO)
