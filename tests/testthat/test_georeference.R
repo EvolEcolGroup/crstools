@@ -16,3 +16,9 @@ europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70)) # approxi
 
 # get the coordinates for these points
 new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
+
+# TODO add in descriptive steps e.g.
+# 1. Choose 4 points
+# 2. Choose a further 2 points
+# etc
+# Add a testthat operation to check number of points total
