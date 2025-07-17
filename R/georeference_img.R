@@ -56,10 +56,10 @@ georeference_img <- function(image_obj, gcp, output_path = NULL) {
   }  
   
   # Get dimensions without fully loading image
-  img_height <- dim(jpeg::readJPEG(image_obj))[1]
+  img_height <- dim(jpeg::readJPEG(image_obj))[1] 
   # Flip Y axis to match GDAL coordinate origin
-  gcp$y <- abs(gcp$y - img_height)
-  
+  gcp$y <- img_height - gcp$y 
+
   # Prepare output file names
   map_tif <- paste0(output_path, ".tif")
   map_warp_tif <- paste0(output_path, "_warp.tif")
