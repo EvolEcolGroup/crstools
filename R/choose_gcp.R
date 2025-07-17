@@ -26,7 +26,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   } else {
     stop("Image must be a file path or an array.")
   }
-  
+
   # check if image is a valid array
   if (length(dim(img)) != 3 || dim(img)[3] != 3) {
     stop("Image must be a colour image with three channels (RGB).")
@@ -35,7 +35,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   if (!is.null(gcp) && !is.data.frame(gcp)) {
     stop("gcp must be a dataframe with columns id, x, y, longitude, latitude.")
   }
-  
+
   # if gcp is not null, check if it has the required columns
   if (!is.null(gcp)) {
     required_cols <- c("id", "x", "y", "longitude", "latitude")
@@ -52,12 +52,12 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
     } else {
       attr(gcp, "image_dims") <- dim(img)
     }
-    
+
   } else {
     gcp <- data.frame(id = integer(0), x = numeric(0), y = numeric(0), longitude = numeric(0), latitude = numeric(0))
     last_id <- 0
   }
-  
+
   # open a new window to plot the image
   x11()
   # plot the image
@@ -70,26 +70,28 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
     points(gcp$x, gcp$y, col = col, pch = 19)
     text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
   }
-    
-  
-    
+
+
+
   gcp_xy <- locator(n=1000, type="p") # change number of points
-  
-  gcp_df_new <- data.frame(
-    id = seq_len(length(gcp_xy$x)) + last_id,
-    x = gcp_xy$x,
-    y = gcp_xy$y,
-    longitude = NA_real_,
-    latitude = NA_real_
-  )
-  
-  # combine the gcp tables
-  gcp <- rbind(gcp, gcp_df_new)
+
+  if(!is.null(gcp_xy)){
+    gcp_df_new <- data.frame(
+      id = seq_len(length(gcp_xy$x)) + last_id,
+      x = gcp_xy$x,
+      y = gcp_xy$y,
+      longitude = NA_real_,
+      latitude = NA_real_
+    )
+    # combine the gcp tables
+    gcp <- rbind(gcp, gcp_df_new)
+  }
+
   # readd the dims of the image as an attribute
   attr(gcp, "image_dims") <- dim(img)
-  
+
  text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
- 
+
  # return the gcp dataframe
   return(gcp)
 
