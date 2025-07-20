@@ -23,7 +23,21 @@ new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 # etc
 # Add a testthat operation to check number of points total
 
+# We can now close the X11 windows that we had opened.
 
 
 # Georeference the image using the created GCPs
-georeference_img(image_obj = img_path, gcp = new_gcp_europe, output_path = NULL)
+georef_path <- georeference_img(image_obj = img_path, gcp = new_gcp_europe, output_path = file.path(tempdir(), "europe_map_georef"))
+map_warp <- terra::rast(georef_path)
+# plot the image
+library(ggplot2)
+library(tidyterra)
+ggplot() +
+  geom_spatraster_rgb(data = map_warp) +
+  geom_sf(
+    data = europe,
+    color = "orange",
+    fill = "transparent"
+  ) +
+  coord_sf(expand = FALSE)
+
