@@ -32,13 +32,25 @@ find_gcp_coords <- function(gcp, sf_obj) {
     points(gcp$longitude, gcp$latitude, col = "blue", pch = 19)
     text(gcp$longitude, gcp$latitude, labels = gcp$id, col = "blue", pos = 2)
   }
+  message("Click on the map to add a new GCP. Press ESC to finish.\n")
   
   # get coordinates of additional points
-  coords <- locator(n = nrow(gcp), type = "p", col = "red", pch = 19)
-  
-  #add the coordinates to the gcp dataframe
-  gcp$longitude[first_missing:length(coords$x)] <- coords$x
-  gcp$latitude[first_missing:length(coords$y)] <- coords$y
-  
+  while(TRUE){
+    
+    coords <- locator(n = 1, type = "p", col = "red", pch = 19)
+    if (is.null(coords)) {
+      break
+    }
+    
+    # add this coordinates to the first missing value in gpc$longitude
+    next_missing <- which(is.na(gcp$longitude) | is.na(gcp$latitude))[1]
+    #add the coordinates to the gcp dataframe
+    gcp$longitude[next_missing] <- coords$x
+    gcp$latitude[next_missing] <- coords$y
+    text(gcp$longitude[next_missing], 
+         gcp$latitude[next_missing],
+         labels = gcp$id[next_missing], col = "blue", pos = 2)
+  }
+
   return(gcp)
 }

@@ -29,7 +29,8 @@ new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 # Georeference the image using the created GCPs
 georef_path <- georeference_img(image_obj = img_path, gcp = new_gcp_europe, output_path = file.path(tempdir(), "europe_map_georef"))
 map_warp <- terra::rast(georef_path)
-# plot the image
+
+# plot the image in the default Rstudio plot window
 library(ggplot2)
 library(tidyterra)
 ggplot() +
@@ -41,3 +42,7 @@ ggplot() +
   ) +
   coord_sf(expand = FALSE)
 
+# We now use locator to get the coordinates of the blue dots
+# Write a nicer function to do this (we want markers every time we click)
+# we want to be able to give it an existing dataframe, plot the current points and add to it
+blue_coords <- locator(n = 6)
