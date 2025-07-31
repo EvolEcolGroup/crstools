@@ -45,4 +45,10 @@ ggplot() +
 # We now use locator to get the coordinates of the blue dots
 # Write a nicer function to do this (we want markers every time we click)
 # we want to be able to give it an existing dataframe, plot the current points and add to it
-blue_coords <- locator(n = 6)
+
+# get the coordinates of the blues points
+blue_coords_df <- extract_coords(map_warp)
+
+# we forgot one of the dots, let's re run the function
+blue_coords_df <- extract_coords(map_warp, blue_coords_df)
+

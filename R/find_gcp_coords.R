@@ -1,7 +1,7 @@
 #' Find the coordinates (longitude and latitude) of the ground control points (GCPs) in a given image.
 #' 
 #' @param gcp A data frame containing the GCPs with columns `id`, `x`, `y`, `longitude`, and `latitude`.
-#' @sf_obj the reference map, as an sf object (already cut to the extend and if needed projected)
+#' @param sf_obj the reference map, as an sf object (already cut to the extend and if needed projected)
 #' @returns A data frame with the GCPs, including their image coordinates and corresponding geographic coordinates.
 #' @export
 
