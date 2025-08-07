@@ -1,0 +1,128 @@
+---
+title: "Georeference an image"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Georeference an image}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+# Georeference an image
+
+Georeferencing is the process of assigning real-world coordinates to an image,
+allowing it to be accurately placed on a map. This is often done using Ground
+Control Points (GCPs), which are known locations on the ground with precise coordinates.
+In this vignette, we will demonstrate how to georeference an image using GCPs
+in the `crswizard` package.
+
+The process of assigning GCPs to an image is interactive, allowing you to
+select points on the image and assign them geographic coordinates. Unfortunately,
+this is not compatible with Rmarkdown or the image pane within RStudio. `crswizard`
+opens separate windows for GCP assignment and image display, and the code has to
+be run from a script or the console.
+
+To get started, we need to load the `crswizard` package:
+
+```{r setup}
+library(crswizard)
+```
+
+Next we need a jpg image that we scanned or downloaded. We will use a map of Europe
+that is included with the package. The map has a number of points (the capitals of 
+BLAH BLAH). Out task is to georeference this image and then extract the coordinates
+of those capitals.
+
+```{r image_path}
+img_path <- system.file("extdata/europe_map.jpeg", package = "crswizard")
+```
+
+We can now select a number of GCPs with `choose_gcp()`. This function
+allows you to click on the image and assign coordinates to the points you select.
+Choose locations that are easy to find again on a map, such as features in coastlines (e.g. bays),
+or corners of country boundaries.
+```{r choose_gcp, eval = FALSE}
+gcp_europe <- choose_gcp(img_path)
+```
+
+This will open a window showing the image:
+
+LINK TO IMAGE
+
+You can click on the image to select points by left-clicking with your mouse. The points will be numbered in the order
+in which they were chosen; you can stop by pressing the ESC key, or with a right-click.
+
+LINK TO IMAGE
+
+```{r save_gcp1, echo = FALSE, eval= FALSE}
+# Run me to save the object if you are recreating the vignette
+saveRDS(gcp_europe,"./vignettes/img/europe_gcp1.RDS")
+```
+
+```{r load_gcp1, echo = FALSE, results = "hide"}
+#gcp_europe <- system.file("extdata/gcp_europe.rds", package = "crswizard")
+gcp_europe <- readRDS("./img/europe_gcp1.rds")
+```
+
+The coordinates of those points will be
+saved in the `gcp_europe` dataframe, which contains the following columns:
+```{r gcp_europe}
+gcp_europe
+```
+
+Next we need to get the coordinates (longitude and latitude) of these points. We can use the `find_gcp_coords()` function
+to assign geographic coordinates to the GCPs. This function requires a reference map in the form of an `sf` object.
+We will use the `rnaturalearth` package to get a map of Europe, and then crop it to the extent of the image.
+```{r get_coords}
+library(sf)
+library(rnaturalearth)
+# Load the world map
+world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+# Transform it to a suitable projection
+world <- st_transform(world, crs = 4326) # WGS 84
+# Crop it to the extent of the image to Europe
+europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
+```
+
+Let's quickly plot it to check that we have the correct extent:
+```{r plot_europe}
+library(ggplot2)
+ggplot() +
+  geom_sf(data = europe, fill = "lightblue", color = "black") +
+  coord_sf(expand = FALSE) +
+  ggtitle("Map of Europe")
+```
+Now we can use the `find_gcp_coords()` function to assign geographic coordinates to the GCPs.
+
+LINK TO IMAGE
+```{r find_gcp_coords, eval = FALSE}
+gcp_europe_coords <- find_gcp_coords(gcp_europe, europe)
+```
+This will open a new window with the map of Europe, and you can click on the points to assign coordinates to the GCPs.
+```{r save_gcp2, echo = FALSE, eval= FALSE}
+# Run me to save the object if you are recreating the vignette
+saveRDS(gcp_europe_coords,"./vignettes/img/europe_gcp_georef.RDS")
+```
+```{r load_gcp2, echo = FALSE, results = "hide"}
+#gcp_europe_coords <- system.file("extdata/gcp_europe_coords.rds", package = "crswizard")
+gcp_europe_coords <- readRDS("./img/europe_gcp_georef.RDS")
+```
+Now the `gcp_europe_coords` dataframe contains the geographic coordinates of the GCPs:
+```{r gcp_europe_coords}
+gcp_europe_coords
+```
+
+Finally, we can use the `georeference_image()` function to georeference the image using the GCPs. This function will create a new TIFF file with the georeferenced image.
+```{r georeference_image}
+georeferenced_image <- georeference_img(img_path, gcp_europe_coords)
+```
+The `georeference_img()` function will create a new TIFF file with the georeferenced image. The output file will have the same name as the input image, but with the suffix `_warp.tif` added to it.
+FIXME we need to put this in a temporary directory
+
+
+
