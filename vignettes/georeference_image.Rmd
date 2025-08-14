@@ -35,7 +35,8 @@ library(crswizard)
 
 Next we need a jpg image that we scanned or downloaded. We will use a map of Europe
 that is included with the package. The map has a number of points (the capitals of 
-BLAH BLAH). Out task is to georeference this image and then extract the coordinates
+UK, France, Spain, Germany, Italy, and Iceland). 
+Our task is to georeference this image and then extract the coordinates
 of those capitals.
 
 ```{r image_path}
@@ -52,12 +53,12 @@ gcp_europe <- choose_gcp(img_path)
 
 This will open a window showing the image:
 
-LINK TO IMAGE
+![Europe_with_georef.](img/europe_image.png)
 
 You can click on the image to select points by left-clicking with your mouse. The points will be numbered in the order
 in which they were chosen; you can stop by pressing the ESC key, or with a right-click.
 
-LINK TO IMAGE
+![Europe_with_georef_GCP.](img/europe_image_georef1.png)
 
 ```{r save_gcp1, echo = FALSE, eval= FALSE}
 # Run me to save the object if you are recreating the vignette
@@ -99,7 +100,8 @@ ggplot() +
 ```
 Now we can use the `find_gcp_coords()` function to assign geographic coordinates to the GCPs.
 
-LINK TO IMAGE
+![Europe_with_georef.](./img/europe_image_GCP.png)
+
 ```{r find_gcp_coords, eval = FALSE}
 gcp_europe_coords <- find_gcp_coords(gcp_europe, europe)
 ```
@@ -108,6 +110,7 @@ This will open a new window with the map of Europe, and you can click on the poi
 # Run me to save the object if you are recreating the vignette
 saveRDS(gcp_europe_coords,"./vignettes/img/europe_gcp_georef.RDS")
 ```
+
 ```{r load_gcp2, echo = FALSE, results = "hide"}
 #gcp_europe_coords <- system.file("extdata/gcp_europe_coords.rds", package = "crswizard")
 gcp_europe_coords <- readRDS("./img/europe_gcp_georef.RDS")
@@ -117,12 +120,88 @@ Now the `gcp_europe_coords` dataframe contains the geographic coordinates of the
 gcp_europe_coords
 ```
 
-Finally, we can use the `georeference_image()` function to georeference the image using the GCPs. This function will create a new TIFF file with the georeferenced image.
+Finally, we can use the `georeference_image()` function to georeference the image using the GCPs. 
+This function will create a new TIFF file with the georeferenced image.
 ```{r georeference_image}
 georeferenced_image <- georeference_img(img_path, gcp_europe_coords)
 ```
 The `georeference_img()` function will create a new TIFF file with the georeferenced image. The output file will have the same name as the input image, but with the suffix `_warp.tif` added to it.
-FIXME we need to put this in a temporary directory
+@FIXME we need to put this in a temporary directory
 
+The georeferenced image can be loaded into R using the `terra` package as a SpatRaster:
+```{r load_georeferenced_image}
+map_warp <- terra::rast(georeferenced_image)
+```
+We can now plot the georeferenced image to check the overlap between the input image and the georeferenced image. 
+This can inform us if more points (GCPs) need to be added and previous steps repeated (`choose_gcp()`).
+```{r plot_warped_image}
 
+library(ggplot2)
+library(tidyterra)
+ggplot() +
+  geom_spatraster_rgb(data = map_warp) +
+  geom_sf(
+    data = europe,
+    color = "orange",
+    fill = "transparent"
+  ) +
+  coord_sf(expand = FALSE)
+```
 
+![Europe georeferenced first version.](./img/europe_georeferenced_version1.png)
+
+To add more points to improve the fit, we use: 
+```{r choose_gcp_version2, eval = FALSE}
+gcp_europe <- choose_gcp(img_path, gcp = gcp_europe) 
+
+```
+
+```{r save_gcp2, echo = FALSE, eval= FALSE}
+# Run me to save the object if you are recreating the vignette
+saveRDS(gcp_europe,"./img/europe_gcp2.RDS")
+
+```
+
+```{r load_gcp2, echo = FALSE, results = "hide"}
+# Reload if needed
+gcp_europe <- readRDS("./img/europe_gcp2.rds")
+```
+
+Additional points were added to the `gcp_europe` dataframe:
+```{r gcp_europe2}
+gcp_europe
+```
+@TODO check it works correctly from here
+Now we can repeat the process of assigning coordinates to the GCPs using `find_gcp_coords()` and `georeference_img()`:
+```{r find_gcp_coords_version2}
+gcp_europe_coords_v2 <- find_gcp_coords(gcp_europe, europe)
+```
+
+Run me to save the object if you are recreating the vignette
+```{r save_gcp2_v2, echo = FALSE, eval= FALSE}
+saveRDS(gcp_europe_coords_v2,"./vignettes/img/europe_gcp_georef_v2.RDS")
+```
+
+```{r load_gcp2_v2, echo = FALSE, results = "hide"}
+gcp_europe_coords_v2 <- readRDS("./img/europe_gcp_georef_v2.RDS")
+```
+
+Repeat georeferencing of the image using the GCPs. 
+```{r georeference_image_v2}
+georeferenced_image_v2 <- georeference_img(img_path, gcp_europe_coords_v2)
+
+map_warp_v2 <- terra::rast(georeferenced_image_v2)
+
+# check the new image
+ggplot() +
+  geom_spatraster_rgb(data = map_warp_v2) +
+  geom_sf(
+    data = europe,
+    color = "orange",
+    fill = "transparent"
+  ) +
+  coord_sf(expand = FALSE)
+```
+
+We can see that the additional points improved the georeferencing of the image, 
+as the map now aligns better with the geographic coordinates of the GCPs.
