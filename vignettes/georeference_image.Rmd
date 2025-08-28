@@ -171,15 +171,20 @@ Additional points were added to the `gcp_europe` dataframe:
 ```{r gcp_europe2}
 gcp_europe
 ```
-@TODO check it works correctly from here
+
+Check the map with the original points 
+![Europe georeferenced points second version.](./img/europe_image_GCP2.png)
+
 Now we can repeat the process of assigning coordinates to the GCPs using `find_gcp_coords()` and `georeference_img()`:
 ```{r find_gcp_coords_version2}
 gcp_europe_coords_v2 <- find_gcp_coords(gcp_europe, europe)
+
+gcp_europe_coords_v2
 ```
 
 Run me to save the object if you are recreating the vignette
 ```{r save_gcp2_v2, echo = FALSE, eval= FALSE}
-saveRDS(gcp_europe_coords_v2,"./vignettes/img/europe_gcp_georef_v2.RDS")
+saveRDS(gcp_europe_coords_v2,"./img/europe_gcp_georef_v2.RDS")
 ```
 
 ```{r load_gcp2_v2, echo = FALSE, results = "hide"}
@@ -202,6 +207,22 @@ ggplot() +
   ) +
   coord_sf(expand = FALSE)
 ```
+![Europe georeferenced second version.](./img/europe_georeferenced_version2.png)
 
 We can see that the additional points improved the georeferencing of the image, 
 as the map now aligns better with the geographic coordinates of the GCPs.
+
+We now use locator to get the coordinates of the blue dots
+```{r get_coords}
+# get the coordinates of the blues points
+blue_coords_df <- extract_coords(map_warp_v2)
+```
+So we now have the coordinates of the blue points:
+```{r show_coords}
+blue_coords_df
+```
+
+There are only 5 entries - we forgot one of the dots, let's re run the function:
+```{r get_coords2}
+blue_coords_df <- extract_coords(map_warp_v2, blue_coords_df)
+```
