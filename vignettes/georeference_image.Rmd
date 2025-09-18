@@ -115,6 +115,7 @@ saveRDS(gcp_europe_coords,"./vignettes/img/europe_gcp_georef.RDS")
 #gcp_europe_coords <- system.file("extdata/gcp_europe_coords.rds", package = "crswizard")
 gcp_europe_coords <- readRDS("./img/europe_gcp_georef.RDS")
 ```
+
 Now the `gcp_europe_coords` dataframe contains the geographic coordinates of the GCPs:
 ```{r gcp_europe_coords}
 gcp_europe_coords
@@ -156,13 +157,13 @@ gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
 
 ```
 
-```{r save_gcp2, echo = FALSE, eval= FALSE}
+```{r save_gcp2_update, echo = FALSE, eval= FALSE}
 # Run me to save the object if you are recreating the vignette
 saveRDS(gcp_europe,"./img/europe_gcp2.RDS")
 
 ```
 
-```{r load_gcp2, echo = FALSE, results = "hide"}
+```{r load_gcp2_update, echo = FALSE, results = "hide"}
 # Reload if needed
 gcp_europe <- readRDS("./img/europe_gcp2.rds")
 ```
@@ -176,7 +177,7 @@ Check the map with the original points
 ![Europe georeferenced points second version.](./img/europe_image_GCP2.png)
 
 Now we can repeat the process of assigning coordinates to the GCPs using `find_gcp_coords()` and `georeference_img()`:
-```{r find_gcp_coords_version2}
+```{r find_gcp_coords_version2, eval = FALSE}
 gcp_europe_coords_v2 <- find_gcp_coords(gcp_europe, europe)
 
 gcp_europe_coords_v2
@@ -213,16 +214,42 @@ We can see that the additional points improved the georeferencing of the image,
 as the map now aligns better with the geographic coordinates of the GCPs.
 
 We now use locator to get the coordinates of the blue dots
-```{r get_coords}
+```{r get_coords_2, eval = FALSE}
 # get the coordinates of the blues points
 blue_coords_df <- extract_coords(map_warp_v2)
 ```
+
+```{r save_blue_coords, echo = FALSE, eval= FALSE}
+saveRDS(blue_coords_df,"./img/blue_coords.RDS")
+```
+
+```{r load_blue_coords, echo = FALSE, results = "hide"}
+blue_coords_df <- readRDS("./img/blue_coords.RDS")
+```
+
 So we now have the coordinates of the blue points:
-```{r show_coords}
+```{r show_blue_coords}
 blue_coords_df
 ```
 
 There are only 5 entries - we forgot one of the dots, let's re run the function:
-```{r get_coords2}
+```{r get_coords_3, eval = FALSE}
 blue_coords_df <- extract_coords(map_warp_v2, blue_coords_df)
 ```
+
+```{r save_blue_coords_2, echo = FALSE, eval= FALSE}
+saveRDS(blue_coords_df,"./img/blue_coords_2.RDS")
+```
+
+```{r load_blue_coords_2, echo = FALSE, results = "hide"}
+blue_coords_df <- readRDS("./img/blue_coords_2.RDS")
+```
+
+So we now we can see check that all the blue dots have been recorded:
+```{r show_blue_coords}
+blue_coords_df
+```
+
+Starting from a non georeferenced image, we were then able to extract the 
+coordinates of our locations of interest. 
+
