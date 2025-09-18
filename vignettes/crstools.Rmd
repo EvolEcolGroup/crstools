@@ -241,6 +241,10 @@ Let's get the annual mean temperature (variable "bio01") for Europe:
 ```{r get_raster_europe}
 library(terra)
 library(pastclim)
+
+# get example dataset from cran
+set_data_path(on_CRAN = TRUE)
+
 europe_r <- region_slice(
   time_bp = 0,
   bio_variables = c("bio01"),

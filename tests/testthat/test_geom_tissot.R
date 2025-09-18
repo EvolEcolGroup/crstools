@@ -28,6 +28,8 @@ test_that("geom_tissot works with differnet inputs",{
   # check that it works with terra
 library(terra)
 library(tidyterra)
+# get example dataset from cran
+pastclim::set_data_path(on_CRAN = TRUE)
 europe_r <- pastclim::region_slice(
   time_bp = 0,
   bio_variables = c("bio01"),
