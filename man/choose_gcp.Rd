@@ -14,8 +14,10 @@ image (of type .jpg or XXXX).}
 \item{gcp}{(optional) A dataframe of GCPs, containing columns \code{id}, \code{x},
 \code{y},\code{longitude}, \code{latitude}. This is used if we want to add additional GCP
 to an existing list (usually created by running this function multiple
-times).
-@param col The colour of the points to be plotted on the image. Default is}
+times).}
+
+\item{col}{The colour of the points to be plotted on the image. Default is
+"red".}
 }
 \value{
 A dataframe with the GCPs, including the image coordinates and their

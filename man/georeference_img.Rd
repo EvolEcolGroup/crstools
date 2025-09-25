@@ -2,12 +2,7 @@
 % Please edit documentation in R/georeference_img.R
 \name{georeference_img}
 \alias{georeference_img}
-\title{Georeference an Image using Ground Control Points (GCPs)
-
-This function warps a given image using a set of Ground Control Points (GCPs) to create a georeferenced
-version of the image. The function uses GDAL tools to first translate the image into a georeferenced TIFF
-format and then applies a warp operation to reproject the image into a spatial reference system (EPSG:4326).
-The warped image is saved as a new file with the suffix \verb{_warp.tif}.}
+\title{Georeference an Image using Ground Control Points (GCPs)}
 \usage{
 georeference_img(image_obj, gcp, output_path = NULL)
 }
@@ -32,8 +27,6 @@ A character string representing the path to the newly created warped TIFF image 
 This file contains the georeferenced image.
 }
 \description{
-Georeference an Image using Ground Control Points (GCPs)
-
 This function warps a given image using a set of Ground Control Points (GCPs) to create a georeferenced
 version of the image. The function uses GDAL tools to first translate the image into a georeferenced TIFF
 format and then applies a warp operation to reproject the image into a spatial reference system (EPSG:4326).

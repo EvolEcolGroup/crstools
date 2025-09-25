@@ -24,20 +24,20 @@ find_gcp_coords <- function(gcp, sf_obj) {
   }
   
   # plot the reference map
-  x11()
+  grDevices::x11()
   plot(sf::st_geometry(sf_obj))
 
   # if some gcp already have coordinates, plot them on this map (TODO)
   if (first_missing > 1) {
-    points(gcp$longitude, gcp$latitude, col = "blue", pch = 19)
-    text(gcp$longitude, gcp$latitude, labels = gcp$id, col = "blue", pos = 2)
+    graphics::points(gcp$longitude, gcp$latitude, col = "blue", pch = 19)
+    graphics::text(gcp$longitude, gcp$latitude, labels = gcp$id, col = "blue", pos = 2)
   }
   message("Click on the map to add a new GCP. Press ESC to finish.\n")
   
   # get coordinates of additional points
   while(TRUE){
     
-    coords <- locator(n = 1, type = "p", col = "red", pch = 19)
+    coords <- graphics::locator(n = 1, type = "p", col = "red", pch = 19)
     if (is.null(coords)) {
       break
     }
@@ -47,7 +47,7 @@ find_gcp_coords <- function(gcp, sf_obj) {
     #add the coordinates to the gcp dataframe
     gcp$longitude[next_missing] <- coords$x
     gcp$latitude[next_missing] <- coords$y
-    text(gcp$longitude[next_missing], 
+    graphics::text(gcp$longitude[next_missing], 
          gcp$latitude[next_missing],
          labels = gcp$id[next_missing], col = "blue", pos = 2)
   }

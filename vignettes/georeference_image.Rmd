@@ -66,8 +66,8 @@ saveRDS(gcp_europe,"./vignettes/img/europe_gcp1.RDS")
 ```
 
 ```{r load_gcp1, echo = FALSE, results = "hide"}
-#gcp_europe <- system.file("extdata/gcp_europe.rds", package = "crswizard")
-gcp_europe <- readRDS("./img/europe_gcp1.rds")
+#gcp_europe <- system.file("extdata/gcp_europe.RDS", package = "crswizard")
+gcp_europe <- readRDS("./img/europe_gcp1.RDS")
 ```
 
 The coordinates of those points will be
@@ -83,7 +83,7 @@ We will use the `rnaturalearth` package to get a map of Europe, and then crop it
 library(sf)
 library(rnaturalearth)
 # Load the world map
-world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+world <- ne_countries(scale = "medium", returnclass = "sf")
 # Transform it to a suitable projection
 world <- st_transform(world, crs = 4326) # WGS 84
 # Crop it to the extent of the image to Europe
@@ -112,7 +112,7 @@ saveRDS(gcp_europe_coords,"./vignettes/img/europe_gcp_georef.RDS")
 ```
 
 ```{r load_gcp2, echo = FALSE, results = "hide"}
-#gcp_europe_coords <- system.file("extdata/gcp_europe_coords.rds", package = "crswizard")
+#gcp_europe_coords <- system.file("extdata/gcp_europe_coords.RDS", package = "crswizard")
 gcp_europe_coords <- readRDS("./img/europe_gcp_georef.RDS")
 ```
 
@@ -165,7 +165,7 @@ saveRDS(gcp_europe,"./img/europe_gcp2.RDS")
 
 ```{r load_gcp2_update, echo = FALSE, results = "hide"}
 # Reload if needed
-gcp_europe <- readRDS("./img/europe_gcp2.rds")
+gcp_europe <- readRDS("./img/europe_gcp2.RDS")
 ```
 
 Additional points were added to the `gcp_europe` dataframe:
@@ -246,7 +246,7 @@ blue_coords_df <- readRDS("./img/blue_coords_2.RDS")
 ```
 
 So we now we can see check that all the blue dots have been recorded:
-```{r show_blue_coords}
+```{r show_blue_coords2}
 blue_coords_df
 ```
 

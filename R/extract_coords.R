@@ -36,7 +36,7 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red"){
   
   
   # plot the image
-  x11()
+  grDevices::x11()
   # plot the image
   plot(0,0, xlim=c(0,dim(georef_image)[1]), ylim=c(0,dim(georef_image)[2]), 
        type="n", xlab="x_pixels", ylab="y_pixels")
@@ -45,13 +45,13 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red"){
   
   if (last_id > 0) {
     # plot and add numbers for an existing set of gcp
-    points(coords_df$longitude, coords_df$latitude, col = col, pch = 19)
-    text(coords_df$longitude, coords_df$latitude, labels = coords_df$id, 
+    graphics::points(coords_df$longitude, coords_df$latitude, col = col, pch = 19)
+    graphics::text(coords_df$longitude, coords_df$latitude, labels = coords_df$id, 
          col = col,pos=2)
   }
   
   # extract coordinates from the image
-  coords <- locator(n=1000, type="p")
+  coords <- graphics::locator(n=1000, type="p")
   
   # create id for points
   #id <- seq_len(length(coords$x) + last_id)
@@ -59,11 +59,11 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red"){
   
   # plot the points on the image
   if (last_id == 0){
-  text(coords$x, coords$y, labels = id, col = col, pos=2)
+  graphics::text(coords$x, coords$y, labels = id, col = col, pos=2)
   } else {
-    text(coords_df$longitude, coords_df$latitude, 
+    graphics::text(coords_df$longitude, coords_df$latitude, 
          labels = seq_len(last_id), col = col, pos=2)
-    text(coords$x, coords$y, 
+    graphics::text(coords$x, coords$y, 
          labels = id, 
          col = col, pos=2)
   }

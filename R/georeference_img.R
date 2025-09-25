@@ -1,4 +1,4 @@
-#' @title Georeference an Image using Ground Control Points (GCPs)
+#' Georeference an Image using Ground Control Points (GCPs)
 #'
 #' This function warps a given image using a set of Ground Control Points (GCPs) to create a georeferenced 
 #' version of the image. The function uses GDAL tools to first translate the image into a georeferenced TIFF 

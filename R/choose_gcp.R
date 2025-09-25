@@ -9,7 +9,8 @@
 #'   `y`,`longitude`, `latitude`. This is used if we want to add additional GCP
 #'   to an existing list (usually created by running this function multiple
 #'   times).
-#'  @param col The colour of the points to be plotted on the image. Default is
+#' @param col The colour of the points to be plotted on the image. Default is
+#' "red".
 #' @return A dataframe with the GCPs, including the image coordinates and their
 #'   corresponding geographic coordinates.
 #' @export
@@ -59,21 +60,21 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   }
 
   # open a new window to plot the image
-  x11()
+  grDevices::x11()
   # plot the image
   plot(0,0, xlim=c(0,dim(img)[1]), ylim=c(0,dim(img)[2]), type="n", xlab="x_pixels", ylab="y_pixels")
   # add the image to the plot
-  rasterImage(img,0,0,dim(img)[1],dim(img)[2])
+  graphics::rasterImage(img,0,0,dim(img)[1],dim(img)[2])
 
   if (last_id > 0) {
     # plot and add numbers for an existing set of gcp
-    points(gcp$x, gcp$y, col = col, pch = 19)
-    text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
+    graphics::points(gcp$x, gcp$y, col = col, pch = 19)
+    graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
   }
 
 
 
-  gcp_xy <- locator(n=1000, type="p") # change number of points
+  gcp_xy <- graphics::locator(n=1000, type="p") # change number of points
 
   if(!is.null(gcp_xy)){
     gcp_df_new <- data.frame(
@@ -90,7 +91,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   # readd the dims of the image as an attribute
   attr(gcp, "image_dims") <- dim(img)
 
- text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
+ graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
 
  # return the gcp dataframe
   return(gcp)

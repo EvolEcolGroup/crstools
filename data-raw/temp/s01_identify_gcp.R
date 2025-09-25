@@ -8,15 +8,15 @@ img <- readJPEG(map_jpg)
 
 # use locator to create points
 if (FALSE){
-  x11()
+  grDevices::x11()
   plot(0,0, xlim=c(0,dim(img)[1]), ylim=c(0,dim(img)[2]), type="n", xlab="", ylab="")
-  rasterImage(img,0,0,dim(img)[1],dim(img)[2])
-  gcp <- locator(n=12, type="p") # change number of points
+  graphics::rasterImage(img,0,0,dim(img)[1],dim(img)[2])
+  gcp <- graphics::locator(n=12, type="p") # change number of points
 
   # add numbers to those points
   gcp_df <- data.frame(id = 1:length(gcp$x),
                           x = gcp$x, y = gcp$y)
-  text(gcp_df$x, gcp_df$y, labels = gcp_df$id, col = "blue",pos=2)
+  graphics::text(gcp_df$x, gcp_df$y, labels = gcp_df$id, col = "blue",pos=2)
   # set the longitudes and latitudes
   gcp_df$lon <- c(-20, 0, 20, 40, -20, 0, 20, -20, 0, -20, 0, 20)
   gcp_df$lat <- c(70, 70, 70, 70, 60, 60, 60, 50, 50, 40, 40, 40)
@@ -27,11 +27,11 @@ if (FALSE){
 # alternatively, use a predefined set of points
 gcp_df <- read.csv("europe_gcp.csv", row.names = 1)
 # plot the points
-x11()
+grDevices::x11()
 plot(0,0, xlim=c(0,dim(img)[1]), ylim=c(0,dim(img)[2]), type="n", xlab="", ylab="")
-rasterImage(img,0,0,dim(img)[1],dim(img)[2])
-points(gcp_df$x, gcp_df$y, pch=19)
-text(gcp_df$x, gcp_df$y, labels = gcp_df$id, col = "blue",pos=2)
+graphics::rasterImage(img,0,0,dim(img)[1],dim(img)[2])
+graphics::points(gcp_df$x, gcp_df$y, pch=19)
+graphics::text(gcp_df$x, gcp_df$y, labels = gcp_df$id, col = "blue",pos=2)
 
 # flip the y axis such that the top left corner is 0,0
 gcp_df$y <- abs(gcp_df$y-dim(img)[2]) # flip the y axis
@@ -87,4 +87,4 @@ ggplot() +
   coord_sf(expand = FALSE)
 
 
-#ggmap::gglocator()
+#ggmap::gggraphics::locator()
