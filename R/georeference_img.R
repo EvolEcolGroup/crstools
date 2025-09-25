@@ -1,25 +1,30 @@
 #' Georeference an Image using Ground Control Points (GCPs)
 #'
-#' This function warps a given image using a set of Ground Control Points (GCPs) to create a georeferenced
-#' version of the image. The function uses GDAL tools to first translate the image into a georeferenced TIFF
-#' format and then applies a warp operation to reproject the image into a spatial reference system (EPSG:4326).
-#' The warped image is saved as a new file with the suffix `_warp.tif`.
+#' This function warps a given image using a set of Ground Control Points (GCPs)
+#' to create a georeferenced version of the image. The function uses GDAL tools
+#' to first translate the image into a georeferenced TIFF format and then
+#' applies a warp operation to reproject the image into a spatial reference
+#' system (EPSG:4326). The warped image is saved as a new file with the suffix
+#' `_warp.tif`.
 #'
-#' @param image_obj A character string specifying the file path to the input image (JPEG format).
-#' The function reads this image and applies the GCPs for georeferencing.
+#' @param image_obj A character string specifying the file path to the input
+#'   image (JPEG format). The function reads this image and applies the GCPs for
+#'   georeferencing.
 #'
-#' @param gcp A data frame containing the Ground Control Points (GCPs). This dataframe can be produced withthe *draw_gcp_points* function. This data frame should have the following columns:
+#' @param gcp A data frame containing the Ground Control Points (GCPs). This
+#'   dataframe can be produced withthe *draw_gcp_points* function. This data
+#'   frame should have the following columns:
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
 #'   - `y`: The y-coordinate of the GCP (in pixel space).
 #'   - `lon`: The longitude of the GCP (georeferenced).
 #'   - `lat`: The latitude of the GCP (georeferenced).
 #'
-#' @param output_path A character string representing the file path to the input image.
-#' (`_warp.tif`) will be appended to it.
+#' @param output_path A character string representing the file path to the input
+#'   image. (`_warp.tif`) will be appended to it.
 #'
-#' @return A character string representing the path to the newly created warped TIFF image file (`_warp.tif`).
-#' This file contains the georeferenced image.
+#' @return A character string representing the path to the newly created warped
+#'   TIFF image file (`_warp.tif`). This file contains the georeferenced image.
 #'
 #' @export
 #'
@@ -62,7 +67,6 @@ georeference_img <- function(image_obj, gcp, output_path = NULL) {
   # Prepare output file names
   map_tif <- paste0(output_path, ".tif")
   map_warp_tif <- paste0(output_path, "_warp.tif")
-  #  map_warp_tif_path <- file.path(output_path, map_warp_tif)
 
   # Georeference using GDAL translate with GCPs
   sf::gdal_utils(

@@ -1,7 +1,9 @@
 #' @title Projection of a hemisphere map
 #' @description Function to suggest a projection for maps showing a hemisphere
-#' @param distortion character string (e.g., "equal_area", "equidistant", "conformal").
-#' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
+#' @param distortion character string (e.g., "equal_area", "equidistant",
+#'   "conformal").
+#' @param center data.frame with two numeric values, latitude and longitude of
+#'   the center of the map.
 #' @param scale numeric value, scale of the map.
 #' @param latmin numeric value, minimum latitude of the map.
 #' @param latmax numeric value, maximum latitude of the map.
@@ -22,22 +24,20 @@ crs_hemisphere <- function(
     quiet = FALSE) {
   # Formatting central meridian
   lon <- round(center$lng * 100) / 100
-  lonStr <- ""
-  latStr <- ""
 
   # Checking if within tropics
   if (abs(latmax) < 23.43665 && abs(latmin) < 23.43665) {
     # Defining standard parallel
     interval <- (latmax - latmin) / 4
-    latS1 <- center$lat + interval
-    latS2 <- center$lat - interval
+    lat_s1 <- center$lat + interval
+    lat_s2 <- center$lat - interval
 
-    latStd <- ifelse(
-      (latS1 > 0 && latS2 > 0) || (latS1 < 0 && latS2 < 0),
+    lat_std <- ifelse(
+      (lat_s1 > 0 && lat_s2 > 0) || (lat_s1 < 0 && lat_s2 < 0),
       max(abs(latmax), abs(latmin)) / 2,
       0
     )
-    latStd <- round(latStd * 100) / 100
+    lat_std <- round(lat_std * 100) / 100
 
     # Adding projection output
     if (distortion == "equal_area") {
@@ -45,7 +45,7 @@ crs_hemisphere <- function(
         prj = "cea",
         x0 = NA_real_,
         lat0 = NA_real_,
-        lat1 = latStd,
+        lat1 = lat_std,
         lat2 = NA_real_,
         lon0 = lon,
         k0 = NA_real_,
@@ -57,7 +57,7 @@ crs_hemisphere <- function(
         prj = "merc",
         x0 = NA_real_,
         lat0 = NA_real_,
-        lat1 = latStd,
+        lat1 = lat_std,
         lat2 = NA_real_,
         lon0 = lon,
         k0 = NA_real_,
@@ -69,12 +69,14 @@ crs_hemisphere <- function(
         prj = "eqc",
         x0 = NA_real_,
         lat0 = NA_real_,
-        lat1 = latStd,
+        lat1 = lat_std,
         lat2 = NA_real_,
         lon0 = lon,
         k0 = NA_real_,
         description = "Equidistant cylindrical",
-        notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
+        notes =
+          paste0("Equidistant projection for maps showing the tropics ",
+                 "- distance correct along meridians")
       )
     }
   } else {

@@ -17,17 +17,9 @@ crs_world_equidistant <- function(
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details, "list") || !"prj" %in% names(prj_details)) {
     stop(
-      "`world_equidistant` must be a list with a `prj` element and the appropriate projection details"
+      paste0("`world_equidistant` must be a list with a `prj` element ",
+             "and the appropriate projection details")
     )
-  }
-
-  # Formatting slider steps
-  if (round_cm || scale < 1.15) {
-    steps <- 1.0
-  } else if (scale < 1.32) {
-    steps <- 0.5
-  } else {
-    steps <- 0.1
   }
 
   # Formatting output

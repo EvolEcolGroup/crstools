@@ -35,7 +35,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar stereographic",
-        notes = "Conformal projection for regional maps with an east-west extent"
+        notes =
+          "Conformal projection for regional maps with an east-west extent"
       )
     } else if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
@@ -47,7 +48,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar Lambert azimuthal equal-area",
-        notes = "Equal-area projection for regional maps with an east-west extent"
+        notes =
+          "Equal-area projection for regional maps with an east-west extent"
       )
     }
   } else if (center$lat < -70) {
@@ -63,7 +65,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar stereographic",
-        notes = "Conformal projection for regional maps with an east-west extent"
+        notes =
+          "Conformal projection for regional maps with an east-west extent"
       )
     } else if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
@@ -75,7 +78,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar Lambert azimuthal equal-area",
-        notes = "Equal-area projection for regional maps with an east-west extent"
+        notes =
+          "Equal-area projection for regional maps with an east-west extent"
       )
     }
     # Case: Close to the equator
@@ -99,7 +103,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Mercator",
-        notes = "Conformal projection for regional maps with an east-west extent"
+        notes =
+          "Conformal projection for regional maps with an east-west extent"
       )
     } else if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
@@ -111,15 +116,15 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Cylindrical equal-area",
-        notes = "Equal-area projection for regional maps with an east-west extent"
+        notes =
+          "Equal-area projection for regional maps with an east-west extent"
       )
     }
-  } # Case: Between pole and equator
-  else {
+  } else {
+    # Case: Between pole and equator
     interval <- (latmax - latmin) / 6
 
     if (distortion == "conformal") {
-      previewMapProjection <- activeProjection <- "Lambert conformal conic"
 
       # Create the CRS of the conic projection that we want to test
       conic_crs_to_test <- data.frame(
@@ -131,7 +136,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Lambert conformal conic",
-        notes = "Conformal projection for regional maps with an east-west extent"
+        notes =
+          "Conformal projection for regional maps with an east-west extent"
       )
       # extract the proj4 string from the conic_crs_to_test data frame
       conic_crs_to_test <- crs_string_row(
@@ -160,7 +166,8 @@ crs_ew_extent <- function(
           lon0 = center$lng,
           k0 = NA_real_,
           description = "Lambert conformal conic",
-          notes = "Conformal projection for regional maps with an east-west extent"
+          notes =
+            "Conformal projection for regional maps with an east-west extent"
         )
       } else {
         # If the cone opens at the pole, switch to stereographic
@@ -175,7 +182,8 @@ crs_ew_extent <- function(
             lon0 = center$lng,
             k0 = NA_real_,
             description = "Polar stereographic",
-            notes = "Conformal projection for regional maps with an east-west extent"
+            notes =
+              "Conformal projection for regional maps with an east-west extent"
           )
         } else {
           crs_suggestions <- data.frame(
@@ -187,7 +195,8 @@ crs_ew_extent <- function(
             lon0 = center$lng,
             k0 = NA_real_,
             description = "Polar stereographic",
-            notes = "Conformal projection for regional maps with an east-west extent"
+            notes =
+              "Conformal projection for regional maps with an east-west extent"
           )
         }
       }
@@ -202,7 +211,8 @@ crs_ew_extent <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Albers equal-area conic",
-        notes = "Equal-area projection for regional maps with an east-west extent"
+        notes =
+          "Equal-area projection for regional maps with an east-west extent"
       )
       # extract the proj4 string from the conic_crs_to_test data frame
       conic_crs_to_test <- crs_string_row(
@@ -211,7 +221,7 @@ crs_ew_extent <- function(
         "m"
       )$proj4
       # Check if the cone opens at a pole
-      conicTest <- crs_check_conic(
+      conic_test <- crs_check_conic(
         center$lng,
         conic_crs_to_test,
         lonmin,
@@ -220,7 +230,7 @@ crs_ew_extent <- function(
         latmax
       )
 
-      if (conicTest > 0) {
+      if (conic_test > 0) {
         crs_suggestions <- data.frame(
           prj = "aea",
           x0 = NA_real_,
@@ -230,10 +240,11 @@ crs_ew_extent <- function(
           lon0 = center$lng,
           k0 = NA_real_,
           description = "Albers equal-area conic",
-          notes = "Equal-area projection for regional maps with an east-west extent"
+          notes =
+            "Equal-area projection for regional maps with an east-west extent"
         )
       } else {
-        if (conicTest == 0) {
+        if (conic_test == 0) {
           crs_suggestions <- data.frame(
             prj = "laea",
             x0 = NA_real_,
@@ -243,7 +254,8 @@ crs_ew_extent <- function(
             lon0 = center$lng,
             k0 = NA_real_,
             description = "Oblique Lambert azimuthal equal-area",
-            notes = "Equal-area projection for regional maps with an east-west extent"
+            notes =
+              "Equal-area projection for regional maps with an east-west extent"
           )
         } else if (center$lat > 0) {
           crs_suggestions <- data.frame(
@@ -255,7 +267,8 @@ crs_ew_extent <- function(
             lon0 = center$lng,
             k0 = NA_real_,
             description = "Polar Lambert azimuthal equal-area",
-            notes = "Equal-area projection for regional maps with an east-west extent"
+            notes =
+              "Equal-area projection for regional maps with an east-west extent"
           )
         } else {
           crs_suggestions <- data.frame(
@@ -267,7 +280,8 @@ crs_ew_extent <- function(
             lon0 = center$lng,
             k0 = NA_real_,
             description = "Polar Lambert azimuthal equal-area",
-            notes = "Equal-area projection for regional maps with an east-west extent"
+            notes =
+              "Equal-area projection for regional maps with an east-west extent"
           )
         }
       }
@@ -279,7 +293,10 @@ crs_ew_extent <- function(
   # Include the scale factor note if necessary
   if (scale_note) {
     message(
-      "To reduce overall area distortion on the map, one can also apply a scale factor k. Various values for k can be applied and the area distortion patterns along the center and at the border of the map are compared to select most appropriate value."
+      paste0("To reduce overall area distortion on the map, one can also ",
+             "apply a scale factor k. Various values for k can be applied and ",
+             "the area distortion patterns along the center and at the border ",
+             "of the map are compared to select most appropriate value.")
     )
   }
 
@@ -321,7 +338,8 @@ crs_check_conic <- function(
   # get y min and y max
   test_pts <- sf::st_coordinates(test_pts)
 
-  # flip coordinates to match the screen coordinates (for which the rules below have been designed)
+  # flip coordinates to match the screen coordinates
+  # (for which the rules below have been designed)
   test_pts[, 2] <- -test_pts[, 2]
   ymin <- min(test_pts[, 2])
   ymax <- max(test_pts[, 2])
@@ -335,9 +353,10 @@ crs_check_conic <- function(
     if (substr(proj4_string, 1, 9) == "+proj=lcc") {
       # Check that this is an lcc projection
       res <- -1
-    } # Case of Albers when the fan of the selected extent spans less than 180deg around a pole
-    # Note: up is negative and down is positive in graphics
-    else if (test_pts[3, 2] > test_pts[4, 2]) {
+      # Case of Albers when the fan of the selected extent spans less than
+      # 180deg around a pole
+      # Note: up is negative and down is positive in graphics
+    } else if (test_pts[3, 2] > test_pts[4, 2]) {
       res <- 0
     } else {
       res <- -1

@@ -1,11 +1,12 @@
 #' @title Extract coordinates
 #' @description Extract coordinates from a georeferenced image.
 #' @param coords_df An optional dataframe containing the coordinates of points
-#' previously extracted from the image. Default is NULL.
+#'   previously extracted from the image. Default is NULL.
 #' @param georef_image A spatraster object representing the georeferenced image.
 #' @param col The colour of the points to be plotted on the image. Default is
-#' "red".
-#' @return A dataframe with ID and coordinates of the points extracted from the image.
+#'   "red".
+#' @return A dataframe with ID and coordinates of the points extracted from the
+#'   image.
 
 extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
   # check that the image is a spatraster object
@@ -76,7 +77,6 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
   coords <- graphics::locator(n = 1000, type = "p")
 
   # create id for points
-  # id <- seq_len(length(coords$x) + last_id)
   id <- (last_id + 1):(length(coords$x) + last_id)
 
   # plot the points on the image

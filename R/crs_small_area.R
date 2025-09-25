@@ -1,7 +1,9 @@
 #' @title Projection of a small area (region or country)
 #' @description maps showing a smaller area
-#' @param distortion character string (e.g., "equal_area", "equidistant", "conformal").
-#' @param center data.frame with two numeric values, latitude and longitude of the center of the map.
+#' @param distortion character string (e.g., "equal_area", "equidistant",
+#'   "conformal").
+#' @param center data.frame with two numeric values, latitude and longitude of
+#'   the center of the map.
 #' @param scale numeric value, scale of the map.
 #' @param lonmin The minimum longitude of the map.
 #' @param lonmax The maximum longitude of the map.
@@ -45,7 +47,9 @@ crs_small_area <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar azimuthal equidistant",
-        notes = "Distance correct along any line passing through the pole (i.e., meridian)"
+        notes =
+          paste0("Distance correct along any line passing through the pole ",
+                 "(i.e., meridian)")
       )
     } else if (center$lat < -70) {
       crs_suggestions <- data.frame(
@@ -57,7 +61,9 @@ crs_small_area <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Polar azimuthal equidistant",
-        notes = "Distance correct along any line passing through the pole (i.e., meridian)"
+        notes =
+          paste0("Distance correct along any line passing through the pole ",
+                 "(i.e., meridian)")
       )
     } else if (ratio > 1.25) {
       crs_suggestions <- data.frame(
@@ -69,10 +75,12 @@ crs_small_area <- function(
         lon0 = center$lng,
         k0 = NA_real_,
         description = "Cassini",
-        notes = "Distance correct along any line perpendicular to the central meridian"
+        notes =
+          paste0("Distance correct along any line perpendicular ",
+                 "to the central meridian")
       )
     } else if (abs(center$lat) < 15) {
-      latS <- ifelse(
+      lat_s <- ifelse(
         latmax * latmin <= 0,
         max(abs(latmax), abs(latmin)) / 2,
         center$lat
@@ -81,7 +89,7 @@ crs_small_area <- function(
         prj = "eqc",
         x0 = NA_real_,
         lat0 = NA_real_,
-        lat1 = latS,
+        lat1 = lat_s,
         lat2 = NA_real_,
         lon0 = center$lng,
         k0 = NA_real_,
@@ -114,7 +122,9 @@ crs_small_area <- function(
           lon0 = center$lng,
           k0 = NA_real_,
           description = "Azimuthal equidistant",
-          notes = "distance correct along any line passing through the center of the map (i.e., great circle)"
+          notes =
+            paste0("distance correct along any line passing through the ",
+                   "center of the map (i.e., great circle)")
         )
       )
     }
@@ -123,44 +133,44 @@ crs_small_area <- function(
       (latmax <= -80 && distortion == "conformal")
   ) {
     # case: very large scale, Universal Polar Stereographic - North Pole
-    previewMapLat0 <- ifelse(latmin >= 84, 90, -90)
-    scaleFactor <- 0.994
+    preview_map_lat_0 <- ifelse(latmin >= 84, 90, -90)
+    scale_factor <- 0.994
     crs_suggestions <- data.frame(
       prj = "stere",
       x0 = NA_real_,
-      lat0 = previewMapLat0,
+      lat0 = preview_map_lat_0,
       lat1 = NA_real_,
       lat2 = NA_real_,
       lon0 = center$lng,
-      k0 = scaleFactor,
+      k0 = scale_factor,
       description = "Polar stereographic",
       notes = "Conformal projection at very large map scale"
     )
   } else if (dlon <= 3 && distortion == "conformal") {
-    previewMapLat0 <- 0
-    scaleFactor <- 0.9999
+    preview_map_lat_0 <- 0
+    scale_factor <- 0.9999
     crs_suggestions <- data.frame(
       prj = "tmerc",
       x0 = 500000,
-      lat0 = previewMapLat0,
+      lat0 = preview_map_lat_0,
       lat1 = NA_real_,
       lat2 = NA_real_,
       lon0 = center$lng,
-      k0 = scaleFactor,
+      k0 = scale_factor,
       description = "Transverse Mercator",
       notes = "Conformal projection at very large map scale"
     )
   } else if (dlon <= 6 && distortion == "conformal") {
-    previewMapLat0 <- 0
-    scaleFactor <- 0.9996
+    preview_map_lat_0 <- 0
+    scale_factor <- 0.9996
     crs_suggestions <- data.frame(
       prj = "tmerc",
       x0 = 500000,
-      lat0 = previewMapLat0,
+      lat0 = preview_map_lat_0,
       lat1 = NA_real_,
       lat2 = NA_real_,
       lon0 = center$lng,
-      k0 = scaleFactor,
+      k0 = scale_factor,
       description = "Transverse Mercator",
       notes = "Conformal projection at very large map scale"
     )
@@ -184,10 +194,8 @@ crs_small_area <- function(
       crs_suggestions <- crs_square_format(distortion, center, latmin, latmax)
     }
   }
-
   if (scale > 260 && !quiet) {
     message("For maps at this scale, consider the state's official projection.")
   }
-
   return(crs_suggestions)
 }

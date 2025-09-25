@@ -12,12 +12,12 @@
 #'   (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic),
 #'   "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc"
 #'   (Mercator), "eqc" (Equidistant Cylindrical), "eqearth" (Equal Earth),
-#'   "moll" (Mollweide), "hammer" (Hammer), "eck4" (Eckert IV), "wag4" (Wagner IV),
-#'   "wag7" (Wagner VII), "tpeqd" (Two Point Equidistant), "robin" (Robinson),
-#'   "natearth" (Natural Earth), "wintri" (Winkel Tripel), "patterson" (Patterson),
-#'   "latlong" (Latitude/Longitude), "mill" (Miller Cylindrical), "tmerc" (Transverse
-#'   Mercator), "cass" (Cassini), "tcea" (Transverse Cylindrical Equal Area).
-#'   .
+#'   "moll" (Mollweide), "hammer" (Hammer), "eck4" (Eckert IV), "wag4" (Wagner
+#'   IV), "wag7" (Wagner VII), "tpeqd" (Two Point Equidistant), "robin"
+#'   (Robinson), "natearth" (Natural Earth), "wintri" (Winkel Tripel),
+#'   "patterson" (Patterson), "latlong" (Latitude/Longitude), "mill" (Miller
+#'   Cylindrical), "tmerc" (Transverse Mercator), "cass" (Cassini), "tcea"
+#'   (Transverse Cylindrical Equal Area). .
 #' @param x0 Numeric. The false easting value.
 #' @param lat0 Numeric. The latitude of origin.
 #' @param lat1 Numeric. The first standard parallel.
