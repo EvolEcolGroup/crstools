@@ -12,12 +12,11 @@
 ################################################################################
 ## crs for regional maps with square extent
 crs_square_format <- function(
-  distortion,
-  center,
-  latmin,
-  latmax,
-  quiet = FALSE
-) {
+    distortion,
+    center,
+    latmin,
+    latmax,
+    quiet = FALSE) {
   # Handle cases based on the latitude of the center
   if (center$lat > 75) {
     previewMapLat0 <- 90

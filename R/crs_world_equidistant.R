@@ -9,12 +9,11 @@
 #' @keywords internal
 
 crs_world_equidistant <- function(
-  center,
-  scale,
-  round_cm = FALSE,
-  prj_details,
-  quiet = FALSE
-) {
+    center,
+    scale,
+    round_cm = FALSE,
+    prj_details,
+    quiet = FALSE) {
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details, "list") || !"prj" %in% names(prj_details)) {
     stop(
@@ -66,7 +65,7 @@ crs_world_equidistant <- function(
       )
     )
   } else if (prj_details$prj == "oblique") {
-    #Oblique azimuthal equidistant
+    # Oblique azimuthal equidistant
     if (!"lat_center" %in% names(prj_details)) {
       stop("`world_equidistant` must contain a `lat_center` element")
     }

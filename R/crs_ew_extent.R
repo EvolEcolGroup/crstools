@@ -12,14 +12,13 @@
 
 ################################################################################
 crs_ew_extent <- function(
-  distortion,
-  center,
-  lonmin,
-  lonmax,
-  latmin,
-  latmax,
-  quiet = FALSE
-) {
+    distortion,
+    center,
+    lonmin,
+    lonmax,
+    latmin,
+    latmax,
+    quiet = FALSE) {
   # Flag to determine if scale note should be included
   scale_note <- FALSE
   # Case: Close to poles
@@ -292,13 +291,12 @@ crs_ew_extent <- function(
 ################################################################################
 # Checking if the fan of the selected extent exposes a cone opening at a pole
 crs_check_conic <- function(
-  lon0,
-  proj4_string,
-  lonmin,
-  lonmax,
-  latmin,
-  latmax
-) {
+    lon0,
+    proj4_string,
+    lonmin,
+    lonmax,
+    latmin,
+    latmax) {
   # Define projection function
 
   # Initialize min and max values for y

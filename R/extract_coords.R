@@ -76,7 +76,7 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
   coords <- graphics::locator(n = 1000, type = "p")
 
   # create id for points
-  #id <- seq_len(length(coords$x) + last_id)
+  # id <- seq_len(length(coords$x) + last_id)
   id <- (last_id + 1):(length(coords$x) + last_id)
 
   # plot the points on the image

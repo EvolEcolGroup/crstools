@@ -37,17 +37,16 @@
 #' @export
 
 geom_tissot <- function(
-  mapping = ggplot2::aes(),
-  data = NULL,
-  na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE,
-  centers = c(5, 5),
-  radius = NULL,
-  fill = "red",
-  alpha = 0.7,
-  ...
-) {
+    mapping = ggplot2::aes(),
+    data = NULL,
+    na.rm = FALSE,
+    show.legend = NA,
+    inherit.aes = TRUE,
+    centers = c(5, 5),
+    radius = NULL,
+    fill = "red",
+    alpha = 0.7,
+    ...) {
   # if data is not null or an sf
   if (!is.null(data) && !inherits(data, "sf")) {
     # we can convert it if it is a SpatRaster or SpatVector

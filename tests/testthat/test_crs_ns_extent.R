@@ -1,7 +1,9 @@
+# styler: off
+
 test_that("test ns extent", {
   # CONFORMAL
   ## Transverse Mercator
-  expect_message(suggested_crs_ns_mercator <- suggest_crs(c(12, 24, 2, 22), distortion = "conformal"), 
+  expect_message(suggested_crs_ns_mercator <- suggest_crs(c(12, 24, 2, 22), distortion = "conformal"),
                  "To reduce overall area distortion on the map")
   ref_proj4_ns_mercator <- "+proj=tmerc +lon_0=18 +datum=WGS84 +units=m +no_defs"
   ref_wkt_ns_mercator <- 'PROJCS["ProjWiz_Custom_Transverse_Mercator",
@@ -19,7 +21,7 @@ test_that("test ns extent", {
                                 UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_ns_mercator$proj4, ref_proj4_ns_mercator)
   expect_true(sf::st_crs(suggested_crs_ns_mercator$wkt) == sf::st_crs(ref_wkt_ns_mercator))
-  
+
   # EQUAL AREA
   ## Transverse cylindrical equal-area
   expect_message(suggested_crs_ns_equal_area <- suggest_crs(c(12, 24, 2, 22), distortion = "equal_area"),
@@ -40,5 +42,5 @@ test_that("test ns extent", {
                                   UNIT["Meter",1.0]]'
   expect_equal(suggested_crs_ns_equal_area$proj4, ref_proj4_ns_equal_area)
   expect_true(sf::st_crs(suggested_crs_ns_equal_area$wkt) == sf::st_crs(ref_wkt_ns_equal_area))
-  
+
 })

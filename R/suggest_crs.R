@@ -60,16 +60,15 @@
 #'
 
 suggest_crs <- function(
-  x,
-  distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-  round_cm = FALSE,
-  return_best = TRUE,
-  datum = c("WGS84", "ETRS89", "NAD83"),
-  unit = c("m", "ft"),
-  lat_check = TRUE,
-  world_equidist = NULL,
-  quiet = FALSE
-) {
+    x,
+    distortion = c("equal_area", "conformal", "equidistant", "compromise"),
+    round_cm = FALSE,
+    return_best = TRUE,
+    datum = c("WGS84", "ETRS89", "NAD83"),
+    unit = c("m", "ft"),
+    lat_check = TRUE,
+    world_equidist = NULL,
+    quiet = FALSE) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {

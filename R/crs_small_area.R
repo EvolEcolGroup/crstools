@@ -14,15 +14,14 @@
 ################################################################################
 # maps showing a smaller area
 crs_small_area <- function(
-  distortion,
-  center,
-  scale,
-  lonmin,
-  lonmax,
-  latmin,
-  latmax,
-  quiet = FALSE
-) {
+    distortion,
+    center,
+    scale,
+    lonmin,
+    lonmax,
+    latmin,
+    latmax,
+    quiet = FALSE) {
   # Computing longitude extent
   dlon <- lonmax - lonmin
 

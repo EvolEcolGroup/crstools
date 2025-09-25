@@ -1,3 +1,5 @@
+# styler: off
+
 test_that("generate crs string correctly", {
   # test error for non-exising projectsion
   # commented out because we use `check.arg` which has an automatic
@@ -6,8 +8,8 @@ test_that("generate crs string correctly", {
   #  crs_string("blah", NA, NA, NA, NA, 0, NA, "WGS84", "m"),
   #  "Projection not recognized."
   #)
-  
-  
+
+
   # equal earth default with whole world
   test_string <- crs_string("eqearth", NA, NA, NA, NA, 0, NA, "WGS84", "m")
   expect_equal(test_string$proj4, "+proj=eqearth +lon_0=0 +datum=WGS84 +units=m +no_defs")

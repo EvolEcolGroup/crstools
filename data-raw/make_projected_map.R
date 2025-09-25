@@ -6,8 +6,9 @@ target_crs <- "+proj=moll"
 world <- ne_countries(scale = "medium", returnclass = "sf")
 # world <- world %>% st_transform(target_crs)
 window_coord <- st_sf(st_sfc(st_point(c(-18, 32.5)),
-                             st_point(c(45, 71)),
-                             crs = 4326))
+  st_point(c(45, 71)),
+  crs = 4326
+))
 window_coord_sf <- st_transform(window_coord, target_crs) %>% st_coordinates()
 
 locations <- data.frame(

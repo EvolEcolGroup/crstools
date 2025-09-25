@@ -14,13 +14,12 @@
 ################################################################################
 # maps showing a hemisphere
 crs_hemisphere <- function(
-  distortion,
-  center,
-  scale,
-  latmin,
-  latmax,
-  quiet = FALSE
-) {
+    distortion,
+    center,
+    scale,
+    latmin,
+    latmax,
+    quiet = FALSE) {
   # Formatting central meridian
   lon <- round(center$lng * 100) / 100
   lonStr <- ""

@@ -14,14 +14,13 @@
 ################################################################################
 # Main small-scale (whole world) output function
 crs_world <- function(
-  distortion,
-  center,
-  scale,
-  round_cm,
-  world_equidist,
-  return_best,
-  quiet = FALSE
-) {
+    distortion,
+    center,
+    scale,
+    round_cm,
+    world_equidist,
+    return_best,
+    quiet = FALSE) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points

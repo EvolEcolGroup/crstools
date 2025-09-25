@@ -54,7 +54,7 @@ find_gcp_coords <- function(gcp, sf_obj) {
 
     # add this coordinates to the first missing value in gpc$longitude
     next_missing <- which(is.na(gcp$longitude) | is.na(gcp$latitude))[1]
-    #add the coordinates to the gcp dataframe
+    # add the coordinates to the gcp dataframe
     gcp$longitude[next_missing] <- coords$x
     gcp$latitude[next_missing] <- coords$y
     graphics::text(

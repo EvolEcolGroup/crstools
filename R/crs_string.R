@@ -36,42 +36,41 @@
 ################################################################################
 # Function to format the PROJ.4 and WKT strings
 crs_string <- function(
-  prj = c(
-    "aeqd",
-    "laea",
-    "stere",
-    "aea",
-    "eqdc",
-    "lcc",
-    "cea",
-    "merc",
-    "eqc",
-    "eqearth",
-    "moll",
-    "hammer",
-    "eck4",
-    "wag4",
-    "wag7",
-    "tpeqd",
-    "robin",
-    "natearth",
-    "wintri",
-    "patterson",
-    "latlong",
-    "mill",
-    "tmerc",
-    "cass",
-    "tcea"
-  ),
-  x0,
-  lat0,
-  lat1,
-  lat2,
-  lon0,
-  k0,
-  datum = c("WGS84", "ETRS89", "NAD83"),
-  unit = c("m", "ft")
-) {
+    prj = c(
+      "aeqd",
+      "laea",
+      "stere",
+      "aea",
+      "eqdc",
+      "lcc",
+      "cea",
+      "merc",
+      "eqc",
+      "eqearth",
+      "moll",
+      "hammer",
+      "eck4",
+      "wag4",
+      "wag7",
+      "tpeqd",
+      "robin",
+      "natearth",
+      "wintri",
+      "patterson",
+      "latlong",
+      "mill",
+      "tmerc",
+      "cass",
+      "tcea"
+    ),
+    x0,
+    lat0,
+    lat1,
+    lat2,
+    lon0,
+    k0,
+    datum = c("WGS84", "ETRS89", "NAD83"),
+    unit = c("m", "ft")) {
   # Check if the input is correct
   prj <- match.arg(prj)
   datum <- match.arg(datum)
@@ -80,8 +79,7 @@ crs_string <- function(
   wkt_str <- "PROJCS[\"ProjWiz_Custom_"
 
   # Formatting Geographic/Geodetic Datum
-  gcs_datum_str <- switch(
-    datum,
+  gcs_datum_str <- switch(datum,
     "WGS84" = {
       c(
         "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],", # nolint
@@ -110,8 +108,7 @@ crs_string <- function(
 
   wkt_str <- paste0(
     wkt_str,
-    switch(
-      prj,
+    switch(prj,
       "aeqd" = paste0(
         'Azimuthal_Equidistant",',
         gcs_str,
@@ -265,8 +262,7 @@ crs_string <- function(
   lon0 <- round(lon0, 7)
 
   # Other proj parameters
-  switch(
-    prj,
+  switch(prj,
     # Azimuthal Equidistant or Lambert azimuthal
     "aeqd" = ,
     "laea" = {
@@ -443,8 +439,7 @@ crs_string <- function(
   proj_str <- paste0(
     proj_str,
     datum_str,
-    switch(
-      unit,
+    switch(unit,
       "m" = " +units=m +no_defs",
       "ft" = " +units=ft +no_defs",
       return("")
@@ -453,8 +448,7 @@ crs_string <- function(
 
   wkt_str <- paste0(
     wkt_str,
-    switch(
-      unit,
+    switch(unit,
       "m" = 'UNIT["Meter",1.0]]',
       "ft" = 'UNIT["Foot",0.3048]]',
       return("")

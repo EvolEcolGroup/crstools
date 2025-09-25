@@ -1,3 +1,5 @@
+# styler: off
+
 skip() # never run this test automatically, it only works interactively
 img_path <- system.file("extdata/europe_map.jpeg", package = "crswizard")
 ## choose some points
@@ -52,3 +54,5 @@ blue_coords_df <- extract_coords(map_warp)
 # we forgot one of the dots, let's re run the function
 blue_coords_df <- extract_coords(map_warp, blue_coords_df)
 
+skip()
+world <- st_transform(world, crs = 4326)
