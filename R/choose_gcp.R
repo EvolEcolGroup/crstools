@@ -15,7 +15,7 @@
 #'   corresponding geographic coordinates.
 #' @export
 
-choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
+choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
   # check if image is a file path or an array
   if (is.character(image_obj)) {
     if (!file.exists(image_obj)) {
@@ -41,7 +41,10 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   if (!is.null(gcp)) {
     required_cols <- c("id", "x", "y", "longitude", "latitude")
     if (!all(required_cols %in% colnames(gcp))) {
-      stop("gcp dataframe must contain columns: ", paste(required_cols, collapse = ", "))
+      stop(
+        "gcp dataframe must contain columns: ",
+        paste(required_cols, collapse = ", ")
+      )
     }
     last_id <- max(gcp$id, na.rm = TRUE)
     # check that the image dimensions are stored as an attribute
@@ -53,30 +56,41 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
     } else {
       attr(gcp, "image_dims") <- dim(img)
     }
-
   } else {
-    gcp <- data.frame(id = integer(0), x = numeric(0), y = numeric(0), longitude = numeric(0), latitude = numeric(0))
+    gcp <- data.frame(
+      id = integer(0),
+      x = numeric(0),
+      y = numeric(0),
+      longitude = numeric(0),
+      latitude = numeric(0)
+    )
     last_id <- 0
   }
 
   # open a new window to plot the image
   grDevices::x11()
   # plot the image
-  plot(0,0, xlim=c(0,dim(img)[1]), ylim=c(0,dim(img)[2]), type="n", xlab="x_pixels", ylab="y_pixels")
+  plot(
+    0,
+    0,
+    xlim = c(0, dim(img)[1]),
+    ylim = c(0, dim(img)[2]),
+    type = "n",
+    xlab = "x_pixels",
+    ylab = "y_pixels"
+  )
   # add the image to the plot
-  graphics::rasterImage(img,0,0,dim(img)[1],dim(img)[2])
+  graphics::rasterImage(img, 0, 0, dim(img)[1], dim(img)[2])
 
   if (last_id > 0) {
     # plot and add numbers for an existing set of gcp
     graphics::points(gcp$x, gcp$y, col = col, pch = 19)
-    graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
+    graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
   }
 
+  gcp_xy <- graphics::locator(n = 1000, type = "p") # change number of points
 
-
-  gcp_xy <- graphics::locator(n=1000, type="p") # change number of points
-
-  if(!is.null(gcp_xy)){
+  if (!is.null(gcp_xy)) {
     gcp_df_new <- data.frame(
       id = seq_len(length(gcp_xy$x)) + last_id,
       x = gcp_xy$x,
@@ -91,9 +105,8 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red"){
   # readd the dims of the image as an attribute
   attr(gcp, "image_dims") <- dim(img)
 
- graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col,pos=2)
+  graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
 
- # return the gcp dataframe
+  # return the gcp dataframe
   return(gcp)
-
 }

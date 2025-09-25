@@ -13,9 +13,14 @@
 
 ################################################################################
 # maps showing a hemisphere
-crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
-                           quiet = FALSE) {
-
+crs_hemisphere <- function(
+  distortion,
+  center,
+  scale,
+  latmin,
+  latmax,
+  quiet = FALSE
+) {
   # Formatting central meridian
   lon <- round(center$lng * 100) / 100
   lonStr <- ""
@@ -38,21 +43,41 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
     # Adding projection output
     if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
-        prj = "cea", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
-        description = "Cylindrical equal-area", notes = "Equal-area projection for maps showing the tropics"
+        prj = "cea",
+        x0 = NA_real_,
+        lat0 = NA_real_,
+        lat1 = latStd,
+        lat2 = NA_real_,
+        lon0 = lon,
+        k0 = NA_real_,
+        description = "Cylindrical equal-area",
+        notes = "Equal-area projection for maps showing the tropics"
       )
     } else if (distortion == "conformal") {
       crs_suggestions <- data.frame(
-        prj = "merc", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
-        description = "Mercator", notes = "Conformal projection for maps showing the tropics"
+        prj = "merc",
+        x0 = NA_real_,
+        lat0 = NA_real_,
+        lat1 = latStd,
+        lat2 = NA_real_,
+        lon0 = lon,
+        k0 = NA_real_,
+        description = "Mercator",
+        notes = "Conformal projection for maps showing the tropics"
       )
     } else if (distortion == "equidistant") {
       crs_suggestions <- data.frame(
-        prj = "eqc", x0 = NA_real_, lat0 = NA_real_, lat1 = latStd, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
-        description = "Equidistant cylindrical", notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
+        prj = "eqc",
+        x0 = NA_real_,
+        lat0 = NA_real_,
+        lat1 = latStd,
+        lat2 = NA_real_,
+        lon0 = lon,
+        k0 = NA_real_,
+        description = "Equidistant cylindrical",
+        notes = "Equidistant projection for maps showing the tropics - distance correct along meridians"
       )
     }
-
   } else {
     # Formatting central latitude
     lat <- if (center$lat > 85) {
@@ -66,16 +91,29 @@ crs_hemisphere <- function(distortion, center, scale, latmin, latmax,
     # Adding projection output
     if (distortion == "equal_area") {
       crs_suggestions <- data.frame(
-        prj = "laea", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
-        description = "Lambert azimuthal equal-area", notes = "Equal-area projection for maps showing a hemisphere"
+        prj = "laea",
+        x0 = NA_real_,
+        lat0 = lat,
+        lat1 = NA_real_,
+        lat2 = NA_real_,
+        lon0 = lon,
+        k0 = NA_real_,
+        description = "Lambert azimuthal equal-area",
+        notes = "Equal-area projection for maps showing a hemisphere"
       )
     } else if (distortion == "equidistant") {
       crs_suggestions <- data.frame(
-        prj = "aeqd", x0 = NA_real_, lat0 = lat, lat1 = NA_real_, lat2 = NA_real_, lon0 = lon, k0 = NA_real_,
-        description = "Azimuthal equidistant", notes = "Equidistant projection for maps showing a hemisphere"
+        prj = "aeqd",
+        x0 = NA_real_,
+        lat0 = lat,
+        lat1 = NA_real_,
+        lat2 = NA_real_,
+        lon0 = lon,
+        k0 = NA_real_,
+        description = "Azimuthal equidistant",
+        notes = "Equidistant projection for maps showing a hemisphere"
       )
     }
-
   }
 
   return(crs_suggestions)

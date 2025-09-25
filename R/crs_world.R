@@ -13,8 +13,15 @@
 
 ################################################################################
 # Main small-scale (whole world) output function
-crs_world <- function(distortion, center, scale, round_cm, world_equidist, 
-                      return_best, quiet = FALSE) {
+crs_world <- function(
+  distortion,
+  center,
+  scale,
+  round_cm,
+  world_equidist,
+  return_best,
+  quiet = FALSE
+) {
   # Global list of world map projections
   listWorld <- list(
     # Equal-area world map projections with poles represented as points
@@ -37,8 +44,15 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
   )
 
   crs_suggestions <- data.frame(
-    prj = character(), x0 = double(), lat0 = double(), lat1 = double(), lat2 = double(), lon0 = double(), k0 = double(),
-    description = character(), notes = character()
+    prj = character(),
+    x0 = double(),
+    lat0 = double(),
+    lat1 = double(),
+    lat2 = double(),
+    lon0 = double(),
+    k0 = double(),
+    description = character(),
+    notes = character()
   )
 
   # Formatting central meridian
@@ -52,8 +66,15 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
       crs_suggestions <- rbind(
         crs_suggestions,
         data.frame(
-          prj = proj4, x0 = NA_real_, lat0 = NA_real_, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng, k0 = NA_real_,
-          description = projectionName, notes = "Equal-area world map projection with poles represented as lines"
+          prj = proj4,
+          x0 = NA_real_,
+          lat0 = NA_real_,
+          lat1 = NA_real_,
+          lat2 = NA_real_,
+          lon0 = lng,
+          k0 = NA_real_,
+          description = projectionName,
+          notes = "Equal-area world map projection with poles represented as lines"
         )
       )
     }
@@ -64,22 +85,35 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
       crs_suggestions <- rbind(
         crs_suggestions,
         data.frame(
-          prj = proj4, x0 = NA_real_, lat0 = NA_real_, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng, k0 = NA_real_,
-          description = projectionName, notes = "Equal-area world map projection with poles represented as points"
+          prj = proj4,
+          x0 = NA_real_,
+          lat0 = NA_real_,
+          lat1 = NA_real_,
+          lat2 = NA_real_,
+          lon0 = lng,
+          k0 = NA_real_,
+          description = projectionName,
+          notes = "Equal-area world map projection with poles represented as points"
         )
       )
     }
   } else if (distortion == "equidistant") {
     if (is.null(world_equidist)) {
-      stop("`world_equidist` must be provided for equidistant world map projections")
+      stop(
+        "`world_equidist` must be provided for equidistant world map projections"
+      )
     }
-    
+
     # Equidistant projections
-    
+
     # Update active projection and preview
-    crs_suggestions <- crs_world_equidistant(center = center, scale = scale,  round_cm = round_cm,
-                          prj_details = world_equidist,
-                          quiet = quiet)
+    crs_suggestions <- crs_world_equidistant(
+      center = center,
+      scale = scale,
+      round_cm = round_cm,
+      prj_details = world_equidist,
+      quiet = quiet
+    )
   } else {
     # compromise projections
 
@@ -90,8 +124,15 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
       crs_suggestions <- rbind(
         crs_suggestions,
         data.frame(
-          prj = proj4, x0 = NA_real_, lat0 = NA_real_, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng, k0 = NA_real_,
-          description = projectionName, notes = "compromise world map projection"
+          prj = proj4,
+          x0 = NA_real_,
+          lat0 = NA_real_,
+          lat1 = NA_real_,
+          lat2 = NA_real_,
+          lon0 = lng,
+          k0 = NA_real_,
+          description = projectionName,
+          notes = "compromise world map projection"
         )
       )
     }
@@ -101,14 +142,23 @@ crs_world <- function(distortion, center, scale, round_cm, world_equidist,
       crs_suggestions <- rbind(
         crs_suggestions,
         data.frame(
-          prj = proj4, x0 = NA_real_, lat0 = NA_real_, lat1 = NA_real_, lat2 = NA_real_, lon0 = lng, k0 = NA_real_,
-          description = projectionName, notes = "compromise rectangular world map projection"
+          prj = proj4,
+          x0 = NA_real_,
+          lat0 = NA_real_,
+          lat1 = NA_real_,
+          lat2 = NA_real_,
+          lon0 = lng,
+          k0 = NA_real_,
+          description = projectionName,
+          notes = "compromise rectangular world map projection"
         )
       )
     }
 
-    if (!return_best && !quiet){
-      message("Rectangular projections are not generally recommended for most world maps.")
+    if (!return_best && !quiet) {
+      message(
+        "Rectangular projections are not generally recommended for most world maps."
+      )
     }
   }
 

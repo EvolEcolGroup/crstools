@@ -57,12 +57,19 @@
 #' # Regional map for EW extent
 #' suggest_crs(c(-60, 20, 40, 70))
 #' @export
-#' 
+#'
 
-suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-                        round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                        unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL,
-                        quiet = FALSE) {
+suggest_crs <- function(
+  x,
+  distortion = c("equal_area", "conformal", "equidistant", "compromise"),
+  round_cm = FALSE,
+  return_best = TRUE,
+  datum = c("WGS84", "ETRS89", "NAD83"),
+  unit = c("m", "ft"),
+  lat_check = TRUE,
+  world_equidist = NULL,
+  quiet = FALSE
+) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -105,10 +112,15 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
   unit <- match.arg(unit)
 
   # Computing the scale of the map
-  scale <- 720 / (lon_max - lon_min) / (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
+  scale <- 720 /
+    (lon_max - lon_min) /
+    (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
 
   # Getting the center of the map
-  center <- data.frame(lat = (lat_max + lat_min) / 2, lng = (lon_max + lon_min) / 2)
+  center <- data.frame(
+    lat = (lat_max + lat_min) / 2,
+    lng = (lon_max + lon_min) / 2
+  )
 
   # Normalizing central meridian value
   center$lng <- normalise_lon(center$lng, 0)
@@ -119,9 +131,12 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
   }
 
   # Choose the appropriate type of map
-  if (scale < 1.5) { # World (small-scale) map
+  if (scale < 1.5) {
+    # World (small-scale) map
     if (distortion == "conformal") {
-      stop("conformal is not available for maps covering the whole world; try equal_area instead")
+      stop(
+        "conformal is not available for maps covering the whole world; try equal_area instead"
+      )
     }
     crs_df <- crs_world(
       distortion = distortion,
@@ -132,15 +147,20 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
       return_best = return_best,
       quiet = quiet
     )
-  } else if (scale < 6) { # Hemisphere (medium-scale) map
+  } else if (scale < 6) {
+    # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
       if (distortion == "conformal") {
-        stop("conformal is not available for maps covering a whole hemisphere; try equal_area instead")
+        stop(
+          "conformal is not available for maps covering a whole hemisphere; try equal_area instead"
+        )
       }
     }
     if (distortion == "compromise") {
-      stop("compromise is not available for maps covering a whole hemisphere; try equal_area instead")
+      stop(
+        "compromise is not available for maps covering a whole hemisphere; try equal_area instead"
+      )
     }
     crs_df <- crs_hemisphere(
       distortion = distortion,
@@ -150,12 +170,21 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
       latmax = lat_max,
       quiet = quiet
     )
-  } else { # Continent or a smaller area (large-scale) map
+  } else {
+    # Continent or a smaller area (large-scale) map
     if (distortion == "compromise") {
-      stop("compromise is not available for maps focussing on a single continent or small area; try equal_area instead")
+      stop(
+        "compromise is not available for maps focussing on a single continent or small area; try equal_area instead"
+      )
     }
-    crs_df <- crs_small_area(distortion, center, scale,
-      lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax = lat_max,
+    crs_df <- crs_small_area(
+      distortion,
+      center,
+      scale,
+      lonmin = lon_min,
+      lonmax = lon_max,
+      latmin = lat_min,
+      latmax = lat_max,
       quiet = quiet
     )
   }

@@ -1,3 +1,6 @@
+skip_if_not_installed("rnaturalearth")
+skip_if_not_installed("rnaturalearthdata")
+
 test_that("geom_tissot works with differnet inputs",{
   suppressMessages(library(rnaturalearth))
   suppressMessages(library(sf))
