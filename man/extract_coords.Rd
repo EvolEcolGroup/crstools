@@ -16,7 +16,8 @@ previously extracted from the image. Default is NULL.}
 "red".}
 }
 \value{
-A dataframe with ID and coordinates of the points extracted from the image.
+A dataframe with ID and coordinates of the points extracted from the
+image.
 }
 \description{
 Extract coordinates from a georeferenced image.

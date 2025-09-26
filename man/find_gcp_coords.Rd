@@ -2,18 +2,23 @@
 % Please edit documentation in R/find_gcp_coords.R
 \name{find_gcp_coords}
 \alias{find_gcp_coords}
-\title{Find the coordinates (longitude and latitude) of the ground control points (GCPs) in a given image.}
+\title{Find the coordinates (longitude and latitude) of the ground control points
+(GCPs) in a given image.}
 \usage{
 find_gcp_coords(gcp, sf_obj)
 }
 \arguments{
-\item{gcp}{A data frame containing the GCPs with columns \code{id}, \code{x}, \code{y}, \code{longitude}, and \code{latitude}.}
+\item{gcp}{A data frame containing the GCPs with columns \code{id}, \code{x}, \code{y},
+\code{longitude}, and \code{latitude}.}
 
-\item{sf_obj}{the reference map, as an sf object (already cut to the extend and if needed projected)}
+\item{sf_obj}{the reference map, as an sf object (already cut to the extend
+and if needed projected)}
 }
 \value{
-A data frame with the GCPs, including their image coordinates and corresponding geographic coordinates.
+A data frame with the GCPs, including their image coordinates and
+corresponding geographic coordinates.
 }
 \description{
-Find the coordinates (longitude and latitude) of the ground control points (GCPs) in a given image.
+Find the coordinates (longitude and latitude) of the ground control points
+(GCPs) in a given image.
 }

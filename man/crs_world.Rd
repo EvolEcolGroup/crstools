@@ -15,7 +15,8 @@ crs_world(
 )
 }
 \arguments{
-\item{distortion}{The distortion of the world map projection (e.g., "equal_area", "equidistant", "compromise").}
+\item{distortion}{The distortion of the world map projection (e.g.,
+"equal_area", "equidistant", "compromise").}
 
 \item{center}{The center of the map projection.}
 
@@ -23,8 +24,8 @@ crs_world(
 
 \item{round_cm}{The round central meridian.}
 
-\item{world_equidist}{The world equidistant parameters (see documentation
-for \code{\link[=suggest_crs]{suggest_crs()}})}
+\item{world_equidist}{The world equidistant parameters (see documentation for
+\code{\link[=suggest_crs]{suggest_crs()}})}
 
 \item{return_best}{Whether to return the best projection (boolean).}
 

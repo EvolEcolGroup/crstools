@@ -7,10 +7,13 @@
 georeference_img(image_obj, gcp, output_path = NULL)
 }
 \arguments{
-\item{image_obj}{A character string specifying the file path to the input image (JPEG format).
-The function reads this image and applies the GCPs for georeferencing.}
+\item{image_obj}{A character string specifying the file path to the input
+image (JPEG format). The function reads this image and applies the GCPs for
+georeferencing.}
 
-\item{gcp}{A data frame containing the Ground Control Points (GCPs). This dataframe can be produced withthe \emph{draw_gcp_points} function. This data frame should have the following columns:
+\item{gcp}{A data frame containing the Ground Control Points (GCPs). This
+dataframe can be produced withthe \emph{draw_gcp_points} function. This data
+frame should have the following columns:
 \itemize{
 \item \code{id}: An identifier for each GCP (numeric).
 \item \code{x}: The x-coordinate of the GCP (in pixel space).
@@ -19,18 +22,20 @@ The function reads this image and applies the GCPs for georeferencing.}
 \item \code{lat}: The latitude of the GCP (georeferenced).
 }}
 
-\item{output_path}{A character string representing the file path to the input image.
-(\verb{_warp.tif}) will be appended to it.}
+\item{output_path}{A character string representing the file path to the input
+image. (\verb{_warp.tif}) will be appended to it.}
 }
 \value{
-A character string representing the path to the newly created warped TIFF image file (\verb{_warp.tif}).
-This file contains the georeferenced image.
+A character string representing the path to the newly created warped
+TIFF image file (\verb{_warp.tif}). This file contains the georeferenced image.
 }
 \description{
-This function warps a given image using a set of Ground Control Points (GCPs) to create a georeferenced
-version of the image. The function uses GDAL tools to first translate the image into a georeferenced TIFF
-format and then applies a warp operation to reproject the image into a spatial reference system (EPSG:4326).
-The warped image is saved as a new file with the suffix \verb{_warp.tif}.
+This function warps a given image using a set of Ground Control Points (GCPs)
+to create a georeferenced version of the image. The function uses GDAL tools
+to first translate the image into a georeferenced TIFF format and then
+applies a warp operation to reproject the image into a spatial reference
+system (EPSG:4326). The warped image is saved as a new file with the suffix
+\verb{_warp.tif}.
 }
 \examples{
 \dontrun{

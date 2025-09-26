@@ -16,9 +16,11 @@ crs_small_area(
 )
 }
 \arguments{
-\item{distortion}{character string (e.g., "equal_area", "equidistant", "conformal").}
+\item{distortion}{character string (e.g., "equal_area", "equidistant",
+"conformal").}
 
-\item{center}{data.frame with two numeric values, latitude and longitude of the center of the map.}
+\item{center}{data.frame with two numeric values, latitude and longitude of
+the center of the map.}
 
 \item{scale}{numeric value, scale of the map.}
 
