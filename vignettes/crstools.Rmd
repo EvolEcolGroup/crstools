@@ -18,16 +18,16 @@ knitr::opts_chunk$set(
 Reference System (CRS) in R. CRSs are essential for mapping, as they define how
 geographic data are projected onto a flat surface. The choice of CRS depends on
 the type of map, the extent of the map, and the purpose of the map.
-The `crstools` package provide 3 main functionalities:
+The `crstools` package provides 3 main functionalities:
 
 1) `suggest_crs` provides suggestions for CRS for different types of maps, such
 as equal area maps, conformal maps, and equidistant maps, depending on the
 extent and location of the are of interest.
 
 2) `geom_tissot` visualises the distortion associated with a given crs, by
-adding Tissot indicatrix to a `ggplot2` map(the distortion of circles on the map).
+adding Tissot indicatrix to a `ggplot2` map (the distortion of circles on the map).
 
-3) `add_crs` help to add CRS to an image; it does so by defining Ground Control
+3) `add_crs` helps to add CRS to an image; it does so by defining Ground Control
 Points (GCPs) and using GDAL to warp the image to a desired CRS.
 
 ## Installation
@@ -40,6 +40,7 @@ devtools::install_github("EvolEcolGroup/crstools")
 ```
 
 ## An overview of CRS codes
+
 Coordinate Reference System (CRS) codes are standardized identifiers used to
 define spatial reference systems, ensuring accurate geospatial data
 representation. One common way to describe a CRS is using **Well-Known Text
@@ -102,6 +103,7 @@ options. Since in `crstools` we attempt to provide a wide range of CRS options,
 we use the *WKT* and *Proj4* format for the CRS suggestions.
 
 ## Spatial objects in R
+
 In R, the `sf` (Simple Features) package is widely used for handling vector
 geographic data, such as points, lines, and polygons. It provides an efficient
 and standardized way to work with spatial data using the **simple features**
@@ -142,7 +144,7 @@ maps preserve angles, and equidistant maps preserve distances. A fourth option,
 the other three types of distortion.
 
 The choice of CRS depends on the extent of the map. Let us use South America
-as an example. We will use `r`naturalearth` to get a map of that continent, as
+as an example. We will use `rnaturalearth` to get a map of that continent, as
 an `sf` object (`sf` is generally used for ):
 ```{r get_s_america}
 library(rnaturalearth)
@@ -234,7 +236,7 @@ ggplot() +
 
 We can do the same with a raster object. We'll use a raster from the package
 `pastclim`, which allows the easy retrieval of climate data. First, ensure
-pastclim is installed and the data_path is set, using `set_data_path()`.
+`pastclim` is installed and the data_path is set, using `set_data_path()`.
 
 Let's get the annual mean temperature (variable "bio01") for Europe:
 ```{r get_raster_europe}

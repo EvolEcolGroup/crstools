@@ -33,9 +33,10 @@ To get started, we need to load the `crstools` package:
 library(crstools)
 ```
 
-Next we need a jpg image that we scanned or downloaded. We will use a map of Europe
+Next we need a .jpg image that we scanned or downloaded. We will use a map of Europe
 that is included with the package. The map has a number of points (the capitals of 
 UK, France, Spain, Germany, Italy, and Iceland). 
+
 Our task is to georeference this image and then extract the coordinates
 of those capitals.
 
@@ -178,7 +179,7 @@ gcp_europe_coords_v2 <- find_gcp_coords(gcp_europe, europe)
 gcp_europe_coords_v2
 ```
 
-Run me to save the object if you are recreating the vignette
+Run the following code chunk to save the object if you are recreating the vignette
 ```{r save_gcp2_v2, echo = FALSE, eval= FALSE}
 saveRDS(gcp_europe_coords_v2, "./img/europe_gcp_georef_v2.RDS")
 ```
@@ -187,7 +188,7 @@ saveRDS(gcp_europe_coords_v2, "./img/europe_gcp_georef_v2.RDS")
 gcp_europe_coords_v2 <- readRDS("./img/europe_gcp_georef_v2.RDS")
 ```
 
-Repeat georeferencing of the image using the GCPs. 
+Repeat georeferencing of the image using the GCPs
 ```{r georeference_image_v2}
 georeferenced_image_v2 <- georeference_img(img_path, gcp_europe_coords_v2)
 
@@ -222,7 +223,7 @@ saveRDS(blue_coords_df, "./img/blue_coords.RDS")
 blue_coords_df <- readRDS("./img/blue_coords.RDS")
 ```
 
-So we now have the coordinates of the blue points:
+So we now have the coordinates of the blue dots:
 ```{r show_blue_coords}
 blue_coords_df
 ```
