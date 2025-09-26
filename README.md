@@ -1,8 +1,7 @@
-
 # crstools
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/EvolEcolGroup/crstools/graph/badge.svg)](https://app.codecov.io/gh/EvolEcolGroup/crstools)
+[![Codecov test coverage](https://codecov.io/gh/EvolEcolGroup/crstools/graph/badge.svg?token=Z0JX70MBhw)](https://codecov.io/gh/EvolEcolGroup/crstools)
 [![R-CMD-check](https://github.com/EvolEcolGroup/crstools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EvolEcolGroup/crstools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
