@@ -1,5 +1,5 @@
-Package: crswizard
-Title: Tools to Choose Projections
+Package: crstools
+Title: Tools to Work with Projections
 Version: 0.0.0.9000
 Authors@R: c(
     person("Andrea", "Manica", , "am315@cam.ac.uk", role = c("aut", "cre"),
@@ -12,7 +12,9 @@ Authors@R: c(
     person("Nile", "Stephenson", role = c("aut")),
     person("Margherita", "Colucci", role = c("aut"))
     )
-Description: What the package does (one paragraph).
+Description: Choose the appropriate projection for a given application,
+  visualise the resulting distortion, and georeference data from unknown
+  projections.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

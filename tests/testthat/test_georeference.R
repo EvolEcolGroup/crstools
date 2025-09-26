@@ -1,7 +1,7 @@
 # styler: off
 
 skip() # never run this test automatically, it only works interactively
-img_path <- system.file("extdata/europe_map.jpeg", package = "crswizard")
+img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 ## choose some points
 gcp_europe <- choose_gcp(img_path)
 # now get some more

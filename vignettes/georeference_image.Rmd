@@ -19,18 +19,18 @@ Georeferencing is the process of assigning real-world coordinates to an image,
 allowing it to be accurately placed on a map. This is often done using Ground
 Control Points (GCPs), which are known locations on the ground with precise coordinates.
 In this vignette, we will demonstrate how to georeference an image using GCPs
-in the `crswizard` package.
+in the `crstools` package.
 
 The process of assigning GCPs to an image is interactive, allowing you to
 select points on the image and assign them geographic coordinates. Unfortunately,
-this is not compatible with Rmarkdown or the image pane within RStudio. `crswizard`
+this is not compatible with Rmarkdown or the image pane within RStudio. `crstools`
 opens separate windows for GCP assignment and image display, and the code has to
 be run from a script or the console.
 
-To get started, we need to load the `crswizard` package:
+To get started, we need to load the `crstools` package:
 
 ```{r setup}
-library(crswizard)
+library(crstools)
 ```
 
 Next we need a jpg image that we scanned or downloaded. We will use a map of Europe
@@ -40,7 +40,7 @@ Our task is to georeference this image and then extract the coordinates
 of those capitals.
 
 ```{r image_path}
-img_path <- system.file("extdata/europe_map.jpeg", package = "crswizard")
+img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 ```
 
 We can now select a number of GCPs with `choose_gcp()`. This function

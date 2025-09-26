@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(crswizard)
+library(crstools)
 
-test_check("crswizard")
+test_check("crstools")

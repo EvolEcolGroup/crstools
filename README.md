@@ -1,20 +1,20 @@
 
-# crswizard
+# crstools
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/EvolEcolGroup/crswizard/graph/badge.svg)](https://app.codecov.io/gh/EvolEcolGroup/crswizard)
-[![R-CMD-check](https://github.com/EvolEcolGroup/crswizard/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EvolEcolGroup/crswizard/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/EvolEcolGroup/crstools/graph/badge.svg)](https://app.codecov.io/gh/EvolEcolGroup/crstools)
+[![R-CMD-check](https://github.com/EvolEcolGroup/crstools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EvolEcolGroup/crstools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of crswizard is to ...
+The goal of crstools is to ...
 
 ## Installation
 
-You can install the development version of crswizard from [GitHub](https://github.com/) with:
+You can install the development version of crstools from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("EvolEcolGroup/crswizard")
+pak::pak("EvolEcolGroup/crstools")
 ```
 
 ## Example
@@ -22,7 +22,7 @@ pak::pak("EvolEcolGroup/crswizard")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(crswizard)
+library(crstools)
 ## basic example code
 ```
 

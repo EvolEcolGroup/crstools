@@ -36,7 +36,7 @@ Currently, `crstools` is only available on GitHub. You can install it using the
 `devtools` package:
 
 ```{r setup, eval=FALSE}
-devtools::install_github("EvolEcolGroup/crswizard")
+devtools::install_github("EvolEcolGroup/crstools")
 ```
 
 ## An overview of CRS codes
@@ -174,7 +174,7 @@ sf::st_crs(s_america_sf)$proj4string
 Now, let's use `suggest_crs()` to get a suggestion for an equidistant CRS 
 for this map:
 ```{r}
-library(crswizard)
+library(crstools)
 s_am_equidist <- suggest_crs(s_america_sf, distortion = "equal_area")
 ```
 
