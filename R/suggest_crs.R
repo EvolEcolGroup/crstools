@@ -29,14 +29,15 @@
 #' @param world_equidist if `distortion`="equidistant" for a whole world
 #'   projection, then this parameter should be a list with one of the following
 #'   sets of elements:
-#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``, where
-#'   `pole` is either -90 or 90 for the South and North Pole, respectively, from
-#'   or through which distances are correct, and `lng_central` is the central
-#'   meridian. E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
-#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`, `lng_center`,
-#'   where `lat_center` and `lng_center` are the latitude and longitude of the
-#'   center from or through which distances are correct. E.g. `list(prj =
-#'   "oblique", lat_center = 39, lng_center = 145)`
+#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``,
+#'   where `pole` is either -90 or 90 for the South and North Pole,
+#'   respectively, from or through which distances are correct, and
+#'   `lng_central` is the central meridian.
+#'   E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
+#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`,
+#'   `lng_center`, where `lat_center` and `lng_center` are the latitude and
+#'   longitude of the center from or through which distances are correct.
+#'   E.g. `list(prj = "oblique", lat_center = 39, lng_center = 145)`
 #' * "Two-point azimuthal": `prj` = "two_points", `lat1`, `lng1`,
 #'   `lat2`, `lng2`, where `lat1`, `lng1`, `lat2`, `lng2` are the latitude and
 #'   longitude of two points on the map from which distances are correct. E.g.
@@ -57,12 +58,18 @@
 #' # Regional map for EW extent
 #' suggest_crs(c(-60, 20, 40, 70))
 #' @export
-#' 
+#'
 
-suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-                        round_cm = FALSE, return_best = TRUE, datum = c("WGS84", "ETRS89", "NAD83"),
-                        unit = c("m", "ft"), lat_check = TRUE, world_equidist = NULL,
-                        quiet = FALSE) {
+suggest_crs <- function(
+    x,
+    distortion = c("equal_area", "conformal", "equidistant", "compromise"),
+    round_cm = FALSE,
+    return_best = TRUE,
+    datum = c("WGS84", "ETRS89", "NAD83"),
+    unit = c("m", "ft"),
+    lat_check = TRUE,
+    world_equidist = NULL,
+    quiet = FALSE) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -84,9 +91,9 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
   lat_min <- x_ext[3]
   lat_max <- x_ext[4]
 
-  # check that the extent is valid
-  # first check that latitudes are within the range
-  # this ensures that lon and lat are fed in the correct order (at least in some cases)
+  # check that the extent is valid first check that latitudes are within the
+  # range this ensures that lon and lat are fed in the correct order (at least
+  # in some cases)
   if ((lat_min < -90 || lat_max > 90) && lat_check == TRUE) {
     stop("Latitude values must be between -90 and 90")
   }
@@ -105,10 +112,15 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
   unit <- match.arg(unit)
 
   # Computing the scale of the map
-  scale <- 720 / (lon_max - lon_min) / (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
+  scale <- 720 /
+    (lon_max - lon_min) /
+    (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
 
   # Getting the center of the map
-  center <- data.frame(lat = (lat_max + lat_min) / 2, lng = (lon_max + lon_min) / 2)
+  center <- data.frame(
+    lat = (lat_max + lat_min) / 2,
+    lng = (lon_max + lon_min) / 2
+  )
 
   # Normalizing central meridian value
   center$lng <- normalise_lon(center$lng, 0)
@@ -119,9 +131,13 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
   }
 
   # Choose the appropriate type of map
-  if (scale < 1.5) { # World (small-scale) map
+  if (scale < 1.5) {
+    # World (small-scale) map
     if (distortion == "conformal") {
-      stop("conformal is not available for maps covering the whole world; try equal_area instead")
+      stop(
+        paste0("conformal is not available for maps covering the whole world; ",
+               "try equal_area instead")
+      )
     }
     crs_df <- crs_world(
       distortion = distortion,
@@ -132,15 +148,22 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
       return_best = return_best,
       quiet = quiet
     )
-  } else if (scale < 6) { # Hemisphere (medium-scale) map
+  } else if (scale < 6) {
+    # Hemisphere (medium-scale) map
     # if the map is NOT focussing on the tropics
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
       if (distortion == "conformal") {
-        stop("conformal is not available for maps covering a whole hemisphere; try equal_area instead")
+        stop(
+          paste0("conformal is not available for maps covering a ",
+                 "whole hemisphere; try equal_area instead")
+        )
       }
     }
     if (distortion == "compromise") {
-      stop("compromise is not available for maps covering a whole hemisphere; try equal_area instead")
+      stop(
+        paste0("compromise is not available for maps covering a ",
+               "whole hemisphere; try equal_area instead")
+      )
     }
     crs_df <- crs_hemisphere(
       distortion = distortion,
@@ -150,12 +173,22 @@ suggest_crs <- function(x, distortion = c("equal_area", "conformal", "equidistan
       latmax = lat_max,
       quiet = quiet
     )
-  } else { # Continent or a smaller area (large-scale) map
+  } else {
+    # Continent or a smaller area (large-scale) map
     if (distortion == "compromise") {
-      stop("compromise is not available for maps focussing on a single continent or small area; try equal_area instead")
+      stop(
+        paste0("compromise is not available for maps focussing on a single ",
+               "continent or small area; try equal_area instead")
+      )
     }
-    crs_df <- crs_small_area(distortion, center, scale,
-      lonmin = lon_min, lonmax = lon_max, latmin = lat_min, latmax = lat_max,
+    crs_df <- crs_small_area(
+      distortion,
+      center,
+      scale,
+      lonmin = lon_min,
+      lonmax = lon_max,
+      latmin = lat_min,
+      latmax = lat_max,
       quiet = quiet
     )
   }

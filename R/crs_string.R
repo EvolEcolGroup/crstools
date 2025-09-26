@@ -11,13 +11,13 @@
 #'   (Azimuthal Equidistant), "laea" (Lambert Azimuthal Equal Area), "stere"
 #'   (Stereographic), "aea" (Albers Equal Area), "eqdc" (Equidistant Conic),
 #'   "lcc" (Lambert Conformal Conic), "cea" (Cylindrical Equal Area), "merc"
-#'   (Mercator), "eqc" (Equidistant Cylindrical), "eqearth" (Equal Earth), 
-#'   "moll" (Mollweide), "hammer" (Hammer), "eck4" (Eckert IV), "wag4" (Wagner IV),
-#'   "wag7" (Wagner VII), "tpeqd" (Two Point Equidistant), "robin" (Robinson),
-#'   "natearth" (Natural Earth), "wintri" (Winkel Tripel), "patterson" (Patterson),
-#'   "latlong" (Latitude/Longitude), "mill" (Miller Cylindrical), "tmerc" (Transverse
-#'   Mercator), "cass" (Cassini), "tcea" (Transverse Cylindrical Equal Area).
-#'   .
+#'   (Mercator), "eqc" (Equidistant Cylindrical), "eqearth" (Equal Earth),
+#'   "moll" (Mollweide), "hammer" (Hammer), "eck4" (Eckert IV), "wag4" (Wagner
+#'   IV), "wag7" (Wagner VII), "tpeqd" (Two Point Equidistant), "robin"
+#'   (Robinson), "natearth" (Natural Earth), "wintri" (Winkel Tripel),
+#'   "patterson" (Patterson), "latlong" (Latitude/Longitude), "mill" (Miller
+#'   Cylindrical), "tmerc" (Transverse Mercator), "cass" (Cassini), "tcea"
+#'   (Transverse Cylindrical Equal Area). .
 #' @param x0 Numeric. The false easting value.
 #' @param lat0 Numeric. The latitude of origin.
 #' @param lat1 Numeric. The first standard parallel.
@@ -35,16 +35,42 @@
 
 ################################################################################
 # Function to format the PROJ.4 and WKT strings
-crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
-                               "lcc", "cea", "merc", "eqc", "eqearth", 
-                               "moll", "hammer", "eck4", "wag4", "wag7", 
-                               "tpeqd", "robin", "natearth", "wintri", 
-                               "patterson", "latlong", "mill", "tmerc", "cass", 
-                               "tcea"),
-                       x0, lat0, lat1, lat2, lon0, k0,
-                       datum = c("WGS84", "ETRS89", "NAD83"),
-                       unit = c("m", "ft")) {
-  
+crs_string <- function(
+    prj = c(
+      "aeqd",
+      "laea",
+      "stere",
+      "aea",
+      "eqdc",
+      "lcc",
+      "cea",
+      "merc",
+      "eqc",
+      "eqearth",
+      "moll",
+      "hammer",
+      "eck4",
+      "wag4",
+      "wag7",
+      "tpeqd",
+      "robin",
+      "natearth",
+      "wintri",
+      "patterson",
+      "latlong",
+      "mill",
+      "tmerc",
+      "cass",
+      "tcea"
+    ),
+    x0,
+    lat0,
+    lat1,
+    lat2,
+    lon0,
+    k0,
+    datum = c("WGS84", "ETRS89", "NAD83"),
+    unit = c("m", "ft")) {
   # Check if the input is correct
   prj <- match.arg(prj)
   datum <- match.arg(datum)
@@ -84,103 +110,128 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     wkt_str,
     switch(prj,
       "aeqd" = paste0(
-        'Azimuthal_Equidistant",', gcs_str,
+        'Azimuthal_Equidistant",',
+        gcs_str,
         'PROJECTION["Azimuthal_Equidistant"],'
       ),
       "laea" = paste0(
-        'Lambert_Azimuthal",', gcs_str,
+        'Lambert_Azimuthal",',
+        gcs_str,
         'PROJECTION["Lambert_Azimuthal_Equal_Area"],'
       ),
       "stere" = paste0(
-        'Stereographic",', gcs_str,
+        'Stereographic",',
+        gcs_str,
         'PROJECTION["Stereographic"],'
       ),
       "aea" = paste0(
-        'Albers",', gcs_str,
+        'Albers",',
+        gcs_str,
         'PROJECTION["Albers"],'
       ),
       "eqdc" = paste0(
-        'Equidistant_Conic",', gcs_str,
+        'Equidistant_Conic",',
+        gcs_str,
         'PROJECTION["Equidistant_Conic"],'
       ),
       "lcc" = paste0(
-        'Lambert_Conformal_Conic",', gcs_str,
+        'Lambert_Conformal_Conic",',
+        gcs_str,
         'PROJECTION["Lambert_Conformal_Conic"],'
       ),
       "cea" = paste0(
-        'Cylindrical_Equal_Area",', gcs_str,
+        'Cylindrical_Equal_Area",',
+        gcs_str,
         'PROJECTION["Cylindrical_Equal_Area"],'
       ),
       "merc" = paste0(
-        'Mercator",', gcs_str,
+        'Mercator",',
+        gcs_str,
         'PROJECTION["Mercator"],'
       ),
       "eqc" = paste0(
-        'Equidistant_Cylindrical",', gcs_str,
+        'Equidistant_Cylindrical",',
+        gcs_str,
         'PROJECTION["Equidistant_Cylindrical"],'
       ),
       "tcea" = paste0(
-        'Transverse_Cylindrical_Equal_Area",', gcs_str,
+        'Transverse_Cylindrical_Equal_Area",',
+        gcs_str,
         'PROJECTION["Transverse_Cylindrical_Equal_Area"],'
       ),
       "tmerc" = paste0(
-        'Transverse_Mercator",', gcs_str,
+        'Transverse_Mercator",',
+        gcs_str,
         'PROJECTION["Transverse_Mercator"],'
       ),
       "cass" = paste0(
-        'Cassini",', gcs_str,
+        'Cassini",',
+        gcs_str,
         'PROJECTION["Cassini"],'
       ),
       "moll" = paste0(
-        'Mollweide",', gcs_str,
+        'Mollweide",',
+        gcs_str,
         'PROJECTION["Mollweide"],'
       ),
       "hammer" = paste0(
-        'Hammer_Aitoff",', gcs_str,
+        'Hammer_Aitoff",',
+        gcs_str,
         'PROJECTION["Hammer_Aitoff"],'
       ),
       "eck4" = paste0(
-        'Eckert_IV",', gcs_str,
+        'Eckert_IV",',
+        gcs_str,
         'PROJECTION["Eckert_IV"],'
       ),
       "eqearth" = paste0(
-        'Equal_Earth",', gcs_str,
+        'Equal_Earth",',
+        gcs_str,
         'PROJECTION["Equal_Earth"],'
       ),
       "wag4" = paste0(
-        'Wagner_IV",', gcs_str,
+        'Wagner_IV",',
+        gcs_str,
         'PROJECTION["Wagner_IV"],'
       ),
       "wag7" = paste0(
-        'Wagner_VII",', gcs_str,
+        'Wagner_VII",',
+        gcs_str,
         'PROJECTION["Wagner_VII"],'
       ),
       "robin" = paste0(
-        'Robinson",', gcs_str,
+        'Robinson",',
+        gcs_str,
         'PROJECTION["Robinson"],'
       ),
       "natearth" = paste0(
-        'Natural_Earth",', gcs_str,
+        'Natural_Earth",',
+        gcs_str,
         'PROJECTION["Natural_Earth"],'
       ),
       "wintri" = paste0(
-        'Winkel_Tripel",', gcs_str,
+        'Winkel_Tripel",',
+        gcs_str,
         'PROJECTION["Winkel_Tripel"],'
       ),
       "patterson" = paste0(
-        'Patterson",', gcs_str,
+        'Patterson",',
+        gcs_str,
         'PROJECTION["Patterson"],'
       ),
       "latlong" = paste0(
-        'Plate_Carree",', gcs_str,
+        'Plate_Carree",',
+        gcs_str,
         'PROJECTION["Plate_Carree"],'
       ),
       "mill" = paste0(
-        'Miller_Cylindrical",', gcs_str,
+        'Miller_Cylindrical",',
+        gcs_str,
         'PROJECTION["Miller_Cylindrical"],'
       ),
       "tpeqd" = paste0(
-        'Two_Point_Equidistant",', gcs_str,
+        'Two_Point_Equidistant",',
+        gcs_str,
         'PROJECTION["Two_Point_Equidistant"],'
       ),
       stop("Projection not recognized. Please select a valid projection.")
@@ -191,8 +242,10 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
   if (!is.na(x0)) {
     proj_str <- paste0(proj_str, " +x_0=", as.integer(x0))
     wkt_str <- paste0(
-      wkt_str, 'PARAMETER["False_Easting",',
-      x0, '],PARAMETER["False_Northing",0.0],'
+      wkt_str,
+      'PARAMETER["False_Easting",',
+      x0,
+      '],PARAMETER["False_Northing",0.0],'
     )
   } else {
     wkt_str <-
@@ -215,8 +268,12 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     "laea" = {
       proj_str <- paste0(proj_str, " +lon_0=", lon0, " +lat_0=", lat0)
       wkt_str <- paste0(
-        wkt_str, 'PARAMETER["Central_Meridian",', lon0,
-        '],PARAMETER["Latitude_Of_Origin",', lat0, "],"
+        wkt_str,
+        'PARAMETER["Central_Meridian",',
+        lon0,
+        '],PARAMETER["Latitude_Of_Origin",',
+        lat0,
+        "],"
       )
     },
     # Stereographic
@@ -224,17 +281,25 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
       if (is.na(k0)) {
         proj_str <- paste0(proj_str, " +lon_0=", lon0, " +lat_0=", lat0)
         wkt_str <- paste0(
-          wkt_str, 'PARAMETER["Central_Meridian",', lon0,
+          wkt_str,
+          'PARAMETER["Central_Meridian",',
+          lon0,
           '],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",',
-          lat0, "],"
+          lat0,
+          "],"
         )
       } else {
         proj_str <-
           paste0(proj_str, " +lon_0=", lon0, " +lat_0=", lat0, " +k_0=", k0)
         wkt_str <- paste0(
-          wkt_str, 'PARAMETER["Central_Meridian",', lon0,
-          '],PARAMETER["Scale_Factor",', k0,
-          '],PARAMETER["Latitude_Of_Origin",', lat0, "],"
+          wkt_str,
+          'PARAMETER["Central_Meridian",',
+          lon0,
+          '],PARAMETER["Scale_Factor",',
+          k0,
+          '],PARAMETER["Latitude_Of_Origin",',
+          lat0,
+          "],"
         )
       }
     },
@@ -244,14 +309,27 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     "eqdc" = ,
     "lcc" = {
       proj_str <- paste0(
-        proj_str, " +lon_0=", lon0, " +lat_1=", lat1,
-        " +lat_2=", lat2, " +lat_0=", lat0
+        proj_str,
+        " +lon_0=",
+        lon0,
+        " +lat_1=",
+        lat1,
+        " +lat_2=",
+        lat2,
+        " +lat_0=",
+        lat0
       )
       wkt_str <- paste0(
-        wkt_str, 'PARAMETER["Central_Meridian",', lon0,
-        '],PARAMETER["Standard_Parallel_1",', lat1,
-        '],PARAMETER["Standard_Parallel_2",', lat2,
-        '],PARAMETER["Latitude_Of_Origin",', lat0, "],"
+        wkt_str,
+        'PARAMETER["Central_Meridian",',
+        lon0,
+        '],PARAMETER["Standard_Parallel_1",',
+        lat1,
+        '],PARAMETER["Standard_Parallel_2",',
+        lat2,
+        '],PARAMETER["Latitude_Of_Origin",',
+        lat0,
+        "],"
       )
     },
 
@@ -261,8 +339,12 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     "merc" = {
       proj_str <- paste0(proj_str, " +lon_0=", lon0, " +lat_ts=", lat1)
       wkt_str <- paste0(
-        wkt_str, 'PARAMETER["Central_Meridian",', lon0,
-        '],PARAMETER["Standard_Parallel_1",', lat1, "],"
+        wkt_str,
+        'PARAMETER["Central_Meridian",',
+        lon0,
+        '],PARAMETER["Standard_Parallel_1",',
+        lat1,
+        "],"
       )
     },
 
@@ -273,14 +355,19 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
       if (is.na(k0)) {
         proj_str <- paste0(proj_str, " +lon_0=", lon0)
         wkt_str <- paste0(
-          wkt_str, 'PARAMETER["Central_Meridian",', lon0,
+          wkt_str,
+          'PARAMETER["Central_Meridian",',
+          lon0,
           '],PARAMETER["Scale_Factor",1.0],PARAMETER["Latitude_Of_Origin",0.0],'
         )
       } else {
         proj_str <- paste0(proj_str, " +lon_0=", lon0, " +k_0=", k0)
         wkt_str <- paste0(
-          wkt_str, 'PARAMETER["Central_Meridian",', lon0,
-          '],PARAMETER["Scale_Factor",', k0,
+          wkt_str,
+          'PARAMETER["Central_Meridian",',
+          lon0,
+          '],PARAMETER["Scale_Factor",',
+          k0,
           '],PARAMETER["Latitude_Of_Origin",0.0],'
         )
       }
@@ -307,7 +394,9 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     "wintri" = {
       proj_str <- paste0(proj_str, " +lon_0=", lon0)
       wkt_str <- paste0(
-        wkt_str, 'PARAMETER["Central_Meridian",', lon0,
+        wkt_str,
+        'PARAMETER["Central_Meridian",',
+        lon0,
         '],PARAMETER["Standard_Parallel_1",50.467],'
       )
     },
@@ -315,14 +404,27 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
     # Two-point azimuthal Equidistant
     "tpeqd" = {
       proj_str <- paste0(
-        proj_str, " +lat_1=", lat0, " +lon_1=", lat1,
-        " +lat_2=", lat2, " +lon_2=", lon0
+        proj_str,
+        " +lat_1=",
+        lat0,
+        " +lon_1=",
+        lat1,
+        " +lat_2=",
+        lat2,
+        " +lon_2=",
+        lon0
       )
       wkt_str <- paste0(
-        wkt_str, 'PARAMETER["Latitude_Of_1st_Point",', lat0,
-        '],PARAMETER["Latitude_Of_2nd_Point",', lat2,
-        '],PARAMETER["Longitude_Of_1st_Point",', lat1,
-        '],PARAMETER["Longitude_Of_2nd_Point",', lon0, "],"
+        wkt_str,
+        'PARAMETER["Latitude_Of_1st_Point",',
+        lat0,
+        '],PARAMETER["Latitude_Of_2nd_Point",',
+        lat2,
+        '],PARAMETER["Longitude_Of_1st_Point",',
+        lat1,
+        '],PARAMETER["Longitude_Of_2nd_Point",',
+        lon0,
+        "],"
       )
     },
 
@@ -332,7 +434,6 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
       wkt_str <- wkt_str
     }
   )
-
 
   # Formatting Linear Unit and Closing Strings
   proj_str <- paste0(
@@ -369,10 +470,14 @@ crs_string <- function(prj = c("aeqd", "laea", "stere", "aea", "eqdc",
 
 crs_string_row <- function(x, datum, unit) {
   crs_string(
-    prj = x$prj[1], x0 = x$x0[1],
-    lat0 = x$lat0[1], lat1 = x$lat1[1], lat2 = x$lat2[1],
+    prj = x$prj[1],
+    x0 = x$x0[1],
+    lat0 = x$lat0[1],
+    lat1 = x$lat1[1],
+    lat2 = x$lat2[1],
     lon0 = x$lon0[1],
     k0 = x$k0[1],
-    datum, unit
+    datum,
+    unit
   )
 }

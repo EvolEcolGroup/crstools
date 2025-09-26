@@ -16,18 +16,22 @@ Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 3.5.0)
 Imports:
     sf,
     ggplot2,
     terra,
-    cli
+    cli,
+    jpeg
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     pastclim,
     rnaturalearth,
+    rnaturalearthdata,
     tidyterra,
     svglite
 Config/testthat/edition: 3

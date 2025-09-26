@@ -1,0 +1,19 @@
+coverage:
+  status:
+    project:
+      default:
+        # basic
+        target: 80%
+        threshold: 5%
+        base: auto
+    patch:
+      default:
+        # basic
+        target: 80%
+        threshold: 5%
+        base: auto
+ignore:
+  - "R/choose_gcp.R"
+  - "R/extract_coords.R"
+  - "R/find_gcp_coords.R"
+  - "R/georeference_img.R"
