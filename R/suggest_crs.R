@@ -29,14 +29,15 @@
 #' @param world_equidist if `distortion`="equidistant" for a whole world
 #'   projection, then this parameter should be a list with one of the following
 #'   sets of elements:
-#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``, where
-#'   `pole` is either -90 or 90 for the South and North Pole, respectively, from
-#'   or through which distances are correct, and `lng_central` is the central
-#'   meridian. E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
-#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`, `lng_center`,
-#'   where `lat_center` and `lng_center` are the latitude and longitude of the
-#'   center from or through which distances are correct. E.g. `list(prj =
-#'   "oblique", lat_center = 39, lng_center = 145)`
+#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``,
+#'   where `pole` is either -90 or 90 for the South and North Pole,
+#'   respectively, from or through which distances are correct, and
+#'   `lng_central` is the central meridian.
+#'   E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
+#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`,
+#'   `lng_center`, where `lat_center` and `lng_center` are the latitude and
+#'   longitude of the center from or through which distances are correct.
+#'   E.g. `list(prj = "oblique", lat_center = 39, lng_center = 145)`
 #' * "Two-point azimuthal": `prj` = "two_points", `lat1`, `lng1`,
 #'   `lat2`, `lng2`, where `lat1`, `lng1`, `lat2`, `lng2` are the latitude and
 #'   longitude of two points on the map from which distances are correct. E.g.
@@ -90,9 +91,9 @@ suggest_crs <- function(
   lat_min <- x_ext[3]
   lat_max <- x_ext[4]
 
-  # check that the extent is valid
-  # first check that latitudes are within the range
-  # this ensures that lon and lat are fed in the correct order (at least in some cases)
+  # check that the extent is valid first check that latitudes are within the
+  # range this ensures that lon and lat are fed in the correct order (at least
+  # in some cases)
   if ((lat_min < -90 || lat_max > 90) && lat_check == TRUE) {
     stop("Latitude values must be between -90 and 90")
   }
@@ -134,7 +135,8 @@ suggest_crs <- function(
     # World (small-scale) map
     if (distortion == "conformal") {
       stop(
-        "conformal is not available for maps covering the whole world; try equal_area instead"
+        paste0("conformal is not available for maps covering the whole world; ",
+               "try equal_area instead")
       )
     }
     crs_df <- crs_world(
@@ -152,13 +154,15 @@ suggest_crs <- function(
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
       if (distortion == "conformal") {
         stop(
-          "conformal is not available for maps covering a whole hemisphere; try equal_area instead"
+          paste0("conformal is not available for maps covering a ",
+                 "whole hemisphere; try equal_area instead")
         )
       }
     }
     if (distortion == "compromise") {
       stop(
-        "compromise is not available for maps covering a whole hemisphere; try equal_area instead"
+        paste0("compromise is not available for maps covering a ",
+               "whole hemisphere; try equal_area instead")
       )
     }
     crs_df <- crs_hemisphere(
@@ -173,7 +177,8 @@ suggest_crs <- function(
     # Continent or a smaller area (large-scale) map
     if (distortion == "compromise") {
       stop(
-        "compromise is not available for maps focussing on a single continent or small area; try equal_area instead"
+        paste0("compromise is not available for maps focussing on a single ",
+               "continent or small area; try equal_area instead")
       )
     }
     crs_df <- crs_small_area(
