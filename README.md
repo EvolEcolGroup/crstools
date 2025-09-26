@@ -16,13 +16,3 @@ You can install the development version of crstools from [GitHub](https://github
 # install.packages("pak")
 pak::pak("EvolEcolGroup/crstools")
 ```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(crstools)
-## basic example code
-```
-
