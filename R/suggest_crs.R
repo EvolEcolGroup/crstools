@@ -4,10 +4,8 @@
 #' extent of the map. For SDMs, an equal area projection is generally favoured,
 #' but it is also possible to get suggestions for conformal, equidistant or
 #' compromise projections. The algorithm is a reimplementation in R of
-#' Projection Wizard (Bojan et al., 2016), version 2.1.
-#'
-#' TODO give some additional explanation about distortions, trade-offs
-#' (especially in the case of whole world maps)
+#' Projection Wizard (Bojan et al., 2016), version 2.1. 
+#' (https://projectionwizard.org/)
 #'
 #' @references Bojan, S, Bernhard, J, & Helen, J (2016) Projection Wizard - An
 #'   Online Map Projection Selection Tool. The Cartographic Journal

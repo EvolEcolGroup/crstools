@@ -36,7 +36,7 @@ find_gcp_coords <- function(gcp, sf_obj) {
   grDevices::x11()
   plot(sf::st_geometry(sf_obj))
 
-  # if some gcp already have coordinates, plot them on this map (TODO)
+  # if some gcp already have coordinates, plot them on this map
   if (first_missing > 1) {
     graphics::points(gcp$longitude, gcp$latitude, col = "blue", pch = 19)
     graphics::text(

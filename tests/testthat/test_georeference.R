@@ -19,7 +19,8 @@ europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70)) # approxi
 # get the coordinates for these points
 new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 
-# TODO add in descriptive steps e.g.
+# TODO in the future: add in descriptive steps e.g.
+# this is essentially what we do in the vignette
 # 1. Choose 4 points
 # 2. Choose a further 2 points
 # etc
