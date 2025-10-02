@@ -13,7 +13,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-# Georeference an image
 
 Georeferencing is the process of assigning real-world coordinates to an image,
 allowing it to be accurately placed on a map. This is often done using Ground
@@ -38,10 +37,17 @@ that is included with the package. The map has a number of points (the capitals 
 UK, France, Spain, Germany, Italy, and Iceland). 
 
 Our task is to georeference this image and then extract the coordinates
-of those capitals.
+of those capitals. We will copy a version of the image to a temporary directory,
+and work on that:
 
 ```{r image_path}
-img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+file.copy(
+  from = system.file("extdata/europe_map.jpeg", package = "crstools"),
+  to = tempdir(),
+  overwrite = TRUE
+)
+
+img_path <- file.path(tempdir(), "europe_map.jpeg")
 ```
 
 We can now select a number of GCPs with `choose_gcp()`. This function
@@ -54,12 +60,12 @@ gcp_europe <- choose_gcp(img_path)
 
 This will open a window showing the image:
 
-![Europe_with_georef.](img/europe_image.png)
+![Figure: Window opened by `choose_gcp()`](img/europe_image.png){width=500px}
 
 You can click on the image to select points by left-clicking with your mouse. The points will be numbered in the order
 in which they were chosen; you can stop by pressing the ESC key, or with a right-click.
 
-![Europe_with_georef_GCP.](img/europe_image_georef1.png)
+![Figure: GCPs selected on the map by clicking with the mouse](img/europe_image_georef1.png){width=500px}
 
 ```{r save_gcp1, echo = FALSE, eval= FALSE}
 # Run me to save the object if you are recreating the vignette
@@ -91,7 +97,7 @@ europe <- st_crop(world, c(xmin = -25, ymin = 25, xmax = 45, ymax = 70))
 ```
 
 Let's quickly plot it to check that we have the correct extent:
-```{r plot_europe}
+```{r plot_europe, eval = FALSE}
 library(ggplot2)
 ggplot() +
   geom_sf(data = europe, fill = "lightblue", color = "black") +
@@ -100,7 +106,7 @@ ggplot() +
 ```
 Now we can use the `find_gcp_coords()` function to assign geographic coordinates to the GCPs.
 
-![Europe_with_georef.](./img/europe_image_GCP.png)
+![Figure: Window opened by `find_gcp_coords()`](./img/europe_image_GCP.png){width=500px}
 
 ```{r find_gcp_coords, eval = FALSE}
 gcp_europe_coords <- find_gcp_coords(gcp_europe, europe)
@@ -126,7 +132,6 @@ This function will create a new TIFF file with the georeferenced image.
 georeferenced_image <- georeference_img(img_path, gcp_europe_coords)
 ```
 The `georeference_img()` function will create a new TIFF file with the georeferenced image. The output file will have the same name as the input image, but with the suffix `_warp.tif` added to it.
-@FIXME we need to put this in a temporary directory
 
 The georeferenced image can be loaded into R using the `terra` package as a SpatRaster:
 ```{r load_georeferenced_image}
@@ -134,7 +139,7 @@ map_warp <- terra::rast(georeferenced_image)
 ```
 We can now plot the georeferenced image to check the overlap between the input image and the georeferenced image. 
 This can inform us if more points (GCPs) need to be added and previous steps repeated (`choose_gcp()`).
-```{r plot_warped_image}
+```{r plot_warped_image, eval=FALSE}
 library(ggplot2)
 library(tidyterra)
 ggplot() +
@@ -147,7 +152,7 @@ ggplot() +
   coord_sf(expand = FALSE)
 ```
 
-![Europe georeferenced first version.](./img/europe_georeferenced_version1.png)
+![Figure: Warped image superimposed on a reference map with country borders](./img/europe_georeferenced_version1.png){width=500px}
 
 To add more points to improve the fit, we use: 
 ```{r choose_gcp_version2, eval = FALSE}
@@ -169,8 +174,9 @@ Additional points were added to the `gcp_europe` dataframe:
 gcp_europe
 ```
 
-Check the map with the original points 
-![Europe georeferenced points second version.](./img/europe_image_GCP2.png)
+Check the map with the original points
+
+![Figure: Additional GCPs added on the image.](./img/europe_image_GCP2.png){width=500px}
 
 Now we can repeat the process of assigning coordinates to the GCPs using `find_gcp_coords()` and `georeference_img()`:
 ```{r find_gcp_coords_version2, eval = FALSE}
@@ -189,7 +195,7 @@ gcp_europe_coords_v2 <- readRDS("./img/europe_gcp_georef_v2.RDS")
 ```
 
 Repeat georeferencing of the image using the GCPs
-```{r georeference_image_v2}
+```{r georeference_image_v2, eval=FALSE}
 georeferenced_image_v2 <- georeference_img(img_path, gcp_europe_coords_v2)
 
 map_warp_v2 <- terra::rast(georeferenced_image_v2)
@@ -204,7 +210,7 @@ ggplot() +
   ) +
   coord_sf(expand = FALSE)
 ```
-![Europe georeferenced second version.](./img/europe_georeferenced_version2.png)
+![Figure: Revised warped image superimposed on the reference map.](./img/europe_georeferenced_version2.png){width=500px}
 
 We can see that the additional points improved the georeferencing of the image, 
 as the map now aligns better with the geographic coordinates of the GCPs.
