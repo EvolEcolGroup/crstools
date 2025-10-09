@@ -35,6 +35,17 @@
 #' @param ... Other arguments passed on to [ggplot2::geom_sf()]
 #' @return A ggplot2 object
 #' @export
+#'@examplesIf rlang::is_installed("rnaturalearth")
+#' library(rnaturalearth)
+#' library(sf)
+#' library(ggplot2)
+#' s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
+#' s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
+#' ggplot(data = s_america_sf) +
+#'  geom_sf() +
+#'  geom_tissot() +
+#'  coord_sf(crs = s_am_equal_area$proj4) +
+#'  theme_minimal()
 
 geom_tissot <- function(
     mapping = ggplot2::aes(),

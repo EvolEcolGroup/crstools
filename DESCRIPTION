@@ -26,7 +26,8 @@ Imports:
     ggplot2,
     terra,
     cli,
-    jpeg
+    jpeg,
+    rlang
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
@@ -35,6 +36,8 @@ Suggests:
     rnaturalearth,
     rnaturalearthdata,
     tidyterra,
-    svglite
+    svglite,
+    spelling
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Language: en-GB
