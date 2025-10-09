@@ -9,7 +9,7 @@ The goal of crstools is to facilitate working with map projections (technically
 coordinate reference systems, CRS) in R. We provide functions to choose the
 appropriate map projection for a given application,
 visualise the resulting distortion, and georeference data from unknown
-projections. The package seemlessly interfaces with the popular `sf` and
+projections. The package seamlessly interfaces with the popular `sf` and
 `terra` packages for spatial data handling.
 
 ## Installation

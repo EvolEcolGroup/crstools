@@ -12,7 +12,7 @@ image (JPEG format). The function reads this image and applies the GCPs for
 georeferencing.}
 
 \item{gcp}{A data frame containing the Ground Control Points (GCPs). This
-dataframe can be produced withthe \emph{draw_gcp_points} function. This data
+dataframe can be produced with the \emph{draw_gcp_points} function. This data
 frame should have the following columns:
 \itemize{
 \item \code{id}: An identifier for each GCP (numeric).

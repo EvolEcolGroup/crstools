@@ -21,16 +21,16 @@
 #'   both data and aesthetics and shouldn't inherit behaviour from the default
 #'   plot specification, e.g. [ggplot2::geom_point()].
 #' @param centers Either a list with elements "lng" and "lat" giving the
-#'   longitudes and latitudes of the grid of centers for the tissot's
+#'   longitudes and latitudes of the grid of centers for the Tissot's
 #'   indicatrix, or a vector of length 2 with the number of rows and columns to
 #'   generate such a grid automatically. The latter is passed to [pretty()] to
 #'   get pretty breaks, and the exact number of Tissot's circles might differ
 #'   from the input numbers (see [pretty()] for details. It defaults to c(5,5).
 #' @param radius The radius of the circles (see [sf::st_buffer()] for an
-#'   explanation of how units are created; we reccomend that you explicitely
+#'   explanation of how units are created; we recommend that you explicitly
 #'   state your using with the `units::as_units()`, e.g `units::as_units(100,
 #'   "km")`
-#' @param fill The fill color of the circles
+#' @param fill The fill colour of the circles
 #' @param alpha The transparency of the circles
 #' @param ... Other arguments passed on to [ggplot2::geom_sf()]
 #' @return A ggplot2 object

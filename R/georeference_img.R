@@ -12,7 +12,7 @@
 #'   georeferencing.
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
-#'   dataframe can be produced withthe *draw_gcp_points* function. This data
+#'   dataframe can be produced with the *draw_gcp_points* function. This data
 #'   frame should have the following columns:
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
