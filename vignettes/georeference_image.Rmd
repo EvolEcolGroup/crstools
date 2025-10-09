@@ -65,7 +65,7 @@ This will open a window showing the image:
 You can click on the image to select points by left-clicking with your mouse. The points will be numbered in the order
 in which they were chosen; you can stop by pressing the ESC key, or with a right-click.
 
-![Figure: GCPs selected on the map by clicking with the mouse](img/europe_image_georef1.png){width=500px}
+![Figure: GCPs selected on the map by clicking with the mouse](img/europe_image_GCP.png){width=500px}
 
 ```{r save_gcp1, echo = FALSE, eval= FALSE}
 # Run me to save the object if you are recreating the vignette
@@ -81,6 +81,7 @@ saved in the `gcp_europe` dataframe, which contains the following columns:
 ```{r gcp_europe}
 gcp_europe
 ```
+@TODO I think it would be good to add a simple function (we can adjust the functio choose_gcp(img_path, gcp = gcp_europe) to only plot) to plot the picture with selected gcp points and their IDs because when I tried georeferencing, I accidentally closed the window and it took me a while to visualise the gcps I selected.
 
 Next we need to get the coordinates (longitude and latitude) of these points. We can use the `find_gcp_coords()` function
 to assign geographic coordinates to the GCPs. This function requires a reference map in the form of an `sf` object.
@@ -106,7 +107,7 @@ ggplot() +
 ```
 Now we can use the `find_gcp_coords()` function to assign geographic coordinates to the GCPs.
 
-![Figure: Window opened by `find_gcp_coords()`](./img/europe_image_GCP.png){width=500px}
+![Figure: Window opened by `find_gcp_coords()`](./img/europe_image_georef1.png){width=500px}
 
 ```{r find_gcp_coords, eval = FALSE}
 gcp_europe_coords <- find_gcp_coords(gcp_europe, europe)

@@ -34,7 +34,7 @@
 #' warped_image <- georeference_image(image_path = "image.jpg", gcp_df = gcp_df)
 #' }
 georeference_img <- function(image_obj, gcp, output_path = NULL) {
-  warning("this function is untested yet!")
+  # warning("this function is untested yet!") I think it is now tested?
 
   # check if image is a file path or an array
   if (is.character(image_obj)) {

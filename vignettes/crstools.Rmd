@@ -21,8 +21,8 @@ the type of map, the extent of the map, and the purpose of the map.
 The `crstools` package provides 3 main functionalities:
 
 1) `suggest_crs` provides suggestions for CRS for different types of maps, such
-as equal area maps, conformal maps, and equidistant maps, depending on the
-extent and location of the are of interest.
+as equal-area maps, conformal maps, and equidistant maps, depending on the
+extent and location of the area of interest.
 
 2) `geom_tissot` visualises the distortion associated with a given crs, by
 adding Tissot indicatrix to a `ggplot2` map (the distortion of circles on the map).
@@ -138,7 +138,7 @@ The `suggest_crs()` function provides suggestions for CRS for different types of
 maps. The function takes the extent of the map and the type of distortion as
 inputs and returns a CRS (or a list of CRSs if more than one option is available).
 There are 3 types of distortion: *equal area*, *conformal*, and *equidistant*.
-As suggested by the name, equal area maps preserve the area of features, conformal
+As suggested by the name, equal-area maps preserve the area of features, conformal
 maps preserve angles, and equidistant maps preserve distances. A fourth option,
 *compromise*, is also available, which tries to balance the trade-offs between
 the other three types of distortion.
@@ -173,16 +173,16 @@ the Proj4 code, we can use the `sf::st_crs()` and extract the `$proj4string` slo
 sf::st_crs(s_america_sf)$proj4string
 ```
 
-Now, let's use `suggest_crs()` to get a suggestion for an equidistant CRS 
+Now, let's use `suggest_crs()` to get a suggestion for an equal-area CRS 
 for this map:
 ```{r}
 library(crstools)
-s_am_equidist <- suggest_crs(s_america_sf, distortion = "equal_area")
+s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 ```
 
 The function returns a list with two elements: `proj4` and `wkt`. Let's see:
 ```{r}
-s_am_equidist
+s_am_equal_area
 ```
 
 We can now use this CRS to reproject the map. We can quickly inspect the projection
@@ -190,7 +190,7 @@ by plotting the map with the new CRS:
 ```{r plot_s_america_equidist}
 ggplot() +
   geom_sf(data = s_america_sf) +
-  coord_sf(crs = s_am_equidist$proj4) +
+  coord_sf(crs = s_am_equal_area$proj4) +
   theme_minimal()
 ```
 
@@ -198,12 +198,12 @@ The Tissot indicatrix is a mathematical contrivance used in cartography to
 characterize local distortions due to map projection. The `geom_tissot()` function
 adds Tissot's indicatrix to a map, showing how circles are distorted by the
 projection. Let's use it to add Tissot's indicatrix to the map of South America
-with the equidistant projection:
+with the equal-area projection:
 ```{r}
 ggplot(data = s_america_sf) +
   geom_sf() +
   geom_tissot() +
-  coord_sf(crs = s_am_equidist$proj4) +
+  coord_sf(crs = s_am_equal_area$proj4) +
   theme_minimal()
 ```
 
@@ -223,14 +223,14 @@ preserves the area of the circles better.
 We could use the CRS to also project the `sf` object, and check that the new
 CRS was indeed adopted:
 ```{r}
-s_america_sf_equidist <- sf::st_transform(s_america_sf, s_am_equidist$proj4)
-sf::st_crs(s_america_sf_equidist)$proj4string
+s_america_sf_equal_area <- sf::st_transform(s_america_sf, s_am_equal_area$proj4)
+sf::st_crs(s_america_sf_equal_area)$proj4string
 ```
 
 Now we can plot it, and the new CRS will be used automatically:
 ```{r plot_sa_equidist_proj}
 ggplot() +
-  geom_sf(data = s_america_sf_equidist) +
+  geom_sf(data = s_america_sf_equal_area) +
   theme_minimal()
 ```
 
@@ -282,7 +282,7 @@ ggplot() +
   theme_minimal()
 ```
 
-We can now ask for a suggestion for an equal area projection for this raster:
+We can now ask for a suggestion for an equal-area projection for this raster:
 ```{r}
 europe_r_equal_area <- suggest_crs(europe_r, distortion = "equal_area")
 europe_r_equal_area
@@ -298,7 +298,7 @@ ggplot() +
 ```
 
 Let us use the Tissot indicatrix to assess how effective the equal area
-projections is:
+projection is:
 ```{r}
 ggplot() +
   geom_spatraster(data = europe_r) +
@@ -319,7 +319,7 @@ ggplot() +
 ```
 
 We can also use the CRS to reproject the raster, and check that it has been
-applied coorectly:
+applied correctly:
 ```{r}
 europe_r_equal_area <- terra::project(europe_r, europe_r_equal_area$proj4)
 terra::crs(europe_r_equal_area, proj = TRUE)
