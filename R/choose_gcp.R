@@ -14,6 +14,14 @@
 #' @return A dataframe with the GCPs, including the image coordinates and their
 #'   corresponding geographic coordinates.
 #' @export
+#' 
+#' @examplesIf rlang::is_interactive()
+#' # Get the path to an example image included in the package and choose GCPs
+#' img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+#' # choose some points
+#' gcp_europe <- choose_gcp(img_path)
+#' # after the first set of points is chosen, we can add more points
+#' gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
 
 choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
   # check if image is a file path or an array

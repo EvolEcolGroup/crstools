@@ -9,7 +9,7 @@
 #' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
-#'
+#' @noRd
 
 ################################################################################
 ## crs for regional maps with square extent

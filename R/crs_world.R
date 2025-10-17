@@ -11,6 +11,7 @@
 #' @param quiet Whether to suppress messages.
 #' @return A data frame with the suggested world map projections.
 #' @keywords internal
+#' @noRd
 
 ################################################################################
 # Main small-scale (whole world) output function

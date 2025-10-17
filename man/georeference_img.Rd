@@ -38,8 +38,7 @@ system (EPSG:4326). The warped image is saved as a new file with the suffix
 \verb{_warp.tif}.
 }
 \examples{
-\dontrun{
+skip_if(!rlang::is_interactive())
 # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
 warped_image <- georeference_image(image_path = "image.jpg", gcp_df = gcp_df)
-}
 }

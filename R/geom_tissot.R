@@ -35,7 +35,7 @@
 #' @param ... Other arguments passed on to [ggplot2::geom_sf()]
 #' @return A ggplot2 object
 #' @export
-#'@examplesIf rlang::is_installed("rnaturalearth")
+#' @examplesIf rlang::is_installed("rnaturalearth")
 #' library(rnaturalearth)
 #' library(sf)
 #' library(ggplot2)

@@ -32,6 +32,7 @@
 #'   contains the PROJ.4 string, while the "wkt" element contains the WKT
 #'   string.
 #' @keywords internal
+#' @noRd
 
 ################################################################################
 # Function to format the PROJ.4 and WKT strings

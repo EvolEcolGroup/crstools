@@ -22,3 +22,26 @@ image.
 \description{
 Extract coordinates from a georeferenced image.
 }
+\examples{
+\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Georeference the image using the created GCPs
+# get the gcp coordinates
+gcp_europe_coords <-
+readRDS(system.file("vignettes/img/europe_gcp_georef_v2.RDS",
+package = "crstools"))
+# get the path to the image
+georef_path <-
+georeference_img(image_obj = img_path,
+gcp = gcp_europe_coords,
+output_path = file.path(tempdir(), "europe_map_georef"))
+# georeference the image using the GCPs
+map_warp <- terra::rast(georef_path)
+# get the coordinates of the points
+coords_df <- extract_coords(map_warp)
+# if needed, extract additional points by supplying the coords_df argument
+# and re run the function
+coords_df <- extract_coords(map_warp, coords_df)
+# dataframe with ID and coordinates of the points extracted from the image.
+print(coords_df)
+\dontshow{\}) # examplesIf}
+}

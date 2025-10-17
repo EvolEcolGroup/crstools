@@ -27,3 +27,13 @@ corresponding geographic coordinates.
 GCPs are used to georeference images by providing known coordinates for
 specific points in the image.
 }
+\examples{
+\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get the path to an example image included in the package and choose GCPs
+img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+# choose some points
+gcp_europe <- choose_gcp(img_path)
+# after the first set of points is chosen, we can add more points
+gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
+\dontshow{\}) # examplesIf}
+}

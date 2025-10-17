@@ -29,10 +29,10 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' skip_if(!rlang::is_interactive())
 #' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
 #' warped_image <- georeference_image(image_path = "image.jpg", gcp_df = gcp_df)
-#' }
+
 georeference_img <- function(image_obj, gcp, output_path = NULL) {
 
   # check if image is a file path or an array

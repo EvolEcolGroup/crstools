@@ -12,6 +12,7 @@
 #' @param quiet logical, whether to suppress messages.
 #' @return data.frame with the suggested projection.
 #' @keywords internal
+#' @noRd
 
 ################################################################################
 # maps showing a smaller area

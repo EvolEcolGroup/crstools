@@ -7,6 +7,7 @@
 #' @param quiet Whether to suppress messages and warnings
 #' @return The projection object
 #' @keywords internal
+#' @noRd
 
 crs_world_equidistant <- function(
     center,
