@@ -31,7 +31,7 @@ specific points in the image.
 \dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Get the path to an example image included in the package and choose GCPs
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
-# choose some points
+# this will open a new window where you can choose some points
 gcp_europe <- choose_gcp(img_path)
 # after the first set of points is chosen, we can add more points
 gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
