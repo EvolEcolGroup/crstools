@@ -23,7 +23,7 @@ image.
 Extract coordinates from a georeferenced image.
 }
 \examples{
-\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # Georeference the image using the created GCPs
 # get the gcp coordinates
 gcp_europe_coords <-

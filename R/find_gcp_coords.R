@@ -24,7 +24,7 @@
 #' europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
 #' # get the coordinates for these points
 #' new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
-#' data frame with the GCPs
+#' # data frame with the GCPs
 #' print(new_gcp_europe)
 
 find_gcp_coords <- function(gcp, sf_obj) {

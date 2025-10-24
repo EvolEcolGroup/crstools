@@ -9,7 +9,7 @@ choose_gcp(image_obj, gcp = NULL, col = "red")
 \arguments{
 \item{image_obj}{An array representing the image (colour images are generally
 imported as an array of nx x ny x 3 colour channels), or a file path to the
-image (of type .jpg or XXXX).}
+image (currenly this can only be of type .jpg).}
 
 \item{gcp}{(optional) A dataframe of GCPs, containing columns \code{id}, \code{x},
 \code{y},\code{longitude}, \code{latitude}. This is used if we want to add additional GCP
@@ -28,7 +28,7 @@ GCPs are used to georeference images by providing known coordinates for
 specific points in the image.
 }
 \examples{
-\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # Get the path to an example image included in the package and choose GCPs
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 # this will open a new window where you can choose some points

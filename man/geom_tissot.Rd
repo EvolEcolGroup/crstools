@@ -65,7 +65,7 @@ mathematical contrivance used in cartography to characterize local
 distortions due to map projection.
 }
 \examples{
-\dontshow{if (rlang::is_installed("rnaturalearth")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("rnaturalearth")) withAutoprint(\{ # examplesIf}
 library(rnaturalearth)
 library(sf)
 library(ggplot2)

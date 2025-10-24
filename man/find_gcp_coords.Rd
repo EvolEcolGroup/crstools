@@ -23,7 +23,7 @@ Find the coordinates (longitude and latitude) of the ground control points
 (GCPs) in a given image.
 }
 \examples{
-\dontshow{if (all(rlang::is_installed("rnaturalearth"), rlang::is_interactive())) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (all(rlang::is_installed("rnaturalearth"), rlang::is_interactive())) withAutoprint(\{ # examplesIf}
 # get the path to an example image included in the package and choose GCPs
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 # choose some points
@@ -38,7 +38,7 @@ world <- st_transform(world, crs = 4326)
 europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
 # get the coordinates for these points
 new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
-data frame with the GCPs
+# data frame with the GCPs
 print(new_gcp_europe)
 \dontshow{\}) # examplesIf}
 }

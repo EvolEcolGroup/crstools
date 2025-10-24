@@ -4,7 +4,7 @@
 #' specific points in the image.
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
-#'   image (of type .jpg or XXXX).
+#'   image (currenly this can only be of type .jpg).
 #' @param gcp (optional) A dataframe of GCPs, containing columns `id`, `x`,
 #'   `y`,`longitude`, `latitude`. This is used if we want to add additional GCP
 #'   to an existing list (usually created by running this function multiple
