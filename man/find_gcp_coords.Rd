@@ -33,9 +33,9 @@ gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
 # create a map of europe to use to get the coordinates
 world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
 # transform it to a suitable projection
-world <- st_transform(world, crs = 4326)
+world <- sf::st_transform(world, crs = 4326)
 # crop it to the extent of the image
-europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
+europe <- sf::st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
 # get the coordinates for these points
 new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 # data frame with the GCPs

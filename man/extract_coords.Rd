@@ -30,6 +30,7 @@ gcp_europe_coords <-
 readRDS(system.file("vignettes/img/europe_gcp_georef_v2.RDS",
 package = "crstools"))
 # get the path to the image
+img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 georef_path <-
 georeference_img(image_obj = img_path,
 gcp = gcp_europe_coords,
