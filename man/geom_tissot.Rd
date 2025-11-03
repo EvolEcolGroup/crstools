@@ -10,7 +10,7 @@ geom_tissot(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  centers = c(5, 5),
+  centres = c(5, 5),
   radius = NULL,
   fill = "red",
   alpha = 0.7,
@@ -39,8 +39,8 @@ combining with them. This is most useful for helper functions that define
 both data and aesthetics and shouldn't inherit behaviour from the default
 plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 
-\item{centers}{Either a list with elements "lng" and "lat" giving the
-longitudes and latitudes of the grid of centers for the Tissot's
+\item{centres}{Either a list with elements "lng" and "lat" giving the
+longitudes and latitudes of the grid of centres for the Tissot's
 indicatrix, or a vector of length 2 with the number of rows and columns to
 generate such a grid automatically. The latter is passed to \code{\link[=pretty]{pretty()}} to
 get pretty breaks, and the exact number of Tissot's circles might differ

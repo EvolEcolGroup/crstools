@@ -2,7 +2,7 @@
 #' @description This function provides a list of world map projections.
 #' @param distortion The distortion of the world map projection (e.g.,
 #'   "equal_area", "equidistant", "compromise").
-#' @param center The center of the map projection.
+#' @param centre The centre of the map projection.
 #' @param scale The scale of the map projection.
 #' @param round_cm The round central meridian.
 #' @param world_equidist The world equidistant parameters (see documentation for
@@ -17,7 +17,7 @@
 # Main small-scale (whole world) output function
 crs_world <- function(
     distortion,
-    center,
+    centre,
     scale,
     round_cm,
     world_equidist,
@@ -57,7 +57,7 @@ crs_world <- function(
   )
 
   # Formatting central meridian
-  lng <- round_world_coords(center$lng, scale, round_cm)
+  lng <- round_world_coords(centre$lng, scale, round_cm)
 
   if (distortion == "equal_area") {
     # Equal-area projections with poles as lines
@@ -112,7 +112,7 @@ crs_world <- function(
 
     # Update active projection and preview
     crs_suggestions <- crs_world_equidistant(
-      center = center,
+      centre = centre,
       scale = scale,
       round_cm = round_cm,
       prj_details = world_equidist,

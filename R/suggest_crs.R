@@ -32,10 +32,10 @@
 #'   respectively, from or through which distances are correct, and
 #'   `lng_central` is the central meridian.
 #'   E.g. `list(prj = "polar", pole = 90, lng_central = -180)`
-#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_center`,
-#'   `lng_center`, where `lat_center` and `lng_center` are the latitude and
-#'   longitude of the center from or through which distances are correct.
-#'   E.g. `list(prj = "oblique", lat_center = 39, lng_center = 145)`
+#' * "Oblique azimuthal equidistant": `prj` = "oblique", `lat_centre`,
+#'   `lng_centre`, where `lat_centre` and `lng_centre` are the latitude and
+#'   longitude of the centre from or through which distances are correct.
+#'   E.g. `list(prj = "oblique", lat_centre = 39, lng_centre = 145)`
 #' * "Two-point azimuthal": `prj` = "two_points", `lat1`, `lng1`,
 #'   `lat2`, `lng2`, where `lat1`, `lng1`, `lat2`, `lng2` are the latitude and
 #'   longitude of two points on the map from which distances are correct. E.g.
@@ -114,18 +114,18 @@ suggest_crs <- function(
     (lon_max - lon_min) /
     (sin(lat_max * pi / 180) - sin(lat_min * pi / 180))
 
-  # Getting the center of the map
-  center <- data.frame(
+  # Getting the centre of the map
+  centre <- data.frame(
     lat = (lat_max + lat_min) / 2,
     lng = (lon_max + lon_min) / 2
   )
 
   # Normalizing central meridian value
-  center$lng <- normalise_lon(center$lng, 0)
+  centre$lng <- normalise_lon(centre$lng, 0)
 
   # Rounding central meridian
   if (round_cm) {
-    center$lng <- round(center$lng)
+    centre$lng <- round(centre$lng)
   }
 
   # Choose the appropriate type of map
@@ -139,7 +139,7 @@ suggest_crs <- function(
     }
     crs_df <- crs_world(
       distortion = distortion,
-      center = center,
+      centre = centre,
       scale = scale,
       round_cm = round_cm,
       world_equidist = world_equidist,
@@ -165,7 +165,7 @@ suggest_crs <- function(
     }
     crs_df <- crs_hemisphere(
       distortion = distortion,
-      center = center,
+      centre = centre,
       scale = scale,
       latmin = lat_min,
       latmax = lat_max,
@@ -181,7 +181,7 @@ suggest_crs <- function(
     }
     crs_df <- crs_small_area(
       distortion,
-      center,
+      centre,
       scale,
       lonmin = lon_min,
       lonmax = lon_max,

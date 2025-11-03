@@ -20,8 +20,8 @@
 #'   combining with them. This is most useful for helper functions that define
 #'   both data and aesthetics and shouldn't inherit behaviour from the default
 #'   plot specification, e.g. [ggplot2::geom_point()].
-#' @param centers Either a list with elements "lng" and "lat" giving the
-#'   longitudes and latitudes of the grid of centers for the Tissot's
+#' @param centres Either a list with elements "lng" and "lat" giving the
+#'   longitudes and latitudes of the grid of centres for the Tissot's
 #'   indicatrix, or a vector of length 2 with the number of rows and columns to
 #'   generate such a grid automatically. The latter is passed to [pretty()] to
 #'   get pretty breaks, and the exact number of Tissot's circles might differ
@@ -54,7 +54,7 @@ geom_tissot <- function(
     na.rm = FALSE, #nolint
     show.legend = NA, #nolint
     inherit.aes = TRUE, #nolint
-    centers = c(5, 5),
+    centres = c(5, 5),
     radius = NULL,
     fill = "red",
     alpha = 0.7,
@@ -83,7 +83,7 @@ geom_tissot <- function(
       inherit.aes = inherit.aes,
       params = list(
         na.rm = na.rm,
-        centers = centers,
+        centres = centres,
         radius = radius,
         fill = fill,
         alpha = alpha,
@@ -97,15 +97,15 @@ geom_tissot <- function(
 tissot <- ggplot2::ggproto(
   "Tissot",
   ggplot2::StatSf,
-  compute_panel = function(data, scales, coord, centers, radius) {
+  compute_panel = function(data, scales, coord, centres, radius) {
     # create new data with the indicatrix
-    data <- create_indicatrix(data, scales, coord, centers, radius)
+    data <- create_indicatrix(data, scales, coord, centres, radius)
     ggplot2::StatSf$compute_panel(data, scales, coord)
   },
   required_aes = c("geometry")
 )
 
-create_indicatrix <- function(data, scales, coord, centers, radius) {
+create_indicatrix <- function(data, scales, coord, centres, radius) {
   data_bbox <- sf::st_bbox(data[[geom_column(data)]])
   orig_crs <- sf::st_crs(data_bbox)
   # if the bbox is not in crs 4326, we should reproject it
@@ -113,12 +113,12 @@ create_indicatrix <- function(data, scales, coord, centers, radius) {
     data_bbox <- sf::st_transform(data_bbox, sf::st_crs("EPSG:4326"))
   }
 
-  # if centers is a vector of two elements (and NOT a list), then we generate
-  # the grid of centers
-  if (!inherits(centers, "list") && length(centers) == 2) {
+  # if centres is a vector of two elements (and NOT a list), then we generate
+  # the grid of centres
+  if (!inherits(centres, "list") && length(centres) == 2) {
     # Generate sequences
-    lon_seq <- pretty(c(data_bbox$xmin, data_bbox$xmax), n = centers[1] + 1)
-    lat_seq <- pretty(c(data_bbox$ymin, data_bbox$ymax), n = centers[2] + 1)
+    lon_seq <- pretty(c(data_bbox$xmin, data_bbox$xmax), n = centres[1] + 1)
+    lat_seq <- pretty(c(data_bbox$ymin, data_bbox$ymax), n = centres[2] + 1)
     # remove first and last values
     lon_seq <- lon_seq[-c(1, length(lon_seq))]
     lat_seq <- lat_seq[-c(1, length(lat_seq))]
@@ -126,12 +126,12 @@ create_indicatrix <- function(data, scales, coord, centers, radius) {
     coord_grid <- as.matrix(expand.grid(lon_seq, lat_seq))
     # if we have a list, we use the values in the list
   } else if (
-    inherits(centers, "list") && all(c("lng", "lat") %in% names(centers))
+    inherits(centres, "list") && all(c("lng", "lat") %in% names(centres))
   ) {
-    coord_grid <- as.matrix(expand.grid(centers$lng, centers$lat))
+    coord_grid <- as.matrix(expand.grid(centres$lng, centres$lat))
   } else {
     stop(
-      paste0("centers must be either a list with elements 'lng' ",
+      paste0("centres must be either a list with elements 'lng' ",
              "and 'lat' or a vector of length 2")
     )
   }
