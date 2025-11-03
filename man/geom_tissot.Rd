@@ -66,6 +66,7 @@ distortions due to map projection.
 }
 \examples{
 \dontshow{if (rlang::is_installed("rnaturalearth")) withAutoprint(\{ # examplesIf}
+# load required packages
 library(rnaturalearth)
 library(sf)
 library(ggplot2)

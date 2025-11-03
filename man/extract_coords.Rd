@@ -24,6 +24,8 @@ Extract coordinates from a georeferenced image.
 }
 \examples{
 \dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
+# Load required packages
+library(terra)
 # Georeference the image using the created GCPs
 # get the gcp coordinates
 gcp_europe_coords <-
@@ -36,7 +38,7 @@ georeference_img(image_obj = img_path,
 gcp = gcp_europe_coords,
 output_path = file.path(tempdir(), "europe_map_georef"))
 # georeference the image using the GCPs
-map_warp <- terra::rast(georef_path)
+map_warp <- rast(georef_path)
 # get the coordinates of the points
 coords_df <- extract_coords(map_warp)
 # if needed, extract additional points by supplying the coords_df argument

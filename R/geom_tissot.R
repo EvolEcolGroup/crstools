@@ -36,6 +36,7 @@
 #' @return A ggplot2 object
 #' @export
 #' @examplesIf rlang::is_installed("rnaturalearth")
+#' # load required packages
 #' library(rnaturalearth)
 #' library(sf)
 #' library(ggplot2)
