@@ -121,5 +121,3 @@ georeference_img <- function(image_obj, gcp, output_path = NULL) {
 
   return(map_warp_tif)
 }
-
-# @TODO add optionto change the output CRS as a param

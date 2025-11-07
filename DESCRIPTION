@@ -1,6 +1,6 @@
 Package: crstools
 Title: Tools to Work with Projections
-Version: 0.0.0.9001
+Version: 0.1.0
 Authors@R: c(
     person("Andrea", "Manica", , "am315@cam.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1895-450X")),
