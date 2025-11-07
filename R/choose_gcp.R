@@ -4,7 +4,7 @@
 #' specific points in the image.
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
-#'   image (of type .jpg or XXXX).
+#'   image (currenly this can only be of type .jpg).
 #' @param gcp (optional) A dataframe of GCPs, containing columns `id`, `x`,
 #'   `y`,`longitude`, `latitude`. This is used if we want to add additional GCP
 #'   to an existing list (usually created by running this function multiple
@@ -14,7 +14,14 @@
 #' @return A dataframe with the GCPs, including the image coordinates and their
 #'   corresponding geographic coordinates.
 #' @export
-
+#'
+#' @examplesIf rlang::is_interactive()
+#' # Get the path to an example image included in the package and choose GCPs
+#' img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+#' # this will open a new window where you can choose some points
+#' gcp_europe <- choose_gcp(img_path)
+#' # after the first set of points is chosen, we can add more points
+#' gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
 choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
   # check if image is a file path or an array
   if (is.character(image_obj)) {

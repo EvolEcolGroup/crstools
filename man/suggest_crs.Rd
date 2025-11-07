@@ -43,10 +43,10 @@ projection, then this parameter should be a list with one of the following
 sets of elements:
 \itemize{
 \item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \verb{lng_central``, where }pole\verb{is either -90 or 90 for the South and North Pole, respectively, from or through which distances are correct, and}lng_central\verb{is the central meridian. E.g.}list(prj = "polar", pole = 90, lng_central = -180)`
-\item "Oblique azimuthal equidistant": \code{prj} = "oblique", \code{lat_center},
-\code{lng_center}, where \code{lat_center} and \code{lng_center} are the latitude and
-longitude of the center from or through which distances are correct.
-E.g. \code{list(prj = "oblique", lat_center = 39, lng_center = 145)}
+\item "Oblique azimuthal equidistant": \code{prj} = "oblique", \code{lat_centre},
+\code{lng_centre}, where \code{lat_centre} and \code{lng_centre} are the latitude and
+longitude of the centre from or through which distances are correct.
+E.g. \code{list(prj = "oblique", lat_centre = 39, lng_centre = 145)}
 \item "Two-point azimuthal": \code{prj} = "two_points", \code{lat1}, \code{lng1},
 \code{lat2}, \code{lng2}, where \code{lat1}, \code{lng1}, \code{lat2}, \code{lng2} are the latitude and
 longitude of two points on the map from which distances are correct. E.g.

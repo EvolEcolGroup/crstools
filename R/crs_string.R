@@ -32,6 +32,7 @@
 #'   contains the PROJ.4 string, while the "wkt" element contains the WKT
 #'   string.
 #' @keywords internal
+#' @noRd
 
 ################################################################################
 # Function to format the PROJ.4 and WKT strings
@@ -467,6 +468,7 @@ crs_string <- function(
 #' @return A list with two elements: "proj4" and "wkt". The "proj4" element
 #'   contains the PROJ.4 string, while the "wkt" element contains the WKT
 #'   string.
+#' @noRd
 
 crs_string_row <- function(x, datum, unit) {
   crs_string(

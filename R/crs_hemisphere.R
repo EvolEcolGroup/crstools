@@ -2,8 +2,8 @@
 #' @description Function to suggest a projection for maps showing a hemisphere
 #' @param distortion character string (e.g., "equal_area", "equidistant",
 #'   "conformal").
-#' @param center data.frame with two numeric values, latitude and longitude of
-#'   the center of the map.
+#' @param centre data.frame with two numeric values, latitude and longitude of
+#'   the centre of the map.
 #' @param scale numeric value, scale of the map.
 #' @param latmin numeric value, minimum latitude of the map.
 #' @param latmax numeric value, maximum latitude of the map.
@@ -18,20 +18,20 @@
 # maps showing a hemisphere
 crs_hemisphere <- function(
     distortion,
-    center,
+    centre,
     scale,
     latmin,
     latmax,
     quiet = FALSE) {
   # Formatting central meridian
-  lon <- round(center$lng * 100) / 100
+  lon <- round(centre$lng * 100) / 100
 
   # Checking if within tropics
   if (abs(latmax) < 23.43665 && abs(latmin) < 23.43665) {
     # Defining standard parallel
     interval <- (latmax - latmin) / 4
-    lat_s1 <- center$lat + interval
-    lat_s2 <- center$lat - interval
+    lat_s1 <- centre$lat + interval
+    lat_s2 <- centre$lat - interval
 
     lat_std <- ifelse(
       (lat_s1 > 0 && lat_s2 > 0) || (lat_s1 < 0 && lat_s2 < 0),
@@ -82,12 +82,12 @@ crs_hemisphere <- function(
     }
   } else {
     # Formatting central latitude
-    lat <- if (center$lat > 85) {
+    lat <- if (centre$lat > 85) {
       90
-    } else if (center$lat < -85) {
+    } else if (centre$lat < -85) {
       -90
     } else {
-      round(center$lat * 100) / 100
+      round(centre$lat * 100) / 100
     }
 
     # Adding projection output

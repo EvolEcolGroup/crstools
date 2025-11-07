@@ -10,7 +10,7 @@ geom_tissot(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  centers = c(5, 5),
+  centres = c(5, 5),
   radius = NULL,
   fill = "red",
   alpha = 0.7,
@@ -39,18 +39,18 @@ combining with them. This is most useful for helper functions that define
 both data and aesthetics and shouldn't inherit behaviour from the default
 plot specification, e.g. \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 
-\item{centers}{Either a list with elements "lng" and "lat" giving the
-longitudes and latitudes of the grid of centers for the tissot's
+\item{centres}{Either a list with elements "lng" and "lat" giving the
+longitudes and latitudes of the grid of centres for the Tissot's
 indicatrix, or a vector of length 2 with the number of rows and columns to
 generate such a grid automatically. The latter is passed to \code{\link[=pretty]{pretty()}} to
 get pretty breaks, and the exact number of Tissot's circles might differ
 from the input numbers (see \code{\link[=pretty]{pretty()}} for details. It defaults to c(5,5).}
 
 \item{radius}{The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
-explanation of how units are created; we reccomend that you explicitely
+explanation of how units are created; we recommend that you explicitly
 state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
 
-\item{fill}{The fill color of the circles}
+\item{fill}{The fill colour of the circles}
 
 \item{alpha}{The transparency of the circles}
 
@@ -66,6 +66,7 @@ distortions due to map projection.
 }
 \examples{
 \dontshow{if (rlang::is_installed("rnaturalearth")) withAutoprint(\{ # examplesIf}
+# load required packages
 library(rnaturalearth)
 library(sf)
 library(ggplot2)

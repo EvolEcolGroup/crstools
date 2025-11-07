@@ -1,15 +1,16 @@
 #' Function to create the world equidistant projection
 #'
-#' @param center The center of the map (named vector with lat and long)
+#' @param centre The centre of the map (named vector with lat and long)
 #' @param scale The scale of the map
 #' @param round_cm The round central meridian.
 #' @param prj_details a list of options defining the desired projection
 #' @param quiet Whether to suppress messages and warnings
 #' @return The projection object
 #' @keywords internal
+#' @noRd
 
 crs_world_equidistant <- function(
-    center,
+    centre,
     scale,
     round_cm = FALSE,
     prj_details,
@@ -58,29 +59,29 @@ crs_world_equidistant <- function(
     )
   } else if (prj_details$prj == "oblique") {
     # Oblique azimuthal equidistant
-    if (!"lat_center" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lat_center` element")
+    if (!"lat_centre" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lat_centre` element")
     }
-    lat_center <- prj_details$lat_center
-    if (!"lng_center" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lng_center` element")
+    lat_centre <- prj_details$lat_centre
+    if (!"lng_centre" %in% names(prj_details)) {
+      stop("`world_equidistant` must contain a `lng_centre` element")
     }
-    lng_center <- prj_details$lng_center
+    lng_centre <- prj_details$lng_centre
 
     crs_suggestions <- data.frame(
       prj = "aeqd",
       x0 = NA_real_,
-      lat0 = lat_center,
+      lat0 = lat_centre,
       lat1 = NA_real_,
       lat2 = NA_real_,
-      lon0 = lng_center,
+      lon0 = lng_centre,
       k0 = NA_real_,
       description = "Oblique azimuthal equidistant",
       notes = paste0(
-        "Distance correct through or from the center (",
-        lng_center,
+        "Distance correct through or from the centre (",
+        lng_centre,
         ", ",
-        lat_center,
+        lat_centre,
         ")"
       )
     )

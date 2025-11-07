@@ -12,7 +12,7 @@
 #'   georeferencing.
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
-#'   dataframe can be produced withthe *draw_gcp_points* function. This data
+#'   dataframe can be produced with the *draw_gcp_points* function. This data
 #'   frame should have the following columns:
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
@@ -28,12 +28,41 @@
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
-#' warped_image <- georeference_image(image_path = "image.jpg", gcp_df = gcp_df)
-#' }
+#' @examplesIf rlang::is_interactive()
+#' # get the path to an example image included in the package
+#' img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+#' # load a set of GCPs (or we could create them using the choose_gcp()
+#' # and find_gcp() functions)
+#' gcp_df <- readRDS(system.file(
+#'   "extdata/europe_gcp_georef.RDS",
+#'   package = "crstools"
+#' ))
+#' #' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
+#' warped_img <- georeference_img(
+#'   image_obj = img_path, gcp = gcp_df,
+#'   output_path = tempfile(
+#'     patter = "georef_img_",
+#'     tmpdir = tempdir(),
+#'     fileext = ".tif"
+#'   )
+#' )
 georeference_img <- function(image_obj, gcp, output_path = NULL) {
+  # check if gcp is a dataframe with the right columns
+  if (!is.data.frame(gcp) ||
+        !all(c("id", "x", "y", "longitude", "latitude")
+             %in% colnames(gcp))) {
+    stop(
+      "gcp must be a data frame with columns: id, x, y, longitude
+      , latitude"
+    )
+  }
+  # check that there are no NAs present
+  if (any(is.na(gcp))) {
+    stop(
+      "gcp dataframe contains NA values. Please fill them. ",
+      "Did you forget to use `find_gcp()`?"
+    )
+  }
 
   # check if image is a file path or an array
   if (is.character(image_obj)) {

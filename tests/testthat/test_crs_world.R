@@ -136,13 +136,13 @@ test_that("test whole world", {
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
-                                                                   lng_center = 0)),
-               "`world_equidistant` must contain a `lat_center` element")
+                                                                   lng_centre = 0)),
+               "`world_equidistant` must contain a `lat_centre` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
-                                                                   lat_center = 0)),
-               "`world_equidistant` must contain a `lng_center` element")
+                                                                   lat_centre = 0)),
+               "`world_equidistant` must contain a `lng_centre` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
@@ -203,8 +203,8 @@ test_that("test whole world", {
   oblique_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                   distortion = "equidistant",
                                   world_equidist = list(prj = "oblique",
-                                                        lat_center = 0,
-                                                        lng_center = 0))
+                                                        lat_centre = 0,
+                                                        lng_centre = 0))
   ref_proj4_oblique_eqd <- "+proj=aeqd +lon_0=0 +lat_0=0 +datum=WGS84 +units=m +no_defs"
   ref_wkt_oblique_eqd <- 'PROJCS["ProjWiz_Custom_Azimuthal_Equidistant",
                                 GEOGCS["GCS_WGS_1984",
