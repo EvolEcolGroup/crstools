@@ -1,8 +1,6 @@
 Bojan
 CMD
-CRS
 CRSs
-Codecov
 EPSG
 ETRS
 GCP
@@ -22,9 +20,9 @@ Rmarkdown
 SDMs
 SpatExtent
 SpatRaster
-WGS
 WKT
 aes
+codecov
 coord
 crs
 currenly
