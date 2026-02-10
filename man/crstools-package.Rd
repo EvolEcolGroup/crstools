@@ -15,6 +15,7 @@ Authors:
 \itemize{
   \item Andrea Pozzi
   \item Cecilia Padilla-Iglesias
+  \item Evie Carter
   \item Michela Leonardi
   \item Aramish Fatima
   \item Ondrej Pelanek
