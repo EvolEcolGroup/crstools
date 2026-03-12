@@ -17,7 +17,8 @@ Authors@R: c(
     )
 Description: Choose the appropriate map projection for a given application,
   visualise the resulting distortion, and georeference data from unknown
-  projections.
+  projections. The full functionalities of the package are described in
+  Pozzi et al. (2026) <doi:10.31223/X5K17P> (pre-print).
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
