@@ -99,7 +99,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
 
   if (!is.null(gcp_xy)) {
     gcp_df_new <- data.frame(
-      id = seq_len(length(gcp_xy$x)) + last_id,
+      id = seq_along(gcp_xy$x) + last_id,
       x = gcp_xy$x,
       y = gcp_xy$y,
       longitude = NA_real_,
