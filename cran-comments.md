@@ -14,10 +14,15 @@ All tests passed in all environments, with an expected NOTE for a new submission
   
   New submission
   
-  Possibly misspelled words in DESCRIPTION:
-    georeference (17:43)
+Possibly misspelled words in DESCRIPTION:
+    Pozzi (21:3)
+    al (21:12)
+    et (21:9)
+    georeference (19:43)
+    pre (21:46)
 
-"georeference" is a correct technical term.
+"georeference" is a correct technical term. The other words are part of the
+pre-print title and author list.
 
 # Changes following first submission:
 - Add a doi for a preprint that described the functionality of the package
