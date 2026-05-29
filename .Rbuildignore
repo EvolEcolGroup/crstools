@@ -6,3 +6,5 @@ data-raw
 ^data-raw$
 .lintr
 codecov.yml
+^cran-comments\.md$
+^CRAN-SUBMISSION$

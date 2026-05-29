@@ -1,6 +1,7 @@
 Bojan
 CMD
 CRSs
+Dominik
 EPSG
 ETRS
 GCP
@@ -26,6 +27,7 @@ codecov
 coord
 crs
 currenly
+doi
 gcp
 georeference
 georeferenced

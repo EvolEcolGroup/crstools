@@ -6,7 +6,7 @@
 \alias{crstools-package}
 \title{crstools: Tools to Work with Projections}
 \description{
-Choose the appropriate map projection for a given application, visualise the resulting distortion, and georeference data from unknown projections.
+Choose the appropriate map projection for a given application, visualise the resulting distortion, and georeference data from unknown projections. The full functionalities of the package are described in Pozzi et al. (2026) \doi{10.31223/X5K17P} (pre-print).
 }
 \author{
 \strong{Maintainer}: Andrea Manica \email{am315@cam.ac.uk} (\href{https://orcid.org/0000-0003-1895-450X}{ORCID})
@@ -15,11 +15,14 @@ Authors:
 \itemize{
   \item Andrea Pozzi
   \item Cecilia Padilla-Iglesias
+  \item Evie Carter
   \item Michela Leonardi
   \item Aramish Fatima
   \item Ondrej Pelanek
   \item Nile Stephenson
   \item Margherita Colucci
+  \item Dominik C Jud
+  \item Cassandra Gunasekaram
 }
 
 }

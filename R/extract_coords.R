@@ -7,7 +7,7 @@
 #'   "red".
 #' @return A dataframe with ID and coordinates of the points extracted from the
 #'   image.
-#'
+#' @export
 #' @examplesIf rlang::is_interactive()
 #' # Load required packages
 #' library(terra)
