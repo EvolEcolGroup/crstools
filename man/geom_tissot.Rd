@@ -46,7 +46,7 @@ generate such a grid automatically. The latter is passed to \code{\link[=pretty]
 get pretty breaks, and the exact number of Tissot's circles might differ
 from the input numbers (see \code{\link[=pretty]{pretty()}} for details. It defaults to c(5,5).}
 
-\item{radius}{The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
+\item{radius}{The radius of the circles (see \code{\link[sf:st_buffer]{sf::st_buffer()}} for an
 explanation of how units are created; we recommend that you explicitly
 state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
 
@@ -54,7 +54,7 @@ state your using with the \code{units::as_units()}, e.g \code{units::as_units(10
 
 \item{alpha}{The transparency of the circles}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}}
+\item{...}{Other arguments passed on to \code{\link[ggplot2:geom_sf]{ggplot2::geom_sf()}}}
 }
 \value{
 A ggplot2 object

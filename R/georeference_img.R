@@ -23,6 +23,16 @@
 #' @param output_path A character string representing the file path to the input
 #'   image. (`_warp.tif`) will be appended to it.
 #'
+#' @param transform_method A character string specifying the transformation
+#'   method to be used for warping the image. Options are "poly_1" (first order
+#'   polynomial), "poly_2" (second order polynomial), "poly_3" (third order
+#'   polyonomial), "tps" (thin plate spline), or "auto" (the default, allowing
+#'   GDAL to choose of a polynomial of the appropriate order based on the
+#'   number of available GCP. Polynomials are best for standard maps directly
+#'   captured from a publication (a first or second order polynomial is often
+#'   sufficient), tps allows for scanning artefacts, but it is badly affected
+#'   by any incorrect GCP.
+#'
 #' @return A character string representing the path to the newly created warped
 #'   TIFF image file (`_warp.tif`). This file contains the georeferenced image.
 #'
@@ -30,23 +40,29 @@
 #'
 #' @examplesIf rlang::is_interactive()
 #' # get the path to an example image included in the package
-#' img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
-#' # load a set of GCPs (or we could create them using the choose_gcp()
+#' img_path <- system.file("extdata/europe_map.jpeg",
+#'   package = "crstools")
+#' # load a set of GCPs (or we could create them using the choose_gcp() 
 #' # and find_gcp() functions)
 #' gcp_df <- readRDS(system.file(
-#'   "extdata/europe_gcp_georef.RDS",
-#'   package = "crstools"
-#' ))
-#' #' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
-#' warped_img <- georeference_img(
-#'   image_obj = img_path, gcp = gcp_df,
-#'   output_path = tempfile(
-#'     patter = "georef_img_",
-#'     tmpdir = tempdir(),
-#'     fileext = ".tif"
-#'   )
-#' )
-georeference_img <- function(image_obj, gcp, output_path = NULL) {
+#'   "extdata/europe_gcp_georef.RDS", package = "crstools" ))
+#' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
+#' warped_img <- georeference_img(image_obj = img_path, gcp = gcp_df,
+#'   output_path = tempfile(pattern = "georef_img_", tmpdir = tempdir(),
+#'   fileext = ".tif" ) )
+georeference_img <- function(image_obj, gcp, output_path = NULL,
+                             transform_method = c("auto", "poly_1", "poly_2",
+                                                  "poly_3", "tps", "auto")) {
+  transform_method <- match.arg(transform_method)
+  # now convert transform method into the appropriate GDAL option
+  gdal_transform_option <- switch(
+    transform_method,
+    "poly_1" = "-order 1",
+    "poly_2" = "-order 2",
+    "poly_3" = "-order 3",
+    "tps" = "-tps",
+    "auto" = NULL
+  )  
   # check if gcp is a dataframe with the right columns
   if (!is.data.frame(gcp) ||
         !all(c("id", "x", "y", "longitude", "latitude")
@@ -104,19 +120,25 @@ georeference_img <- function(image_obj, gcp, output_path = NULL) {
     options = c(as.vector(t(cbind("-gcp", gcp[, -1]))), "-of", "GTiff")
   )
 
+  warp_options <- c(
+    "-s_srs",
+    "EPSG:4326",
+    "-t_srs",
+    "EPSG:4326",
+    "-overwrite"
+  )
+  
+  # if we have a transform method, add it to the option
+  if (!is.null(gdal_transform_option)) {
+    warp_options <- c(gdal_transform_option, warp_options)
+  }
+  
   # Warp the image into a spatial reference system (EPSG:4326)
   sf::gdal_utils(
     "warp",
     source = map_tif,
     dest = map_warp_tif,
-    options = c(
-      "-tps",
-      "-s_srs",
-      "EPSG:4326",
-      "-t_srs",
-      "EPSG:4326",
-      "-overwrite"
-    )
+    options = warp_options
   )
 
   return(map_warp_tif)
