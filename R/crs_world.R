@@ -16,13 +16,14 @@
 ################################################################################
 # Main small-scale (whole world) output function
 crs_world <- function(
-    distortion,
-    centre,
-    scale,
-    round_cm,
-    world_equidist,
-    return_best,
-    quiet = FALSE) {
+  distortion,
+  centre,
+  scale,
+  round_cm,
+  world_equidist,
+  return_best,
+  quiet = FALSE
+) {
   # Global list of world map projections
   list_world <- list(
     # Equal-area world map projections with poles represented as points
@@ -103,8 +104,10 @@ crs_world <- function(
   } else if (distortion == "equidistant") {
     if (is.null(world_equidist)) {
       stop(
-        paste0("`world_equidist` must be provided for ",
-               "equidistant world map projections")
+        paste0(
+          "`world_equidist` must be provided for ",
+          "equidistant world map projections"
+        )
       )
     }
 
@@ -161,8 +164,10 @@ crs_world <- function(
 
     if (!return_best && !quiet) {
       message(
-        paste0("Rectangular projections are not generally ",
-               "recommended for most world maps.")
+        paste0(
+          "Rectangular projections are not generally ",
+          "recommended for most world maps."
+        )
       )
     }
   }

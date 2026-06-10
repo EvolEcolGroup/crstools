@@ -13,13 +13,14 @@
 
 ################################################################################
 crs_ew_extent <- function(
-    distortion,
-    centre,
-    lonmin,
-    lonmax,
-    latmin,
-    latmax,
-    quiet = FALSE) {
+  distortion,
+  centre,
+  lonmin,
+  lonmax,
+  latmin,
+  latmax,
+  quiet = FALSE
+) {
   # Flag to determine if scale note should be included
   scale_note <- FALSE
   # Case: Close to poles
@@ -126,7 +127,6 @@ crs_ew_extent <- function(
     interval <- (latmax - latmin) / 6
 
     if (distortion == "conformal") {
-
       # Create the CRS of the conic projection that we want to test
       conic_crs_to_test <- data.frame(
         prj = "lcc",
@@ -294,10 +294,12 @@ crs_ew_extent <- function(
   # Include the scale factor note if necessary
   if (scale_note) {
     message(
-      paste0("To reduce overall area distortion on the map, one can also ",
-             "apply a scale factor k. Various values for k can be applied and ",
-             "the area distortion patterns along the centre and at the border ",
-             "of the map are compared to select most appropriate value.")
+      paste0(
+        "To reduce overall area distortion on the map, one can also ",
+        "apply a scale factor k. Various values for k can be applied and ",
+        "the area distortion patterns along the centre and at the border ",
+        "of the map are compared to select most appropriate value."
+      )
     )
   }
 
@@ -309,12 +311,13 @@ crs_ew_extent <- function(
 ################################################################################
 # Checking if the fan of the selected extent exposes a cone opening at a pole
 crs_check_conic <- function(
-    lon0,
-    proj4_string,
-    lonmin,
-    lonmax,
-    latmin,
-    latmax) {
+  lon0,
+  proj4_string,
+  lonmin,
+  lonmax,
+  latmin,
+  latmax
+) {
   # Define projection function
 
   # Initialize min and max values for y
