@@ -14,11 +14,12 @@
 ################################################################################
 ## crs for regional maps with square extent
 crs_square_format <- function(
-    distortion,
-    centre,
-    latmin,
-    latmax,
-    quiet = FALSE) {
+  distortion,
+  centre,
+  latmin,
+  latmax,
+  quiet = FALSE
+) {
   # Handle cases based on the latitude of the centre
   if (centre$lat > 75) {
     if (distortion == "conformal") {
@@ -82,7 +83,8 @@ crs_square_format <- function(
         k0 = NA_real_,
         description = "Polar Lambert azimuthal equal-area",
         notes =
-          paste0("Equal-area projection for regional maps in square format; ",
+          paste0(
+            "Equal-area projection for regional maps in square format; ",
             "central meridian ", centre$lng
           )
       )
@@ -161,11 +163,13 @@ crs_square_format <- function(
   # Include any notes about the scale factor
   if (distortion == "conformal" && !quiet) {
     message(
-      paste0("To reduce overall area distortion on the map, ",
-             "one can also apply a scale factor. Various values for can be ",
-             "applied and the area distortion patterns along the centre and ",
-             "at the border of the map are compared to select ",
-             "most appropriate value.")
+      paste0(
+        "To reduce overall area distortion on the map, ",
+        "one can also apply a scale factor. Various values for can be ",
+        "applied and the area distortion patterns along the centre and ",
+        "at the border of the map are compared to select ",
+        "most appropriate value."
+      )
     )
   }
 

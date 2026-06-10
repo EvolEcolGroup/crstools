@@ -64,14 +64,19 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
     "auto" = NULL
   )  
   # check if gcp is a dataframe with the right columns
-  if (!is.data.frame(gcp) ||
-        !all(c("id", "x", "y", "longitude", "latitude")
-             %in% colnames(gcp))) {
+  # nolint start
+  if ((!is.data.frame(gcp)) ||
+    (!all(c("id", "x", "y", "longitude", "latitude")
+    %in% colnames(gcp)))) {
     stop(
       "gcp must be a data frame with columns: id, x, y, longitude
       , latitude"
     )
   }
+  # nolint end
+  # reorder columns and only keep the ones that we need
+  gcp <- gcp[, c("id", "x", "y", "longitude", "latitude")]
+
   # check that there are no NAs present
   if (any(is.na(gcp))) {
     stop(

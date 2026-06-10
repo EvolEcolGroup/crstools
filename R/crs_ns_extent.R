@@ -42,19 +42,23 @@ crs_ns_extent <- function(distortion, centre, quiet = FALSE) {
   # Additional notes
   if (distortion == "equal_area" && !quiet) {
     message(
-      paste0("To reduce overall distortion on the map, one can also compress ",
-             "the map in the north-south direction (with a factor s) and ",
-             "expand the map in the east-west direction (with a factor 1 / s).",
-             " The factor s can be determined with a trial-and-error approach ",
-             "comparing the distortion patterns along the centre and at ",
-             "the border of the map.")
+      paste0(
+        "To reduce overall distortion on the map, one can also compress ",
+        "the map in the north-south direction (with a factor s) and ",
+        "expand the map in the east-west direction (with a factor 1 / s).",
+        " The factor s can be determined with a trial-and-error approach ",
+        "comparing the distortion patterns along the centre and at ",
+        "the border of the map."
+      )
     )
   } else if (distortion == "conformal" && !quiet) {
     message(
-      paste0("To reduce overall area distortion on the map, one can also apply",
-             " a scale factor k. Various values for k can be applied and the ",
-             "area distortion patterns along the centre and at the border ",
-             "of the map are compared to select most appropriate value.")
+      paste0(
+        "To reduce overall area distortion on the map, one can also apply",
+        " a scale factor k. Various values for k can be applied and the ",
+        "area distortion patterns along the centre and at the border ",
+        "of the map are compared to select most appropriate value."
+      )
     )
   }
 

@@ -17,14 +17,15 @@
 ################################################################################
 # maps showing a smaller area
 crs_small_area <- function(
-    distortion,
-    centre,
-    scale,
-    lonmin,
-    lonmax,
-    latmin,
-    latmax,
-    quiet = FALSE) {
+  distortion,
+  centre,
+  scale,
+  lonmin,
+  lonmax,
+  latmin,
+  latmax,
+  quiet = FALSE
+) {
   # Computing longitude extent
   dlon <- lonmax - lonmin
 
@@ -49,8 +50,10 @@ crs_small_area <- function(
         k0 = NA_real_,
         description = "Polar azimuthal equidistant",
         notes =
-          paste0("Distance correct along any line passing through the pole ",
-                 "(i.e., meridian)")
+          paste0(
+            "Distance correct along any line passing through the pole ",
+            "(i.e., meridian)"
+          )
       )
     } else if (centre$lat < -70) {
       crs_suggestions <- data.frame(
@@ -63,8 +66,10 @@ crs_small_area <- function(
         k0 = NA_real_,
         description = "Polar azimuthal equidistant",
         notes =
-          paste0("Distance correct along any line passing through the pole ",
-                 "(i.e., meridian)")
+          paste0(
+            "Distance correct along any line passing through the pole ",
+            "(i.e., meridian)"
+          )
       )
     } else if (ratio > 1.25) {
       crs_suggestions <- data.frame(
@@ -77,8 +82,10 @@ crs_small_area <- function(
         k0 = NA_real_,
         description = "Cassini",
         notes =
-          paste0("Distance correct along any line perpendicular ",
-                 "to the central meridian")
+          paste0(
+            "Distance correct along any line perpendicular ",
+            "to the central meridian"
+          )
       )
     } else if (abs(centre$lat) < 15) {
       lat_s <- ifelse(
@@ -124,8 +131,10 @@ crs_small_area <- function(
           k0 = NA_real_,
           description = "Azimuthal equidistant",
           notes =
-            paste0("distance correct along any line passing through the ",
-                   "centre of the map (i.e., great circle)")
+            paste0(
+              "distance correct along any line passing through the ",
+              "centre of the map (i.e., great circle)"
+            )
         )
       )
     }
