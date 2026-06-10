@@ -22,13 +22,15 @@ A plot with the GCPs
 }
 \description{
 GCPs are used to georeference images by providing known coordinates for
-specific points in the image. This function plots GCPs onto the original map
+specific points in the image. This function plots GCPs onto the original map.
+This can be helpful in thinking about here additional GCPs might be needed
+to improve the transformation.
 }
 \examples{
 \dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # Get the path to an example image included in the package
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
-# load some GCPs
+# load some previously captured GCPs
 gcp_europe <- readRDS(system.file(
                                 "extdata/europe_gcp_georef.RDS",
                                 package = "crstools"))

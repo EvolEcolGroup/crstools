@@ -1,7 +1,9 @@
 #' Function to plot the Ground Control Point (GCP) on an image
 #'
 #' GCPs are used to georeference images by providing known coordinates for
-#' specific points in the image. This function plots GCPs onto the original map
+#' specific points in the image. This function plots GCPs onto the original map.
+#' This can be helpful in thinking about here additional GCPs might be needed 
+#' to improve the transformation.
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
 #'   image (currenly this can only be of type .jpg).
@@ -15,7 +17,7 @@
 #' @examplesIf rlang::is_interactive()
 #' # Get the path to an example image included in the package
 #' img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
-#' # load some GCPs
+#' # load some previously captured GCPs
 #' gcp_europe <- readRDS(system.file(
 #'                                 "extdata/europe_gcp_georef.RDS",
 #'                                 package = "crstools"))
