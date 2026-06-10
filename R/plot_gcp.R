@@ -1,7 +1,9 @@
-#' Function to plot the Ground Control Point (GCP) on an image
+#' Function to plot the Ground Control Points (GCPs) on an raw image
 #'
 #' GCPs are used to georeference images by providing known coordinates for
-#' specific points in the image. This function plots GCPs onto the original map.
+#' specific points in the image. This function plots GCPs onto the original map
+#' (i.e. using the pixel coordinates of the points on the original image before
+#' georeferencing).
 #' This can be helpful in thinking about here additional GCPs might be needed 
 #' to improve the transformation.
 #' @param image_obj An array representing the image (colour images are generally

@@ -5,7 +5,8 @@
 #' assigned to it. If a dataframe of coordinates is supplied, the new points 
 #' will be added to it, and the IDs will be numbered sequentially.
 #' @param coords_df An optional dataframe containing the coordinates of points
-#'   previously extracted from the image. It has to consiste of 3 colums:
+#'   previously extracted from the image. It has to consist of 3 columns,
+#'   named:
 #'   "id", "longitude" and "latitude". Default is NULL.
 #' @param georef_image A spatraster object representing the georeferenced image.
 #' @param col The colour of the points to be plotted on the image. Default is

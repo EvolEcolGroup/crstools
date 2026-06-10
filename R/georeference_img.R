@@ -56,7 +56,7 @@ georeference_img <- function(image_obj, gcp, output_path = NULL) {
       , latitude"
     )
   }
-  # reorder columsn and only keep the ones that we need
+  # reorder columns and only keep the ones that we need
   gcp <- gcp[, c("id", "x", "y", "longitude", "latitude")]
   
   # check that there are no NAs present
