@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_coords.R
 \name{extract_coords}
 \alias{extract_coords}
-\title{Extract coordinates}
+\title{Extract coordinates from a georeferenced image}
 \usage{
 extract_coords(georef_image, coords_df = NULL, col = "red")
 }
@@ -10,7 +10,8 @@ extract_coords(georef_image, coords_df = NULL, col = "red")
 \item{georef_image}{A spatraster object representing the georeferenced image.}
 
 \item{coords_df}{An optional dataframe containing the coordinates of points
-previously extracted from the image. Default is NULL.}
+previously extracted from the image. It has to consiste of 3 colums:
+"id", "longitude" and "latitude". Default is NULL.}
 
 \item{col}{The colour of the points to be plotted on the image. Default is
 "red".}
@@ -20,7 +21,11 @@ A dataframe with ID and coordinates of the points extracted from the
 image.
 }
 \description{
-Extract coordinates from a georeferenced image.
+This function allows to extract coordinates from a
+georeferenced image by clicking on points of interest. Every time a point is
+clicked, its latitude and longitude are captured, and a unique ID is
+assigned to it. If a dataframe of coordinates is supplied, the new points
+will be added to it, and the IDs will be numbered sequentially.
 }
 \examples{
 \dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}

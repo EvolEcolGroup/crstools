@@ -1,7 +1,12 @@
-#' @title Extract coordinates
-#' @description Extract coordinates from a georeferenced image.
+#' @title Extract coordinates from a georeferenced image
+#' @description This function allows to extract coordinates from a 
+#' georeferenced image by clicking on points of interest. Every time a point is
+#' clicked, its latitude and longitude are captured, and a unique ID is 
+#' assigned to it. If a dataframe of coordinates is supplied, the new points 
+#' will be added to it, and the IDs will be numbered sequentially.
 #' @param coords_df An optional dataframe containing the coordinates of points
-#'   previously extracted from the image. Default is NULL.
+#'   previously extracted from the image. It has to consiste of 3 colums:
+#'   "id", "longitude" and "latitude". Default is NULL.
 #' @param georef_image A spatraster object representing the georeferenced image.
 #' @param col The colour of the points to be plotted on the image. Default is
 #'   "red".

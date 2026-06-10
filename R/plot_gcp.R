@@ -5,10 +5,8 @@
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
 #'   image (currenly this can only be of type .jpg).
-#' @param gcp (optional) A dataframe of GCPs, containing columns `id`, `x`,
-#'   `y`,`longitude`, `latitude`. This is used if we want to add additional GCP
-#'   to an existing list (usually created by running this function multiple
-#'   times).
+#' @param gcp A dataframe of GCPs, containing at least columns `id`, `x`,
+#'   `y`.
 #' @param col The colour of the points to be plotted on the image. Default is
 #' "red".
 #' @return A plot with the GCPs
@@ -42,11 +40,11 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   }
   # check if gcp is a dataframe
   if (!is.null(gcp) && !is.data.frame(gcp)) {
-    stop("gcp must be a dataframe with columns id, x, y, longitude, latitude.")
+    stop("gcp must be a dataframe with columns id, x, y.")
   }
 
   # if gcp is not null, check if it has the required columns
-    required_cols <- c("id", "x", "y", "longitude", "latitude")
+    required_cols <- c("id", "x", "y")
     if (!all(required_cols %in% colnames(gcp))) {
       stop(
         "gcp dataframe must contain columns: ",
@@ -54,14 +52,12 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
       )
     }
     last_id <- max(gcp$id, na.rm = TRUE)
-    # check that the image dimensions are stored as an attribute
+    # check that, if the image dimensions are stored as an attribute, they match
     if (!is.null(attr(gcp, "image_dims"))) {
       img_dims <- attr(gcp, "image_dims")
       if (!all(img_dims == dim(img))) {
         stop("Image dimensions do not match the dimensions stored in gcp.")
       }
-    } else {
-      attr(gcp, "image_dims") <- dim(img)
     }
 
 
