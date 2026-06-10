@@ -59,15 +59,16 @@
 #'
 
 suggest_crs <- function(
-    x,
-    distortion = c("equal_area", "conformal", "equidistant", "compromise"),
-    round_cm = FALSE,
-    return_best = TRUE,
-    datum = c("WGS84", "ETRS89", "NAD83"),
-    unit = c("m", "ft"),
-    lat_check = TRUE,
-    world_equidist = NULL,
-    quiet = FALSE) {
+  x,
+  distortion = c("equal_area", "conformal", "equidistant", "compromise"),
+  round_cm = FALSE,
+  return_best = TRUE,
+  datum = c("WGS84", "ETRS89", "NAD83"),
+  unit = c("m", "ft"),
+  lat_check = TRUE,
+  world_equidist = NULL,
+  quiet = FALSE
+) {
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
@@ -133,8 +134,10 @@ suggest_crs <- function(
     # World (small-scale) map
     if (distortion == "conformal") {
       stop(
-        paste0("conformal is not available for maps covering the whole world; ",
-               "try equal_area instead")
+        paste0(
+          "conformal is not available for maps covering the whole world; ",
+          "try equal_area instead"
+        )
       )
     }
     crs_df <- crs_world(
@@ -152,15 +155,19 @@ suggest_crs <- function(
     if (!(abs(lat_max) < 23.43665 && abs(lat_min) < 23.43665)) {
       if (distortion == "conformal") {
         stop(
-          paste0("conformal is not available for maps covering a ",
-                 "whole hemisphere; try equal_area instead")
+          paste0(
+            "conformal is not available for maps covering a ",
+            "whole hemisphere; try equal_area instead"
+          )
         )
       }
     }
     if (distortion == "compromise") {
       stop(
-        paste0("compromise is not available for maps covering a ",
-               "whole hemisphere; try equal_area instead")
+        paste0(
+          "compromise is not available for maps covering a ",
+          "whole hemisphere; try equal_area instead"
+        )
       )
     }
     crs_df <- crs_hemisphere(
@@ -175,8 +182,10 @@ suggest_crs <- function(
     # Continent or a smaller area (large-scale) map
     if (distortion == "compromise") {
       stop(
-        paste0("compromise is not available for maps focussing on a single ",
-               "continent or small area; try equal_area instead")
+        paste0(
+          "compromise is not available for maps focussing on a single ",
+          "continent or small area; try equal_area instead"
+        )
       )
     }
     crs_df <- crs_small_area(

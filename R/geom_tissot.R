@@ -43,22 +43,22 @@
 #' s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
 #' s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 #' ggplot(data = s_america_sf) +
-#'  geom_sf() +
-#'  geom_tissot() +
-#'  coord_sf(crs = s_am_equal_area$proj4) +
-#'  theme_minimal()
-
+#'   geom_sf() +
+#'   geom_tissot() +
+#'   coord_sf(crs = s_am_equal_area$proj4) +
+#'   theme_minimal()
 geom_tissot <- function(
-    mapping = ggplot2::aes(),
-    data = NULL,
-    na.rm = FALSE, #nolint
-    show.legend = NA, #nolint
-    inherit.aes = TRUE, #nolint
-    centres = c(5, 5),
-    radius = NULL,
-    fill = "red",
-    alpha = 0.7,
-    ...) {
+  mapping = ggplot2::aes(),
+  data = NULL,
+  na.rm = FALSE, # nolint
+  show.legend = NA, # nolint
+  inherit.aes = TRUE, # nolint
+  centres = c(5, 5),
+  radius = NULL,
+  fill = "red",
+  alpha = 0.7,
+  ...
+) {
   # if data is not null or an sf
   if (!is.null(data) && !inherits(data, "sf")) {
     # we can convert it if it is a SpatRaster or SpatVector
@@ -131,8 +131,10 @@ create_indicatrix <- function(data, scales, coord, centres, radius) {
     coord_grid <- as.matrix(expand.grid(centres$lng, centres$lat))
   } else {
     stop(
-      paste0("centres must be either a list with elements 'lng' ",
-             "and 'lat' or a vector of length 2")
+      paste0(
+        "centres must be either a list with elements 'lng' ",
+        "and 'lat' or a vector of length 2"
+      )
     )
   }
 

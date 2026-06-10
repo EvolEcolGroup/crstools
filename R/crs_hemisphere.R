@@ -17,12 +17,13 @@
 ################################################################################
 # maps showing a hemisphere
 crs_hemisphere <- function(
-    distortion,
-    centre,
-    scale,
-    latmin,
-    latmax,
-    quiet = FALSE) {
+  distortion,
+  centre,
+  scale,
+  latmin,
+  latmax,
+  quiet = FALSE
+) {
   # Formatting central meridian
   lon <- round(centre$lng * 100) / 100
 
@@ -76,8 +77,10 @@ crs_hemisphere <- function(
         k0 = NA_real_,
         description = "Equidistant cylindrical",
         notes =
-          paste0("Equidistant projection for maps showing the tropics ",
-                 "- distance correct along meridians")
+          paste0(
+            "Equidistant projection for maps showing the tropics ",
+            "- distance correct along meridians"
+          )
       )
     }
   } else {

@@ -10,16 +10,19 @@
 #' @noRd
 
 crs_world_equidistant <- function(
-    centre,
-    scale,
-    round_cm = FALSE,
-    prj_details,
-    quiet = FALSE) {
+  centre,
+  scale,
+  round_cm = FALSE,
+  prj_details,
+  quiet = FALSE
+) {
   # make sure that we have a projection element in prj_details
   if (!inherits(prj_details, "list") || !"prj" %in% names(prj_details)) {
     stop(
-      paste0("`world_equidistant` must be a list with a `prj` element ",
-             "and the appropriate projection details")
+      paste0(
+        "`world_equidistant` must be a list with a `prj` element ",
+        "and the appropriate projection details"
+      )
     )
   }
 
