@@ -33,7 +33,7 @@ image. (\verb{_warp.tif}) will be appended to it.}
 \item{transform_method}{A character string specifying the transformation
 method to be used for warping the image. Options are "poly_1" (first order
 polynomial), "poly_2" (second order polynomial), "poly_3" (third order
-polyonomial), "tps" (thin plate spline), or "auto" (the default, allowing
+polynomial), "tps" (thin plate spline), or "auto" (the default, allowing
 GDAL to choose of a polynomial of the appropriate order based on the
 number of available GCP. Polynomials are best for standard maps directly
 captured from a publication (a first or second order polynomial is often
