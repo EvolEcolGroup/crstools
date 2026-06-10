@@ -4,4 +4,5 @@
 .Ruserdata
 *.Rproj
 inst/doc
+tests/testthat/Rplots.pdf
 .positai
