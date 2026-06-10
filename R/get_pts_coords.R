@@ -1,13 +1,18 @@
-#' Extract geographic coordinates from pixel coordinates using GDAL GCP transforms
+#' Extract geographic coordinates from pixel coordinates
 #'
 #' Transform target point pixel coordinates into longitude/latitude coordinates
-#' using a set of Ground Control Points (GCPs) and GDAL's internal
-#' transformation engine via \code{gdaltransform}. This function does not warp
-#' a raster; instead it performs direct point-wise coordinate transformation.
+#' using a set of Ground Control Points (GCPs). This function performs direct
+#' point-wise coordinate transformation without warping a raster.
 #'
-#' The function creates a temporary VRT dataset containing the supplied GCPs
-#' and then uses \code{gdaltransform} to estimate geographic coordinates for
-#' the supplied target points.
+#' Polynomial transformations are implemented using native linear models, while
+#' thin plate spline transformations are implemented using
+#' \code{fields::Tps()}.
+#'
+#' Note that, when using `tps` as a method, you might get warnings that the
+#' "Grid searches over lambda (nugget and sill variances) with minima at
+#' the endpoints:" This is often benign warning and indicates that the optimal
+#' smoothing parameter is at or near the boundary of the search space (matching
+#' the default lamba 1e-4, and thus approaching perfect interpolation).
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
 #'   dataframe can be produced with the \code{draw_gcp_points} function. This
@@ -24,87 +29,45 @@
 #'   This dataframe must contain the following columns:
 #'   \itemize{
 #'     \item \code{id}: An identifier for each target point.
-#'     \item \code{x}: The x-coordinate of the point (in pixel space).
-#'     \item \code{y}: The y-coordinate of the point (in pixel space).
+#'     \item \code{x} or \code{cx}: The x-coordinate of the point
+#'       (in pixel space).
+#'     \item \code{y} or \code{cy}: The y-coordinate of the point
+#'       (in pixel space).
 #'   }
 #'
 #' @param transform_method A character string specifying the transformation
 #'   method to be used for warping the image. Options are \code{"poly_1"}
 #'   (first order polynomial), \code{"poly_2"} (second order polynomial),
 #'   \code{"poly_3"} (third order polynomial), \code{"tps"} (thin plate
-#'   spline), or \code{"auto"} (the default, allowing GDAL to choose of a
-#'   polynomial of the appropriate order based on the number of available GCP.
-#'   Polynomials are best for standard maps directly captured from a publication
-#'   (a first or second order polynomial is often sufficient), tps allows for
-#'   scanning artefacts, but it is badly affected by any incorrect GCP.
+#'   spline), or \code{"auto"} (the default, automatically selecting a
+#'   polynomial order based on the number of GCPs available).
+#'
+#' @param lambda Numeric smoothing parameter used for thin plate spline
+#'   transformations (\code{transform_method = "tps"}). A value of \code{1e-4}
+#'   produces near-exact interpolation through the GCPs, mimicking GDAL TPS
+#'   behaviour whilst helping with algorithm convergence. Larger values
+#'   introduce smoothing and may improve robustness
+#'   when GCPs contain noise or digitizing errors.
 #'
 #' @return A data frame containing:
 #'   \itemize{
 #'     \item \code{id}: The original target point identifier.
-#'     \item \code{x}: Original x pixel coordinate.
-#'     \item \code{y}: Original y pixel coordinate.
+#'     \item Pixel coordinate columns from the original dataframe.
 #'     \item \code{lon}: Estimated longitude.
 #'     \item \code{lat}: Estimated latitude.
 #'   }
 #'
-#' @details
-#' This function relies on GDAL command line utilities being available on the
-#' system. Specifically, it uses:
-#' \itemize{
-#'   \item \code{gdal_translate} to create a temporary VRT with embedded GCPs.
-#'   \item \code{gdaltransform} to transform the target point coordinates.
-#' }
-#'
-#' No raster warping is performed; only point coordinates are transformed.
-#'
-#' Thin plate spline (\code{"tps"}) transformations can produce excellent local
-#' accuracy on distorted historical maps, but may become unstable near edges or
-#' if GCPs contain errors.
-#'
-#' First order polynomial (\code{"poly_1"}) is equivalent to an affine
-#' transformation and is typically sufficient for modern maps with limited
-#' distortion.
-#'
-#' @examples
-#' \dontrun{
-#'
-#' # Example GCPs
-#' gcp <- data.frame(
-#'   id = 1:4,
-#'   x = c(100, 500, 120, 520),
-#'   y = c(200, 210, 800, 790),
-#'   lon = c(-3.12, -3.00, -3.11, -2.99),
-#'   lat = c(55.95, 55.96, 55.80, 55.81)
-#' )
-#'
-#' # Target points
-#' pts <- data.frame(
-#'   id = 1:2,
-#'   x = c(300, 350),
-#'   y = c(400, 700)
-#' )
-#'
-#' # Transform points
-#' coords <- get_pts_coords(
-#'   gcp = gcp,
-#'   target_pts = pts,
-#'   transform_method = "poly_1"
-#' )
-#'
-#' print(coords)
-#' }
-#'
 #' @export
 get_pts_coords <- function(
-    gcp,
-    target_pts,
-    transform_method = "auto"
+  gcp,
+  target_pts,
+  transform_method = "auto",
+  lambda = 1e-4
 ) {
-  
   # ---------------------------------------------------------------------------
   # Validate transform method
   # ---------------------------------------------------------------------------
-  
+
   valid_methods <- c(
     "auto",
     "poly_1",
@@ -112,191 +75,211 @@ get_pts_coords <- function(
     "poly_3",
     "tps"
   )
-  
+
   if (!transform_method %in% valid_methods) {
     stop(
       "Invalid 'transform_method'. Must be one of: ",
       paste(valid_methods, collapse = ", ")
     )
   }
-  
+
+  # ---------------------------------------------------------------------------
+  # Validate lambda
+  # ---------------------------------------------------------------------------
+
+  if (!is.numeric(lambda) || length(lambda) != 1 || is.na(lambda)) {
+    stop("'lambda' must be a single numeric value.")
+  }
+
+  if (lambda < 0) {
+    stop("'lambda' must be >= 0.")
+  }
+
   # ---------------------------------------------------------------------------
   # Validate required columns in GCP dataframe
   # ---------------------------------------------------------------------------
-  
+
   required_gcp_cols <- c("id", "x", "y", "lon", "lat")
-  
+
   missing_gcp_cols <- setdiff(required_gcp_cols, names(gcp))
-  
+
   if (length(missing_gcp_cols) > 0) {
     stop(
       "Missing required columns in 'gcp': ",
       paste(missing_gcp_cols, collapse = ", ")
     )
   }
-  
+
   # ---------------------------------------------------------------------------
-  # Validate required columns in target points dataframe
+  # Allow x/y OR cx/cy in target points
   # ---------------------------------------------------------------------------
-  
-  required_target_cols <- c("id", "x", "y")
-  
-  missing_target_cols <- setdiff(required_target_cols, names(target_pts))
-  
-  if (length(missing_target_cols) > 0) {
+
+  if (all(c("x", "y") %in% names(target_pts))) {
+    target_pts$x_internal <- target_pts$x
+    target_pts$y_internal <- target_pts$y
+  } else if (all(c("cx", "cy") %in% names(target_pts))) {
+    target_pts$x_internal <- target_pts$cx
+    target_pts$y_internal <- target_pts$cy
+  } else {
     stop(
-      "Missing required columns in 'target_pts': ",
-      paste(missing_target_cols, collapse = ", ")
+      "target_pts must contain either columns ('x', 'y') ",
+      "or ('cx', 'cy')."
     )
   }
-  
+
   # ---------------------------------------------------------------------------
   # Validate minimum number of GCPs needed for each transformation
   # ---------------------------------------------------------------------------
-  
+
   n_gcp <- nrow(gcp)
-  
+
   if (transform_method == "poly_1" && n_gcp < 3) {
     stop("At least 3 GCPs are required for a first order polynomial.")
   }
-  
+
   if (transform_method == "poly_2" && n_gcp < 6) {
     stop("At least 6 GCPs are required for a second order polynomial.")
   }
-  
+
   if (transform_method == "poly_3" && n_gcp < 10) {
     stop("At least 10 GCPs are required for a third order polynomial.")
   }
-  
+
   # ---------------------------------------------------------------------------
-  # Create temporary files
+  # Automatically select polynomial order if requested
   # ---------------------------------------------------------------------------
-  
-  # Temporary empty raster file
-  temp_tif <- tempfile(fileext = ".tif")
-  
-  # Temporary VRT file that will store GCP information
-  temp_vrt <- tempfile(fileext = ".vrt")
-  
-  # Temporary input and output point files
-  pts_in <- tempfile(fileext = ".txt")
-  pts_out <- tempfile(fileext = ".txt")
-  
+
+  if (transform_method == "auto") {
+    if (n_gcp >= 10) {
+      transform_method <- "poly_3"
+    } else if (n_gcp >= 6) {
+      transform_method <- "poly_2"
+    } else {
+      transform_method <- "poly_1"
+    }
+  }
+
   # ---------------------------------------------------------------------------
-  # Create a minimal dummy raster
-  #
-  # GDAL requires a raster dataset as the base for attaching GCPs.
-  # We therefore create a tiny blank raster.
+  # Build prediction dataframe
   # ---------------------------------------------------------------------------
-  
-  terra::writeRaster(
-    terra::rast(matrix(1, ncol=1, nrow=1)
-    ),
-    temp_tif,
-    overwrite = TRUE
+
+  pred_df <- data.frame(
+    x = target_pts$x_internal,
+    y = target_pts$y_internal
   )
-  
+
   # ---------------------------------------------------------------------------
-  # Build GCP arguments for gdal_translate
+  # First-order polynomial
   # ---------------------------------------------------------------------------
-  
-  gcp_args <- unlist(
-    apply(gcp, 1, function(row) {
-      c(
-        "-gcp",
-        as.character(row["x"]),
-        as.character(row["y"]),
-        as.character(row["lon"]),
-        as.character(row["lat"])
-      )
-    })
-  )
-  
-  # ---------------------------------------------------------------------------
-  # Create the VRT containing embedded GCPs
-  # ---------------------------------------------------------------------------
-  
-  sf::gdal_utils(
-    util = "translate",
-    source = temp_tif,
-    destination = temp_vrt,
-    options = c(
-      "-of", "VRT",
-      gcp_args
+
+  if (transform_method == "poly_1") {
+    lon_model <- stats::lm(
+      lon ~ x + y,
+      data = gcp
     )
-  )
-  
+
+    lat_model <- stats::lm(
+      lat ~ x + y,
+      data = gcp
+    )
+
+    lon_pred <- stats::predict(lon_model, pred_df)
+    lat_pred <- stats::predict(lat_model, pred_df)
+  }
+
   # ---------------------------------------------------------------------------
-  # Write target points to temporary input file.
-  #
-  # gdaltransform expects:
-  #   x y
-  # per line.
+  # Second-order polynomial
   # ---------------------------------------------------------------------------
-  
-  utils::write.table(
-    target_pts[, c("x", "y")],
-    file = pts_in,
-    row.names = FALSE,
-    col.names = FALSE,
-    quote = FALSE
-  )
-  
+
+  if (transform_method == "poly_2") {
+    lon_model <- stats::lm(
+      lon ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      data = gcp
+    )
+
+    lat_model <- stats::lm(
+      lat ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      data = gcp
+    )
+
+    lon_pred <- stats::predict(lon_model, pred_df)
+    lat_pred <- stats::predict(lat_model, pred_df)
+  }
+
   # ---------------------------------------------------------------------------
-  # Construct gdaltransform command depending on transform method
+  # Third-order polynomial
   # ---------------------------------------------------------------------------
-  
-  transform_args <- switch(
-    transform_method,
-    
-    "auto" = "",
-    
-    "poly_1" = "-order 1",
-    
-    "poly_2" = "-order 2",
-    
-    "poly_3" = "-order 3",
-    
-    "tps" = "-tps"
-  )
-  
+
+  if (transform_method == "poly_3") {
+    lon_model <- stats::lm(
+      lon ~ x + y +
+        I(x^2) + I(y^2) + I(x * y) +
+        I(x^3) + I(y^3) +
+        I(x^2 * y) + I(x * y^2),
+      data = gcp
+    )
+
+    lat_model <- stats::lm(
+      lat ~ x + y +
+        I(x^2) + I(y^2) + I(x * y) +
+        I(x^3) + I(y^3) +
+        I(x^2 * y) + I(x * y^2),
+      data = gcp
+    )
+
+    lon_pred <- stats::predict(lon_model, pred_df)
+    lat_pred <- stats::predict(lat_model, pred_df)
+  }
+
   # ---------------------------------------------------------------------------
-  # Execute gdaltransform
+  # Thin plate spline transformation
   # ---------------------------------------------------------------------------
-  
-  cmd <- paste(
-    "gdaltransform",
-    transform_args,
-    shQuote(temp_vrt),
-    "<",
-    shQuote(pts_in),
-    ">",
-    shQuote(pts_out)
-  )
-  
-  system(cmd)
-  
+
+  if (transform_method == "tps") {
+    if (!requireNamespace("fields", quietly = TRUE)) {
+      stop(
+        "Package 'fields' is required for transform_method = 'tps'."
+      )
+    }
+
+    gcp_xy <- as.matrix(gcp[, c("x", "y")])
+
+    pred_xy <- as.matrix(pred_df)
+
+    lon_model <- fields::Tps(
+      x = gcp_xy,
+      Y = gcp$lon,
+      lambda = lambda
+    )
+
+    lat_model <- fields::Tps(
+      x = gcp_xy,
+      Y = gcp$lat,
+      lambda = lambda
+    )
+
+    lon_pred <- stats::predict(
+      lon_model,
+      pred_xy
+    )
+
+    lat_pred <- stats::predict(
+      lat_model,
+      pred_xy
+    )
+  }
+
   # ---------------------------------------------------------------------------
-  # Read transformed coordinates
+  # Assemble result
   # ---------------------------------------------------------------------------
-  
-  transformed <- utils::read.table(
-    pts_out,
-    header = FALSE
-  )
-  
-  # ---------------------------------------------------------------------------
-  # gdaltransform returns:
-  #   lon lat z
-  #
-  # We only retain lon/lat.
-  # ---------------------------------------------------------------------------
-  
+
   result <- target_pts
-  
-  result$lon <- transformed$V1
-  result$lat <- transformed$V2
-  
+
+  result$x_internal <- NULL
+  result$y_internal <- NULL
+
+  result$lon <- as.numeric(lon_pred)
+  result$lat <- as.numeric(lat_pred)
+
   return(result)
 }
-

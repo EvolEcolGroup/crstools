@@ -29,7 +29,8 @@ library(sf)
 library(rnaturalearth)
 # get the path to an example image included in the package and choose GCPs
 img_path <- system.file("extdata/europe_map.jpeg",
-package = "crstools")
+  package = "crstools"
+)
 # choose some points
 gcp_europe <- choose_gcp(img_path)
 # now get some more
@@ -39,7 +40,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 # transform it to a suitable projection
 world <- st_transform(world, crs = 4326)
 # crop it to the extent of the image
-europe <- st_crop(world, c(xmin = -25, ymin=25, xmax = 45, ymax = 70))
+europe <- st_crop(world, c(xmin = -25, ymin = 25, xmax = 45, ymax = 70))
 # get the coordinates for these points
 new_gcp_europe <- find_gcp_coords(gcp_europe, sf_obj = europe)
 # data frame with the GCPs

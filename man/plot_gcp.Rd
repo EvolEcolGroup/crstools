@@ -34,8 +34,9 @@ to improve the transformation.
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 # load some previously captured GCPs
 gcp_europe <- readRDS(system.file(
-                                "extdata/europe_gcp_georef.RDS",
-                                package = "crstools"))
+  "extdata/europe_gcp_georef.RDS",
+  package = "crstools"
+))
 # plot
 plot_gcp(img_path, gcp = gcp_europe)
 \dontshow{\}) # examplesIf}

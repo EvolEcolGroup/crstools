@@ -46,7 +46,7 @@ generate such a grid automatically. The latter is passed to \code{\link[=pretty]
 get pretty breaks, and the exact number of Tissot's circles might differ
 from the input numbers (see \code{\link[=pretty]{pretty()}} for details. It defaults to c(5,5).}
 
-\item{radius}{The radius of the circles (see \code{\link[sf:st_buffer]{sf::st_buffer()}} for an
+\item{radius}{The radius of the circles (see \code{\link[sf:geos_unary]{sf::st_buffer()}} for an
 explanation of how units are created; we recommend that you explicitly
 state your using with the \code{units::as_units()}, e.g \code{units::as_units(100, "km")}}
 
@@ -54,7 +54,7 @@ state your using with the \code{units::as_units()}, e.g \code{units::as_units(10
 
 \item{alpha}{The transparency of the circles}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:geom_sf]{ggplot2::geom_sf()}}}
+\item{...}{Other arguments passed on to \code{\link[ggplot2:ggsf]{ggplot2::geom_sf()}}}
 }
 \value{
 A ggplot2 object
@@ -73,9 +73,9 @@ library(ggplot2)
 s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
 s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 ggplot(data = s_america_sf) +
- geom_sf() +
- geom_tissot() +
- coord_sf(crs = s_am_equal_area$proj4) +
- theme_minimal()
+  geom_sf() +
+  geom_tissot() +
+  coord_sf(crs = s_am_equal_area$proj4) +
+  theme_minimal()
 \dontshow{\}) # examplesIf}
 }

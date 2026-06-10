@@ -56,14 +56,21 @@ system (EPSG:4326). The warped image is saved as a new file with the suffix
 \dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # get the path to an example image included in the package
 img_path <- system.file("extdata/europe_map.jpeg",
-  package = "crstools")
-# load a set of GCPs (or we could create them using the choose_gcp() 
+  package = "crstools"
+)
+# load a set of GCPs (or we could create them using the choose_gcp()
 # and find_gcp() functions)
 gcp_df <- readRDS(system.file(
-  "extdata/europe_gcp_georef.RDS", package = "crstools" ))
+  "extdata/europe_gcp_georef.RDS",
+  package = "crstools"
+))
 # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
-warped_img <- georeference_img(image_obj = img_path, gcp = gcp_df,
-  output_path = tempfile(pattern = "georef_img_", tmpdir = tempdir(),
-  fileext = ".tif" ) )
+warped_img <- georeference_img(
+  image_obj = img_path, gcp = gcp_df,
+  output_path = tempfile(
+    pattern = "georef_img_", tmpdir = tempdir(),
+    fileext = ".tif"
+  )
+)
 \dontshow{\}) # examplesIf}
 }

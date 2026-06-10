@@ -13,7 +13,6 @@ Choose the appropriate map projection for a given application, visualise the res
 
 Authors:
 \itemize{
-  \item Andrea Manica \email{am315@cam.ac.uk} (\href{https://orcid.org/0000-0003-1895-450X}{ORCID})
   \item Andrea Pozzi
   \item Cecilia Padilla-Iglesias
   \item Evie Carter
