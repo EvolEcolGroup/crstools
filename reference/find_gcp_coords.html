@@ -84,6 +84,17 @@ and if needed projected)</p></dd>
     <p>A data frame with the GCPs, including their image coordinates and
 corresponding geographic coordinates.</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>NOTE: There are two conventions on how to define pixel coordinates. In this
+function (and more generally throughout <code>crstools</code>), the origin is defined as
+the bottom left corner of the image, with x increasing to the right and y
+increasing upwards. This is consistent with the convention used in many image
+processing libraries. However, some libraries (like OpenCV and GDAL) define
+the origin at the top left corner, with y increasing downwards. Be sure to
+check which convention your image processing library uses when working with
+pixel coordinates.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -93,7 +104,8 @@ corresponding geographic coordinates.</p>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/rnaturalearth/" class="external-link">rnaturalearth</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># get the path to an example image included in the package and choose GCPs</span></span></span>
 <span class="r-in"><span><span class="va">img_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/europe_map.jpeg"</span>,</span></span>
-<span class="r-in"><span>package <span class="op">=</span> <span class="st">"crstools"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  package <span class="op">=</span> <span class="st">"crstools"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># choose some points</span></span></span>
 <span class="r-in"><span><span class="va">gcp_europe</span> <span class="op">&lt;-</span> <span class="fu"><a href="choose_gcp.html">choose_gcp</a></span><span class="op">(</span><span class="va">img_path</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># now get some more</span></span></span>
@@ -103,7 +115,7 @@ corresponding geographic coordinates.</p>
 <span class="r-in"><span><span class="co"># transform it to a suitable projection</span></span></span>
 <span class="r-in"><span><span class="va">world</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">world</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># crop it to the extent of the image</span></span></span>
-<span class="r-in"><span><span class="va">europe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crop.html" class="external-link">st_crop</a></span><span class="op">(</span><span class="va">world</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="op">-</span><span class="fl">25</span>, ymin<span class="op">=</span><span class="fl">25</span>, xmax <span class="op">=</span> <span class="fl">45</span>, ymax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">europe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crop.html" class="external-link">st_crop</a></span><span class="op">(</span><span class="va">world</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="op">-</span><span class="fl">25</span>, ymin <span class="op">=</span> <span class="fl">25</span>, xmax <span class="op">=</span> <span class="fl">45</span>, ymax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># get the coordinates for these points</span></span></span>
 <span class="r-in"><span><span class="va">new_gcp_europe</span> <span class="op">&lt;-</span> <span class="fu">find_gcp_coords</span><span class="op">(</span><span class="va">gcp_europe</span>, sf_obj <span class="op">=</span> <span class="va">europe</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># data frame with the GCPs</span></span></span>
