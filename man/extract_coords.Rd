@@ -35,14 +35,17 @@ library(terra)
 # Georeference the image using the created GCPs
 # get the gcp coordinates
 gcp_europe_coords <-
-readRDS(system.file("vignettes/img/europe_gcp_georef_v2.RDS",
-package = "crstools"))
+  readRDS(system.file("vignettes/img/europe_gcp_georef_v2.RDS",
+    package = "crstools"
+  ))
 # get the path to the image
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 georef_path <-
-georeference_img(image_obj = img_path,
-gcp = gcp_europe_coords,
-output_path = file.path(tempdir(), "europe_map_georef"))
+  georeference_img(
+    image_obj = img_path,
+    gcp = gcp_europe_coords,
+    output_path = file.path(tempdir(), "europe_map_georef")
+  )
 # georeference the image using the GCPs
 map_warp <- rast(georef_path)
 # get the coordinates of the points

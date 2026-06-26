@@ -73,9 +73,9 @@ library(ggplot2)
 s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
 s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 ggplot(data = s_america_sf) +
- geom_sf() +
- geom_tissot() +
- coord_sf(crs = s_am_equal_area$proj4) +
- theme_minimal()
+  geom_sf() +
+  geom_tissot() +
+  coord_sf(crs = s_am_equal_area$proj4) +
+  theme_minimal()
 \dontshow{\}) # examplesIf}
 }
