@@ -1,33 +1,37 @@
 #' Extract projection-induced distortion metrics
-#'
-#' This function computes Tissot's indicatrix distortion metrics (Snyder
-#' 1987, pp. 20-26) for a grid of points across the extent of `data`,
-#' evaluated in the CRS of `data`. Rather than drawing a circle and
-#' measuring how it warps once reprojected (the approach [geom_tissot()]
-#' uses to visualise distortion), this "takes a short step" due north and due
-#' east of each grid point and reads the distortion off how those two steps
-#' land once projected. 
-#'
-#' The following measures are return per each grid point: `areal_scale`, the
-#' ratio of projected to true area (value of 1 means no area distortion, higher
-#' values in dicate local inflation, while lower values indicate local
-#' shrinkage), `angular_distortion`, Snyder's maximum angular deformation in
-#' degrees (a value of 0 degrees means no shape distortion, a value of 180
-#' degress  means complete shape distortion), the semi-major and semi-minor axes
-#' of the indicatrix, and the intersection angle between the projected meridian
-#' and parallel directions (90 degrees indicates no angular distortion).
 #' 
-#' Equation numbering follows Gimond's tissot R functions
-#' (https://github.com/mgimond/tissot).
-#'
-#' @param data An sf, SpatRaster, or SpatVector object. This has to projected
+#' This function computes Tissot's indicatrix distortion metrics
+#'   (Snyder 1987, pp. 20-26) for a grid of points across the extent of `data`,
+#'   evaluated in the CRS of `data`. Rather than drawing a circle and measuring
+#'   how it warps once reprojected (the approach [geom_tissot()] uses to
+#'   visualise distortion), this "takes a short step" due north and due east of
+#'   each grid point and reads the distortion off how those two steps land once
+#'   projected.
+#'   
+#'   The following measures are returned per each grid point: `areal_scale`, the
+#'   ratio of projected to true area (value of 1 means no area distortion,
+#'   higher values indicate local inflation, while lower values indicate local
+#'   shrinkage), `angular_distortion`, Snyder's maximum angular deformation in
+#'   degrees (a value of 0 degrees means no shape distortion, a value of 180
+#'   degrees  means complete shape distortion), the semi-major and semi-minor
+#'   axes of the indicatrix, and the intersection angle between the projected
+#'   meridian and parallel directions (90 degrees indicates no angular
+#'   distortion).
+#'   
+#'   This implementation follows the approach in Gimond's tissot R functions
+#'   (https://github.com/mgimond/tissot).
+#'   
+#' @references Snyder, J.P. (1987) Map Projections—A Working Manual. U.S.
+#'   Geological Survey Professional Paper 1395, pp. 20-26. Washington, D.C.:
+#'   U.S. Government Printing Office. DOI: 10.3133/pp1395.
+#' @param data An sf, SpatRaster, or SpatVector object. This has to be projected
 #'   to the CRS intened to assess.
 #' @param centres Either a list with elements "lng" and "lat", or a vector
 #'   of length 2 with the number of rows/columns for an automatic grid, as
 #'   in [geom_tissot()]. Default is c(5, 5).
 #' @param radius The length of the probing step used to estimate local
 #'   distortion, in metres. If NULL, estimated automatically
-#'   as in [geom_tissot()].Default is NULL.
+#'   as in [geom_tissot()]. Default is NULL.
 #' @return A data.frame with one row per grid point: `lon`, `lat` (centre of
 #'   the point, in EPSG:4326), `areal_scale`, `angular_distortion` (degrees),
 #'   `intersection_angle` (degrees), `semi_major`, and `semi_minor` (in the

@@ -7,7 +7,7 @@
 tissot_metrics(data, centres = c(5, 5), radius = NULL)
 }
 \arguments{
-\item{data}{An sf, SpatRaster, or SpatVector object. This has to projected
+\item{data}{An sf, SpatRaster, or SpatVector object. This has to be projected
 to the CRS intened to assess.}
 
 \item{centres}{Either a list with elements "lng" and "lat", or a vector
@@ -16,7 +16,7 @@ in \code{\link[=geom_tissot]{geom_tissot()}}. Default is c(5, 5).}
 
 \item{radius}{The length of the probing step used to estimate local
 distortion, in metres. If NULL, estimated automatically
-as in \code{\link[=geom_tissot]{geom_tissot()}}.Default is NULL.}
+as in \code{\link[=geom_tissot]{geom_tissot()}}. Default is NULL.}
 }
 \value{
 A data.frame with one row per grid point: \code{lon}, \code{lat} (centre of
@@ -25,25 +25,25 @@ the point, in EPSG:4326), \code{areal_scale}, \code{angular_distortion} (degrees
 units of \code{data}'s CRS).
 }
 \description{
-This function computes Tissot's indicatrix distortion metrics (Snyder
-1987, pp. 20-26) for a grid of points across the extent of \code{data},
-evaluated in the CRS of \code{data}. Rather than drawing a circle and
-measuring how it warps once reprojected (the approach \code{\link[=geom_tissot]{geom_tissot()}}
-uses to visualise distortion), this "takes a short step" due north and due
-east of each grid point and reads the distortion off how those two steps
-land once projected.
-}
-\details{
-The following measures are return per each grid point: \code{areal_scale}, the
-ratio of projected to true area (value of 1 means no area distortion, higher
-values in dicate local inflation, while lower values indicate local
+This function computes Tissot's indicatrix distortion metrics
+(Snyder 1987, pp. 20-26) for a grid of points across the extent of \code{data},
+evaluated in the CRS of \code{data}. Rather than drawing a circle and measuring
+how it warps once reprojected (the approach \code{\link[=geom_tissot]{geom_tissot()}} uses to
+visualise distortion), this "takes a short step" due north and due east of
+each grid point and reads the distortion off how those two steps land once
+projected.
+
+The following measures are returned per each grid point: \code{areal_scale}, the
+ratio of projected to true area (value of 1 means no area distortion,
+higher values indicate local inflation, while lower values indicate local
 shrinkage), \code{angular_distortion}, Snyder's maximum angular deformation in
 degrees (a value of 0 degrees means no shape distortion, a value of 180
-degress  means complete shape distortion), the semi-major and semi-minor axes
-of the indicatrix, and the intersection angle between the projected meridian
-and parallel directions (90 degrees indicates no angular distortion).
+degrees  means complete shape distortion), the semi-major and semi-minor
+axes of the indicatrix, and the intersection angle between the projected
+meridian and parallel directions (90 degrees indicates no angular
+distortion).
 
-Equation numbering follows Gimond's tissot R functions
+This implementation follows the approach in Gimond's tissot R functions
 (https://github.com/mgimond/tissot).
 }
 \examples{
@@ -57,4 +57,9 @@ s_america_proj <- st_transform(s_america_sf, s_am_equal_area$proj4)
 metrics <- tissot_metrics(s_america_proj)
 summary(metrics[c("areal_scale", "angular_distortion")])
 \dontshow{\}) # examplesIf}
+}
+\references{
+Snyder, J.P. (1987) Map Projections—A Working Manual. U.S.
+Geological Survey Professional Paper 1395, pp. 20-26. Washington, D.C.:
+U.S. Government Printing Office. DOI: 10.3133/pp1395.
 }
