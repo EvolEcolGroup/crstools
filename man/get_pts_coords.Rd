@@ -14,8 +14,8 @@ data frame should have the following columns:
 \item \code{id}: An identifier for each GCP (numeric).
 \item \code{x}: The x-coordinate of the GCP (in pixel space).
 \item \code{y}: The y-coordinate of the GCP (in pixel space).
-\item \code{lon}: The longitude of the GCP (georeferenced).
-\item \code{lat}: The latitude of the GCP (georeferenced).
+\item \code{longitude}: The longitude of the GCP (georeferenced).
+\item \code{latitude}: The latitude of the GCP (georeferenced).
 }}
 
 \item{target_pts}{A data frame containing the target points to transform.

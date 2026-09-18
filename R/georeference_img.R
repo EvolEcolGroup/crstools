@@ -17,8 +17,8 @@
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
 #'   - `y`: The y-coordinate of the GCP (in pixel space).
-#'   - `lon`: The longitude of the GCP (georeferenced).
-#'   - `lat`: The latitude of the GCP (georeferenced).
+#'   - `longitude`: The longitude of the GCP (georeferenced).
+#'   - `latitude`: The latitude of the GCP (georeferenced).
 #'
 #' @param output_path A character string representing the file path to the input
 #'   image. (`_warp.tif`) will be appended to it.
