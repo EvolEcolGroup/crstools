@@ -56,7 +56,7 @@ tissot_metrics <- function(data, centres = c(5, 5), radius = NULL) {
   # because the distortion metrics are only meaningful in a projected CRS,
   # check that the data is not in a geographic CRS
   if (sf::st_is_longlat(orig_crs)) {
-    warning(
+    stop(
       paste0(
         "data uses a geographic (longitude/latitude) CRS; distortion ",
         "metrics will be uninformative. Please project data before", 
