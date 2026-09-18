@@ -60,7 +60,7 @@
 georeference_img <- function(image_obj, gcp, output_path = NULL,
                              transform_method = c(
                                "auto", "poly_1", "poly_2",
-                               "poly_3", "tps", "auto"
+                               "poly_3", "tps"
                              )) {
   transform_method <- match.arg(transform_method)
   # now convert transform method into the appropriate GDAL option
