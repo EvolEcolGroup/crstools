@@ -65,9 +65,9 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
   transform_method <- match.arg(transform_method)
   # now convert transform method into the appropriate GDAL option
   gdal_transform_option <- switch(transform_method,
-    "poly_1" = "-order 1",
-    "poly_2" = "-order 2",
-    "poly_3" = "-order 3",
+    "poly_1" = c("-order", "1"),
+    "poly_2" = c("-order", "2"),
+    "poly_3" = c("-order", "3"),
     "tps" = "-tps",
     "auto" = NULL
   )
