@@ -34,4 +34,18 @@ test_that("georeference_img works", {
     ),
     "gcp must be a data frame with columns"
   )
+  
+  # now test different transformations
+  gcp <- readRDS(system.file("extdata/europe_gcp_georef.RDS",
+                             package = "crstools"))
+  # warp image
+  img_out <- georeference_img(img_path, gcp, output_path = tempfile(),
+                   transform_method = "auto")
+  expect_true(file.exists(img_out))
+  img_out <- georeference_img(img_path, gcp, output_path = tempfile(),
+                              transform_method = "tps")
+  expect_true(file.exists(img_out))
+  img_out <- georeference_img(img_path, gcp, output_path = tempfile(),
+                              transform_method = "poly_1")
+  expect_true(file.exists(img_out))
 })
