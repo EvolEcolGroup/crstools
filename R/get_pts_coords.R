@@ -159,9 +159,7 @@ get_pts_coords <- function(
   # ---------------------------------------------------------------------------
 
   if (transform_method == "auto") {
-    if (n_gcp >= 10) {
-      transform_method <- "poly_3"
-    } else if (n_gcp >= 6) {
+    if (n_gcp >= 6) {
       transform_method <- "poly_2"
     } else {
       transform_method <- "poly_1"
