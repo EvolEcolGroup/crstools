@@ -146,13 +146,9 @@ test_that("check output structure", {
   # distances in km can not be negative
   expect_true(all(res$res_km >= 0))
   expect_true(all(res$loo_km >= 0))
-  # attributes are present
+  # attribute is present
   expect_equal(attr(res, "order"), 1L)
-  expect_length(attr(res, "rmse_km"), 1)
-  expect_length(attr(res, "loo_rmse_km"), 1)
-  expect_true(attr(res, "rmse_km") >= 0)
-  expect_true(attr(res, "loo_rmse_km") >= 0)
-  
+
 })
 
 # check orders of polynomial are stored correctly
@@ -223,10 +219,10 @@ test_that("residuals are exact for a perfect fit", {
   expect_true(max(abs(c(res$loo_lon, res$loo_lat))) < 1e-8)
   # overall RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "rmse_km") < 1e-8)
+  expect_true( sqrt(mean(res$res_km^2)) < 1e-8)
   # the LOO RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "loo_rmse_km") < 1e-8)
+  expect_true( sqrt(mean(res$loo_km^2, na.rm = TRUE)) < 1e-8)
   # QUADRATIC MAP
   # longitude follow quadratic function (x * y)
   gcp_syn$longitude <- gcp_syn$longitude + 1e-6 * gcp_syn$x * gcp_syn$y
@@ -245,14 +241,14 @@ test_that("residuals are exact for a perfect fit", {
   expect_true(max(abs(c(res$loo_lon, res$loo_lat))) < 1e-8)
   # overall RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "rmse_km") < 1e-8)
+  expect_true(sqrt(mean(res$res_km^2)) < 1e-8)
   # the LOO RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "loo_rmse_km") < 1e-8)
+  expect_true(sqrt(mean(res$loo_km^2, na.rm = TRUE)) < 1e-8)
   # first oder polynomial should not fit perfectly thus error must be 
   # larger than 1 km
   res_under <- gcp_residuals(gcp_syn, transform_method = "poly_1")
-  expect_true(attr(res_under, "rmse_km") > 1)
+  expect_true(sqrt(mean(res_under$res_km^2)) > 1)
   # CUBIC MAP
   # longitude follow cubic function (x^2 * y)
   gcp_syn$longitude <- gcp_syn$longitude + 1e-10 * gcp_syn$x^2 * gcp_syn$y
@@ -271,14 +267,14 @@ test_that("residuals are exact for a perfect fit", {
   expect_true(max(abs(c(res$loo_lon, res$loo_lat))) < 1e-8)
   # overall RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "rmse_km") < 1e-8)
+  expect_true( sqrt(mean(res$res_km^2)) < 1e-8)
   # the LOO RMSE should be very close to zero (not zero because of rounding
   # error)
-  expect_true(attr(res, "loo_rmse_km") < 1e-8)
+  expect_true(sqrt(mean(res$loo_km^2, na.rm = TRUE)) < 1e-8)
   # second order polynomial should not fit perfectly thus error must be
   # larger than 1 km
   res_under <- gcp_residuals(gcp_syn, transform_method = "poly_2")
-  expect_true(attr(res_under, "rmse_km") > 1)
+  expect_true(sqrt(mean(res_under$res_km^2)) > 1)
 })
 
 # check properties of least squares fit are maintained

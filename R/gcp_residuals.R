@@ -49,9 +49,7 @@
 #'   - `loo_km`: the distance between observed and leave-one-out predicted
 #'     position, in km.
 #'
-#'   The data frame has the attributes `order` (the order of the polynomial),
-#'   `rmse_km` and `loo_rmse_km` (the root mean square of `res_km` and
-#'   `loo_km`).
+#'   The data frame has the attributes `order` (the order of the polynomial).
 #'
 #' @export
 #'
@@ -62,8 +60,12 @@
 #' ))
 #' res <- gcp_residuals(gcp_df, transform_method = "poly_1")
 #' res
-#' attr(res, "rmse_km")
-#' attr(res, "loo_rmse_km")
+#' # mean rmse
+#' mean(res$res_km)
+#' sqrt(mean(res$res_km^2))
+#' # mean loo rmse
+#' sqrt(mean(res$loo_km^2, na.rm = TRUE))
+
 gcp_residuals <- function(gcp,
                           transform_method = c(
                             "auto", "poly_1", "poly_2", "poly_3"
@@ -206,10 +208,6 @@ gcp_residuals <- function(gcp,
   )
   # store polynomial order
   attr(out, "order") <- poly_order
-  # overall error of the fit
-  attr(out, "rmse_km") <- sqrt(mean(out$res_km^2))
-  # overall error of the leave-one-out residuals
-  attr(out, "loo_rmse_km") <- sqrt(mean(out$loo_km^2))
   return(out)
 }
 
