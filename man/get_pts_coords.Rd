@@ -67,3 +67,12 @@ the endpoints:" This is often benign warning and indicates that the optimal
 smoothing parameter is at or near the boundary of the search space (matching
 the default lamba 1e-4, and thus approaching perfect interpolation).
 }
+\examples{
+pts_df <- readRDS(system.file(
+  "extdata/europe_gcp_georef.RDS",
+  package = "crstools"
+))
+target_df <- data.frame(pt_id = 1:2, x = c(477, 2014), y = c(554, 1311))
+get_pts_coords(pts_df, target_df)
+
+}

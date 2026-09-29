@@ -33,9 +33,7 @@ edges of the map, or isolated points).
 position, in km.
 }
 
-The data frame has the attributes \code{order} (the order of the polynomial),
-\code{rmse_km} and \code{loo_rmse_km} (the root mean square of \code{res_km} and
-\code{loo_km}).
+The data frame has the attributes \code{order} (the order of the polynomial).
 }
 \description{
 This function refits the polynomial transformation that GDAL uses in
@@ -73,6 +71,9 @@ gcp_df <- readRDS(system.file(
 ))
 res <- gcp_residuals(gcp_df, transform_method = "poly_1")
 res
-attr(res, "rmse_km")
-attr(res, "loo_rmse_km")
+# mean rmse
+mean(res$res_km)
+sqrt(mean(res$res_km^2))
+# mean loo rmse
+sqrt(mean(res$loo_km^2, na.rm = TRUE))
 }
