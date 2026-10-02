@@ -8,11 +8,21 @@
 \description{
 Choose the appropriate map projection for a given application, visualise the resulting distortion, and georeference data from unknown projections. The full functionalities of the package are described in Pozzi et al. (2026) \doi{10.31223/X5K17P} (pre-print).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/EvolEcolGroup/crstools}
+  \item \url{https://evolecolgroup.github.io/crstools/}
+  \item Report bugs at \url{https://github.com/EvolEcolGroup/crstools/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Andrea Manica \email{am315@cam.ac.uk} (\href{https://orcid.org/0000-0003-1895-450X}{ORCID})
 
 Authors:
 \itemize{
+  \item Andrea Manica \email{am315@cam.ac.uk} (\href{https://orcid.org/0000-0003-1895-450X}{ORCID})
   \item Andrea Pozzi
   \item Cecilia Padilla-Iglesias
   \item Evie Carter
