@@ -21,6 +21,9 @@ Description: Choose the appropriate map projection for a given application,
   Pozzi et al. (2026) <doi:10.31223/X5K17P> (pre-print).
 License: GPL (>= 3)
 Encoding: UTF-8
+URL: https://github.com/EvolEcolGroup/crstools,
+    https://evolecolgroup.github.io/crstools/
+BugReports: https://github.com/EvolEcolGroup/crstools/issues
 Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 3.5.0)
