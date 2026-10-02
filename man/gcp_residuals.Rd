@@ -8,15 +8,15 @@ gcp_residuals(gcp, transform_method = c("auto", "poly_1", "poly_2", "poly_3"))
 }
 \arguments{
 \item{gcp}{A data frame containing the Ground Control Points (GCPs), with
-columns \code{id}, \code{x}, \code{y}, \code{longitude} and \code{latitude} (the same format used
-by \code{\link[=georeference_img]{georeference_img()}}).}
+columns \code{id}, \code{x}, \code{y}, \code{longitude} and \code{latitude} (the same format used by
+\code{\link[=georeference_img]{georeference_img()}}).}
 
-\item{transform_method}{A character string specifying the polynomial used
-for the transformation. Options are "poly_1" (first order polynomial),
-"poly_2" (second order polynomial), "poly_3" (third order polynomial) or
-"auto" (the default), which mimics the choice made by GDAL in
-\code{\link[=georeference_img]{georeference_img()}}: a first order polynomial if fewer than 6 GCPs are
-available, and a second order polynomial otherwise.}
+\item{transform_method}{A character string specifying the polynomial used for
+the transformation. Options are "poly_1" (first order polynomial), "poly_2"
+(second order polynomial), "poly_3" (third order polynomial) or "auto" (the
+default), which mimics the choice made by GDAL in \code{\link[=georeference_img]{georeference_img()}}: a
+first order polynomial if fewer than 6 GCPs are available, and a second
+order polynomial otherwise.}
 }
 \value{
 A data frame with one row per GCP, containing the original columns
@@ -26,8 +26,8 @@ and:
 \item \code{res_lon}, \code{res_lat}: the ordinary residuals, in degrees.
 \item \code{res_km}: the distance between observed and fitted position, in km.
 \item \code{leverage}: the leverage of each GCP. Values close to 1 indicate GCPs
-that strongly determine the transformation (typically points at the
-edges of the map, or isolated points).
+that strongly determine the transformation (typically points at the edges
+of the map, or isolated points).
 \item \code{loo_lon}, \code{loo_lat}: the leave-one-out residuals, in degrees.
 \item \code{loo_km}: the distance between observed and leave-one-out predicted
 position, in km.
@@ -50,17 +50,16 @@ indicating that the GCP has more influence on the fitted transformation.
 }
 \details{
 The transformation is a polynomial in pixel coordinates, fitted by ordinary
-least square separately for longitude and latitude, with all terms up to
-the specific order (3, 6, 10 coefficients for first, second and third order
+least square separately for longitude and latitude, with all terms up to the
+specific order (3, 6, 10 coefficients for first, second and third order
 polynomials). This forward (pixel to lon/lat) transformation, is the same
-applied by GDAL in \code{\link[=georeference_img]{georeference_img()}} and \code{\link[=get_pts_coords]{get_pts_coords()}}.
-LOO resisuals are computed without refittinhg as \eqn{e_i / (1 - h_{ii})},
-where \eqn{e_i} is the ordinary residual and \eqn{h_{ii}} is the
-leverage of the i-th GCP.
+applied by GDAL in \code{\link[=georeference_img]{georeference_img()}} and \code{\link[=get_pts_coords]{get_pts_coords()}}. LOO resisuals
+are computed without refittinhg as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
+is the ordinary residual and \eqn{h_{ii}} is the leverage of the i-th GCP.
 
 Residuals are given in degrees (observed minus fitted) and as the
-great-circle distance (in km, on a sphere of radius 6371.0088 km) between
-the observed and the fitted position of each GCP. Note that, because the
+great-circle distance (in km, on a sphere of radius 6371.0088 km) between the
+observed and the fitted position of each GCP. Note that, because the
 polynomial is fitted in degrees, residuals in longitude are not comparable
 across latitudes, whereas distances in km are.
 }

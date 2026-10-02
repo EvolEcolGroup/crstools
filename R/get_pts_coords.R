@@ -65,7 +65,7 @@
 #' ))
 #' target_df <- data.frame(pt_id = 1:2, x = c(477, 2014), y = c(554, 1311))
 #' get_pts_coords(pts_df, target_df)
-#' 
+#'
 
 get_pts_coords <- function(
   gcp,

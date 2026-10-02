@@ -10,32 +10,31 @@
 #' for points of the map that were not used as GCPs. The leverage of each GCP is
 #' also returned, which is a measure of how much influence each GCP has on the
 #' fitted transformation. Leverage values range from 0 to 1, with higher values
-#' indicating that the GCP has more influence on the fitted transformation. 
+#' indicating that the GCP has more influence on the fitted transformation.
 #'
-#' The transformation is a polynomial in pixel coordinates, fitted by ordinary 
-#' least square separately for longitude and latitude, with all terms up to 
-#' the specific order (3, 6, 10 coefficients for first, second and third order
+#' The transformation is a polynomial in pixel coordinates, fitted by ordinary
+#' least square separately for longitude and latitude, with all terms up to the
+#' specific order (3, 6, 10 coefficients for first, second and third order
 #' polynomials). This forward (pixel to lon/lat) transformation, is the same
-#' applied by GDAL in [georeference_img()] and [get_pts_coords()]. 
-#' LOO resisuals are computed without refittinhg as \eqn{e_i / (1 - h_{ii})},
-#' where \eqn{e_i} is the ordinary residual and \eqn{h_{ii}} is the
-#' leverage of the i-th GCP.
+#' applied by GDAL in [georeference_img()] and [get_pts_coords()]. LOO resisuals
+#' are computed without refittinhg as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
+#' is the ordinary residual and \eqn{h_{ii}} is the leverage of the i-th GCP.
 #'
 #' Residuals are given in degrees (observed minus fitted) and as the
-#' great-circle distance (in km, on a sphere of radius 6371.0088 km) between
-#' the observed and the fitted position of each GCP. Note that, because the
+#' great-circle distance (in km, on a sphere of radius 6371.0088 km) between the
+#' observed and the fitted position of each GCP. Note that, because the
 #' polynomial is fitted in degrees, residuals in longitude are not comparable
 #' across latitudes, whereas distances in km are.
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs), with
-#'   columns `id`, `x`, `y`, `longitude` and `latitude` (the same format used
-#'   by [georeference_img()]).
-#' @param transform_method A character string specifying the polynomial used
-#'   for the transformation. Options are "poly_1" (first order polynomial),
-#'   "poly_2" (second order polynomial), "poly_3" (third order polynomial) or
-#'   "auto" (the default), which mimics the choice made by GDAL in
-#'   [georeference_img()]: a first order polynomial if fewer than 6 GCPs are
-#'   available, and a second order polynomial otherwise.
+#'   columns `id`, `x`, `y`, `longitude` and `latitude` (the same format used by
+#'   [georeference_img()]).
+#' @param transform_method A character string specifying the polynomial used for
+#'   the transformation. Options are "poly_1" (first order polynomial), "poly_2"
+#'   (second order polynomial), "poly_3" (third order polynomial) or "auto" (the
+#'   default), which mimics the choice made by GDAL in [georeference_img()]: a
+#'   first order polynomial if fewer than 6 GCPs are available, and a second
+#'   order polynomial otherwise.
 #'
 #' @return A data frame with one row per GCP, containing the original columns
 #'   and:
@@ -43,11 +42,11 @@
 #'   - `res_lon`, `res_lat`: the ordinary residuals, in degrees.
 #'   - `res_km`: the distance between observed and fitted position, in km.
 #'   - `leverage`: the leverage of each GCP. Values close to 1 indicate GCPs
-#'     that strongly determine the transformation (typically points at the
-#'     edges of the map, or isolated points).
+#'   that strongly determine the transformation (typically points at the edges
+#'   of the map, or isolated points).
 #'   - `loo_lon`, `loo_lat`: the leave-one-out residuals, in degrees.
 #'   - `loo_km`: the distance between observed and leave-one-out predicted
-#'     position, in km.
+#'   position, in km.
 #'
 #'   The data frame has the attributes `order` (the order of the polynomial).
 #'
@@ -155,7 +154,7 @@ gcp_residuals <- function(gcp,
       poly_order, " (e.g. they are collinear)."
     )
   }
-  
+
   # predicted lon/lat of each GCP from pixel position
   fitted <- cbind(stats::fitted(lon_model), stats::fitted(lat_model))
   # residuals of each GCP from pixel position as observed minnus lon/lat of each
@@ -168,7 +167,7 @@ gcp_residuals <- function(gcp,
 
   # calculate leave-one-out residuals as: e_i / (1 - h_ii)
   loo <- res / (1 - leverage)
-  # loo cannot be computed for GCPs with leverage = 1. 
+  # loo cannot be computed for GCPs with leverage = 1.
   loo_ok <- leverage < 1 - sqrt(.Machine$double.eps)
   loo[!loo_ok, ] <- NA
   if (any(!loo_ok)) {
