@@ -25,15 +25,18 @@ corresponding geographic coordinates.
 }
 \description{
 GCPs are used to georeference images by providing known coordinates for
-specific points in the image.
+specific points in the image. This functions extracts the pixel coordinates
+(coded as the origin on the bottom left corner, see below) of the GCPs from
+the image, and allows the user to input their corresponding geographic
+coordinates (longitude and latitude).
 }
-\examples{
-\dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
-# Get the path to an example image included in the package and choose GCPs
-img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
-# this will open a new window where you can choose some points
-gcp_europe <- choose_gcp(img_path)
-# after the first set of points is chosen, we can add more points
-gcp_europe <- choose_gcp(img_path, gcp = gcp_europe)
-\dontshow{\}) # examplesIf}
+\details{
+NOTE: There are two conventions on how to define pixel coordinates. In this
+function (and more generally throughout \code{crstools}), the origin is defined as
+the bottom left corner of the image, with x increasing to the right and y
+increasing upwards. This is consistent with the convention used in many image
+processing libraries. However, some libraries (like OpenCV and GDAL) define
+the origin at the top left corner, with y increasing downwards. Be sure to
+check which convention your image processing library uses when working with
+pixel coordinates.
 }
