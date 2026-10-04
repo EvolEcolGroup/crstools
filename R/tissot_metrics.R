@@ -43,47 +43,54 @@
 #' summary(metrics[c("areal_scale", "angular_distortion")])
 
 tissot_metrics <- function(data, centres = c(5, 5)) {
-  # generate a grid of points across the extent of data
-  grid <- tissot_grid_centres(data, centres = centres)
-  coord_grid <- grid$centres
-  orig_crs <- grid$crs
-  
-  # because the distortion metrics are only meaningful in a projected CRS,
-  # check that the data is not in a geographic CRS
-  if (sf::st_is_longlat(orig_crs)) {
-    stop(
-      paste0(
-        "data uses a geographic (longitude/latitude) CRS; distortion ",
-        "metrics will be uninformative. Please project data before ", 
-        "calling tissot_metrics()."
+  # check if PROJ is installed 
+  if (!rlang::is_installed("PROJ", version = "0.7.0")) {
+    # stop if not
+    stop(paste0("Package 'PROJ' version >= 0.7.0 is required to run this ",
+    "fucntion Please install it."), call. = FALSE)
+  } else {
+    # generate a grid of points across the extent of data
+    grid <- tissot_grid_centres(data, centres = centres)
+    coord_grid <- grid$centres
+    orig_crs <- grid$crs
+    
+    # because the distortion metrics are only meaningful in a projected CRS,
+    # check that the data is not in a geographic CRS
+    if (sf::st_is_longlat(orig_crs)) {
+      stop(
+        paste0(
+          "data uses a geographic (longitude/latitude) CRS; distortion ",
+          "metrics will be uninformative. Please project data before ", 
+          "calling tissot_metrics()."
+        )
       )
+    }
+    
+    # use PROJ to estimate distortion using the "walking" north and eat approach
+    factors <- PROJ::proj_factors(coord_grid, orig_crs$wkt)
+    
+    # return a data frame with the metrics
+    metrics <- data.frame(
+      # point location
+      lon = coord_grid[, "lon"],
+      lat = coord_grid[, "lat"],
+      # areal scale (1 no distortion, >1 local inflation, <1 local shrinkage)
+      areal_scale = factors[, "areal_scale"],
+      # angular distortion (0 no distortion, 180 complete distortion)
+      # convert to degrees from radians
+      angular_distortion = factors[, "angular_distortion"] * 180 / pi,
+      # intersection angle between projected meridian and parallel
+      # (90 no distortion)
+      intersection_angle = factors[, "meridian_parallel_angle"] * 180 / pi,
+      # semi axes of elipses (1 no distorion)
+      semi_major = factors[, "tissot_semimajor"],
+      semi_minor = factors[, "tissot_semiminor"],
+      row.names = NULL
     )
+    
+    # return the metrics
+    return(metrics)
   }
-  
-  # use PROJ to estimate distortion using the "walking" north and eat approach
-  factors <- PROJ::proj_factors(coord_grid, orig_crs$wkt)
-  
-  # return a data frame with the metrics
-  metrics <- data.frame(
-    # point location
-    lon = coord_grid[, "lon"],
-    lat = coord_grid[, "lat"],
-    # areal scale (1 no distortion, >1 local inflation, <1 local shrinkage)
-    areal_scale = factors[, "areal_scale"],
-    # angular distortion (0 no distortion, 180 complete distortion)
-    # convert to degrees from radians
-    angular_distortion = factors[, "angular_distortion"] * 180 / pi,
-    # intersection angle between projected meridian and parallel
-    # (90 no distortion)
-    intersection_angle = factors[, "meridian_parallel_angle"] * 180 / pi,
-    # semi axes of elipses (1 no distorion)
-    semi_major = factors[, "tissot_semimajor"],
-    semi_minor = factors[, "tissot_semiminor"],
-    row.names = NULL
-  )
-  
-  # return the metrics
-  return(metrics)
 }
 
 #####################
