@@ -57,7 +57,7 @@
 #'   "extdata/europe_gcp_georef.RDS",
 #'   package = "crstools"
 #' ))
-#' res <- gcp_residuals(gcp_df, transform_method = "poly_1")
+#' res <- get_gcp_residuals(gcp_df, transform_method = "poly_1")
 #' res
 #' # mean rmse
 #' mean(res$res_km)
@@ -65,7 +65,7 @@
 #' # mean loo rmse
 #' sqrt(mean(res$loo_km^2, na.rm = TRUE))
 
-gcp_residuals <- function(gcp,
+get_gcp_residuals <- function(gcp,
                           transform_method = c(
                             "auto", "poly_1", "poly_2", "poly_3"
                           )) {
