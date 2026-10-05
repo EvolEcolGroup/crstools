@@ -39,10 +39,10 @@
 #' s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
 #' s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 #' s_america_proj <- st_transform(s_america_sf, s_am_equal_area$proj4)
-#' metrics <- tissot_metrics(s_america_proj)
+#' metrics <- get_distortion_metrics(s_america_proj)
 #' summary(metrics[c("areal_scale", "angular_distortion")])
 
-tissot_metrics <- function(data, centres = c(5, 5)) {
+get_distortion_metrics <- function(data, centres = c(5, 5)) {
   # check if PROJ is installed 
   if (!rlang::is_installed("PROJ", version = "0.7.0")) {
     # stop if not
@@ -61,7 +61,7 @@ tissot_metrics <- function(data, centres = c(5, 5)) {
         paste0(
           "data uses a geographic (longitude/latitude) CRS; distortion ",
           "metrics will be uninformative. Please project data before ", 
-          "calling tissot_metrics()."
+          "calling get_distortion_metrics()."
         )
       )
     }
