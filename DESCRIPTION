@@ -1,6 +1,6 @@
 Package: crstools
 Title: Tools to Work with Projections
-Version: 1.0.0.9002
+Version: 1.0.0.9004
 Authors@R: c(
     person("Andrea", "Manica", , "am315@cam.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1895-450X")),
@@ -21,11 +21,14 @@ Description: Choose the appropriate map projection for a given application,
   Pozzi et al. (2026) <doi:10.31223/X5K17P> (pre-print).
 License: GPL (>= 3)
 Encoding: UTF-8
+URL: https://github.com/EvolEcolGroup/crstools,
+    https://evolecolgroup.github.io/crstools/
+BugReports: https://github.com/EvolEcolGroup/crstools/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Depends:
     R (>= 3.5.0)
 Imports:
+    fields,
     sf,
     ggplot2,
     terra,
@@ -41,7 +44,10 @@ Suggests:
     rnaturalearthdata,
     tidyterra,
     svglite,
-    spelling
+    spelling,
+    scales
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-GB
+Config/roxygen2/version: 8.1.0
+RoxygenNote: 7.3.3
