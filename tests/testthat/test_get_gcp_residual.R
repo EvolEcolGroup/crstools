@@ -11,7 +11,8 @@ test_that("gcp input class", {
   # turn into a matrix
   gcp_europe_matrix <- as.matrix(gcp_europe)
   # check that the function throws an error when gcp is not a dataframe
-  expect_error(get_gcp_residuals(gcp_europe_matrix, transform_method = "poly_1"), 
+  expect_error(get_gcp_residuals(gcp_europe_matrix,
+                                 transform_method = "poly_1"), 
                "gcp must be a data frame with columns")
   
 })
@@ -41,7 +42,8 @@ test_that("gcp input NAs", {
   gcp_europe_with_na <- gcp_europe
   gcp_europe_with_na$latitude[2] <- NA
   # check that the function throws an error when gcp has NAs
-  expect_error(get_gcp_residuals(gcp_europe_with_na, transform_method = "poly_1"), 
+  expect_error(get_gcp_residuals(gcp_europe_with_na,
+                                 transform_method = "poly_1"), 
                "GCP dataframe contains NA values")
   # introduce an NA in pixels
   gcp_europe_with_na_pixels <- gcp_europe
@@ -326,94 +328,104 @@ test_that("proporties of least squares fit mantrained", {
 })
 
 
-# # Check that function returns same fitted coordinates as GDAL
-# test_that("get_gcp_residuals returns same fitted coordinates as GDAL", {
-#   # do not run on CRAN
-#   skip_on_cran()
-#   # do not run on GitHub Actions
-#   skip_on_ci()
-#   # skip if GDAL not available
-#   skip_if(
-#     Sys.which("gdaltransform") == "",
-#     "gdaltransform not available"
-#   )
-#   # helper fucntion to get predicted lon/lat from GDAL
-#   gdal_fitted <- function(gcp, order = NULL) {
-#     # get arguments 
-#     gdal_args <- c(rbind(
-#       "-gcp",
-#       sprintf("%.17g", gcp$x),
-#       sprintf("%.17g", gcp$y),
-#       sprintf("%.17g", gcp$longitude),
-#       sprintf("%.17g", gcp$latitude)
-#     ))
-#     # polynomial order
-#     if (!is.null(order)) {
-#       gdal_args <- c(gdal_args, "-order", order)
-#     }
-#     # tranform GCP pixel position with GDAL fit
-#     gdal_out <- system2(
-#       "gdaltransform",
-#       c("-output_xy", gdal_args),
-#       input = sprintf("%.17g %.17g", gcp$x, gcp$y),
-#       stdout = TRUE
-#     )
-#     # quit if GDAL failed
-#     if (!is.null(attr(gdal_out, "status"))) {
-#       stop("gdaltransform failed with status ", attr(gdal_out, "status"))
-#     }
-#     # quite is not one line per GCP
-#     if (length(gdal_out) != nrow(gcp)) {
-#       stop("gdaltransform output has ", length(gdal_out), " lines, expected ",
-#            nrow(gcp))
-#     }
-#     # read output into matrix with col 1 for lon and col 2 for lat
-#     matrix(scan(text = gdal_out, quiet = TRUE), ncol = 2, byrow = TRUE)
-#   }
-#   # set seed
-#   set.seed(123)
-#   # syntethic GCPs
-#   n_gcp <- 15
-#   gcp_syn <- data.frame(
-#     id = seq_len(n_gcp),
-#     x = runif(n_gcp, 0, 3000),
-#     y = runif(n_gcp, 0, 2500)
-#   )
-#   # get longitude for each GCP by starting at z + x with x*y and sd=0.3
-#   # this makes the map non-linear and noi polynomial fits perfectly
-#   gcp_syn$longitude <- -25 + 0.02 * gcp_syn$x + 1e-6 * gcp_syn$x * gcp_syn$y +
-#     rnorm(n_gcp, sd = 0.3)
-#   # same approach for latitude
-#   gcp_syn$latitude <- 70 - 0.013 * gcp_syn$y + 2e-6 * gcp_syn$x^2 +
-#     rnorm(n_gcp, sd = 0.3)
-#   # loop over polynomial order
-#   for (i in 1:3) {
-#     # run get_gcp_residuals with polynomial order i
-#     res <- get_gcp_residuals(gcp_syn, transform_method = paste0("poly_", i))
-#     # get fitted coordinates from GDAL
-#     gdal_pos <- gdal_fitted(gcp_syn, order = i)
-#     # check that fitted coordinates from get_gcp_residuals and GDAL are equal
-#     # very small tollerance applied 
-#     # longitude
-#     expect_equal(res$fitted_lon, gdal_pos[, 1], tolerance = 1e-8)
-#     # latitude
-#     expect_equal(res$fitted_lat, gdal_pos[, 2], tolerance = 1e-8)
-#   }
-#   # check same thing with auto using different numbers of GCPs to trigger
-#   # different polynomial orders
-#   # use 15 GCPs but will only use first and second poly
-#   for (a in c(5,8, 15)){
-#     # run get_gcp_residuals with polynomial order a
-#     res <- get_gcp_residuals(gcp_syn[1:a, ], transform_method = "auto")
-#     # get fitted coordinates from GDAL
-#     gdal_pos <- gdal_fitted(gcp_syn[1:a, ])
-#     # check that fitted coordinates from get_gcp_residuals and GDAL are equal
-#     # very small tollerance applied 
-#     # longitude
-#     expect_equal(res$fitted_lon, gdal_pos[, 1], tolerance = 1e-8)
-#     # latitude
-#     expect_equal(res$fitted_lat, gdal_pos[, 2], tolerance = 1e-8)
-#   }
-# })
+# Check that function returns same fitted coordinates as GDAL
+# Fitted coordinates are obtained from gdaltransform if it is installed and
+# working, otherwise from the GDAL results stored in the package
+test_that("get_gcp_residuals returns same fitted coordinates as GDAL", {
+  # load fitted coordinates previously obtained from GDAL
+  gdal_ref <- readRDS(system.file("extdata/gdal_fitted.rds",
+    package = "crstools"
+  ))
+  # synthetic GCPs used to obtain the stored GDAL results
+  gcp_syn <- gdal_ref$gcp
+  # check that we are not on CRAN or CI before calling GDAL
+  on_cran <- !interactive() &&
+    !isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
+  on_ci <- isTRUE(as.logical(Sys.getenv("CI", "false")))
+  # check if gdaltransform is installed and runs without errors
+  gdal_works <- FALSE
+  if (!on_cran && !on_ci && Sys.which("gdaltransform") != "") {
+    gdal_status <- suppressWarnings(system2(
+      "gdaltransform", "--version",
+      stdout = FALSE, stderr = FALSE
+    ))
+    gdal_works <- gdal_status == 0
+  }
+  # helper function to get predicted lon/lat from GDAL
+  gdal_fitted <- function(gcp, order = NULL) {
+    # get arguments
+    gdal_args <- c(rbind(
+      "-gcp",
+      sprintf("%.17g", gcp$x),
+      sprintf("%.17g", gcp$y),
+      sprintf("%.17g", gcp$longitude),
+      sprintf("%.17g", gcp$latitude)
+    ))
+    # polynomial order
+    if (!is.null(order)) {
+      gdal_args <- c(gdal_args, "-order", order)
+    }
+    # transform GCP pixel position with GDAL fit
+    gdal_out <- system2(
+      "gdaltransform",
+      c("-output_xy", gdal_args),
+      input = sprintf("%.17g %.17g", gcp$x, gcp$y),
+      stdout = TRUE
+    )
+    # quit if GDAL failed
+    if (!is.null(attr(gdal_out, "status"))) {
+      stop("gdaltransform failed with status ", attr(gdal_out, "status"))
+    }
+    # quit if not one line per GCP
+    if (length(gdal_out) != nrow(gcp)) {
+      stop(
+        "gdaltransform output has ", length(gdal_out), " lines, expected ",
+        nrow(gcp)
+      )
+    }
+    # read output into matrix with col 1 for lon and col 2 for lat
+    matrix(scan(text = gdal_out, quiet = TRUE), ncol = 2, byrow = TRUE)
+  }
+  # loop over polynomial order
+  for (i in 1:3) {
+    # run get_gcp_residuals with polynomial order i
+    res <- get_gcp_residuals(gcp_syn, transform_method = paste0("poly_", i))
+    # get fitted coordinates from GDAL if it works
+    if (gdal_works) {
+      gdal_pos <- gdal_fitted(gcp_syn, order = i)
+    }
+    # otherwise use the stored GDAL results
+    if (!gdal_works) {
+      gdal_pos <- gdal_ref[[paste0("poly_", i)]]
+    }
+    # check that fitted coordinates from get_gcp_residuals and GDAL are equal
+    # very small tolerance applied
+    # longitude
+    expect_equal(res$fitted_lon, gdal_pos[, 1], tolerance = 1e-8)
+    # latitude
+    expect_equal(res$fitted_lat, gdal_pos[, 2], tolerance = 1e-8)
+  }
+  # check same thing with auto using different numbers of GCPs to trigger
+  # different polynomial orders
+  # use 15 GCPs but will only use first and second poly
+  for (a in c(5, 8, 15)) {
+    # run get_gcp_residuals with auto on the first a GCPs
+    res <- get_gcp_residuals(gcp_syn[1:a, ], transform_method = "auto")
+    # get fitted coordinates from GDAL if it works
+    if (gdal_works) {
+      gdal_pos <- gdal_fitted(gcp_syn[1:a, ])
+    }
+    # otherwise use the stored GDAL results
+    if (!gdal_works) {
+      gdal_pos <- gdal_ref[[paste0("auto_", a)]]
+    }
+    # check that fitted coordinates from get_gcp_residuals and GDAL are equal
+    # very small tolerance applied
+    # longitude
+    expect_equal(res$fitted_lon, gdal_pos[, 1], tolerance = 1e-8)
+    # latitude
+    expect_equal(res$fitted_lat, gdal_pos[, 2], tolerance = 1e-8)
+  }
+})
                
                
