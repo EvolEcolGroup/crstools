@@ -14,8 +14,8 @@ data frame should have the following columns:
 \item \code{id}: An identifier for each GCP (numeric).
 \item \code{x}: The x-coordinate of the GCP (in pixel space).
 \item \code{y}: The y-coordinate of the GCP (in pixel space).
-\item \code{lon}: The longitude of the GCP (georeferenced).
-\item \code{lat}: The latitude of the GCP (georeferenced).
+\item \code{longitude}: The longitude of the GCP (georeferenced).
+\item \code{latitude}: The latitude of the GCP (georeferenced).
 }}
 
 \item{target_pts}{A data frame containing the target points to transform.
@@ -66,4 +66,13 @@ Note that, when using \code{tps} as a method, you might get warnings that the
 the endpoints:" This is often benign warning and indicates that the optimal
 smoothing parameter is at or near the boundary of the search space (matching
 the default lamba 1e-4, and thus approaching perfect interpolation).
+}
+\examples{
+pts_df <- readRDS(system.file(
+  "extdata/europe_gcp_georef.RDS",
+  package = "crstools"
+))
+target_df <- data.frame(pt_id = 1:2, x = c(477, 2014), y = c(554, 1311))
+get_pts_coords(pts_df, target_df)
+
 }

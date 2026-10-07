@@ -17,8 +17,8 @@
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
 #'   - `y`: The y-coordinate of the GCP (in pixel space).
-#'   - `lon`: The longitude of the GCP (georeferenced).
-#'   - `lat`: The latitude of the GCP (georeferenced).
+#'   - `longitude`: The longitude of the GCP (georeferenced).
+#'   - `latitude`: The latitude of the GCP (georeferenced).
 #'
 #' @param output_path A character string representing the file path to the input
 #'   image. (`_warp.tif`) will be appended to it.
@@ -60,14 +60,14 @@
 georeference_img <- function(image_obj, gcp, output_path = NULL,
                              transform_method = c(
                                "auto", "poly_1", "poly_2",
-                               "poly_3", "tps", "auto"
+                               "poly_3", "tps"
                              )) {
   transform_method <- match.arg(transform_method)
   # now convert transform method into the appropriate GDAL option
   gdal_transform_option <- switch(transform_method,
-    "poly_1" = "-order 1",
-    "poly_2" = "-order 2",
-    "poly_3" = "-order 3",
+    "poly_1" = c("-order", "1"),
+    "poly_2" = c("-order", "2"),
+    "poly_3" = c("-order", "3"),
     "tps" = "-tps",
     "auto" = NULL
   )

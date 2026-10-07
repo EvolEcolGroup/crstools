@@ -21,8 +21,8 @@
 #'     \item \code{id}: An identifier for each GCP (numeric).
 #'     \item \code{x}: The x-coordinate of the GCP (in pixel space).
 #'     \item \code{y}: The y-coordinate of the GCP (in pixel space).
-#'     \item \code{lon}: The longitude of the GCP (georeferenced).
-#'     \item \code{lat}: The latitude of the GCP (georeferenced).
+#'     \item \code{longitude}: The longitude of the GCP (georeferenced).
+#'     \item \code{latitude}: The latitude of the GCP (georeferenced).
 #'   }
 #'
 #' @param target_pts A data frame containing the target points to transform.
@@ -58,6 +58,15 @@
 #'   }
 #'
 #' @export
+#' @examples
+#' pts_df <- readRDS(system.file(
+#'   "extdata/europe_gcp_georef.RDS",
+#'   package = "crstools"
+#' ))
+#' target_df <- data.frame(pt_id = 1:2, x = c(477, 2014), y = c(554, 1311))
+#' get_pts_coords(pts_df, target_df)
+#'
+
 get_pts_coords <- function(
   gcp,
   target_pts,
@@ -99,7 +108,7 @@ get_pts_coords <- function(
   # Validate required columns in GCP dataframe
   # ---------------------------------------------------------------------------
 
-  required_gcp_cols <- c("id", "x", "y", "lon", "lat")
+  required_gcp_cols <- c("id", "x", "y", "longitude", "latitude")
 
   missing_gcp_cols <- setdiff(required_gcp_cols, names(gcp))
 
@@ -150,9 +159,7 @@ get_pts_coords <- function(
   # ---------------------------------------------------------------------------
 
   if (transform_method == "auto") {
-    if (n_gcp >= 10) {
-      transform_method <- "poly_3"
-    } else if (n_gcp >= 6) {
+    if (n_gcp >= 6) {
       transform_method <- "poly_2"
     } else {
       transform_method <- "poly_1"
@@ -174,12 +181,12 @@ get_pts_coords <- function(
 
   if (transform_method == "poly_1") {
     lon_model <- stats::lm(
-      lon ~ x + y,
+      longitude ~ x + y,
       data = gcp
     )
 
     lat_model <- stats::lm(
-      lat ~ x + y,
+      latitude ~ x + y,
       data = gcp
     )
 
@@ -193,12 +200,12 @@ get_pts_coords <- function(
 
   if (transform_method == "poly_2") {
     lon_model <- stats::lm(
-      lon ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      longitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
       data = gcp
     )
 
     lat_model <- stats::lm(
-      lat ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      latitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
       data = gcp
     )
 
@@ -212,7 +219,7 @@ get_pts_coords <- function(
 
   if (transform_method == "poly_3") {
     lon_model <- stats::lm(
-      lon ~ x + y +
+      longitude ~ x + y +
         I(x^2) + I(y^2) + I(x * y) +
         I(x^3) + I(y^3) +
         I(x^2 * y) + I(x * y^2),
@@ -220,7 +227,7 @@ get_pts_coords <- function(
     )
 
     lat_model <- stats::lm(
-      lat ~ x + y +
+      latitude ~ x + y +
         I(x^2) + I(y^2) + I(x * y) +
         I(x^3) + I(y^3) +
         I(x^2 * y) + I(x * y^2),
@@ -248,13 +255,13 @@ get_pts_coords <- function(
 
     lon_model <- fields::Tps(
       x = gcp_xy,
-      Y = gcp$lon,
+      Y = gcp$longitude,
       lambda = lambda
     )
 
     lat_model <- fields::Tps(
       x = gcp_xy,
-      Y = gcp$lat,
+      Y = gcp$latitude,
       lambda = lambda
     )
 
@@ -278,8 +285,8 @@ get_pts_coords <- function(
   result$x_internal <- NULL
   result$y_internal <- NULL
 
-  result$lon <- as.numeric(lon_pred)
-  result$lat <- as.numeric(lat_pred)
+  result$longitude <- as.numeric(lon_pred)
+  result$latitude <- as.numeric(lat_pred)
 
   return(result)
 }

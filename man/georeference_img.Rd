@@ -8,7 +8,7 @@ georeference_img(
   image_obj,
   gcp,
   output_path = NULL,
-  transform_method = c("auto", "poly_1", "poly_2", "poly_3", "tps", "auto")
+  transform_method = c("auto", "poly_1", "poly_2", "poly_3", "tps")
 )
 }
 \arguments{
@@ -23,8 +23,8 @@ frame should have the following columns:
 \item \code{id}: An identifier for each GCP (numeric).
 \item \code{x}: The x-coordinate of the GCP (in pixel space).
 \item \code{y}: The y-coordinate of the GCP (in pixel space).
-\item \code{lon}: The longitude of the GCP (georeferenced).
-\item \code{lat}: The latitude of the GCP (georeferenced).
+\item \code{longitude}: The longitude of the GCP (georeferenced).
+\item \code{latitude}: The latitude of the GCP (georeferenced).
 }}
 
 \item{output_path}{A character string representing the file path to the input
