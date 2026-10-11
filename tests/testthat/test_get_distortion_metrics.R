@@ -120,19 +120,30 @@ test_that("Check areal_scale values for equal area projection", {
 
 # check that for a conformal projection we `angular_distortion` values of 0
 test_that("Check angular_distortion values for conformal projection", {
-  skip_if_not_installed("PROJ", "0.7.0")
   library(rnaturalearth)
   library(sf)
   s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
   s_am_conformal <- suggest_crs(s_america_sf, distortion = "conformal")
   s_america_proj <- st_transform(s_america_sf, s_am_conformal$proj4)
-  # check for ellipsoid (exact Tissot factors, angular distortion should be 0)
-  metrics_ell <- get_distortion_metrics(s_america_proj, method = "ellipsoid")
-  expect_true(all(round(metrics_ell$angular_distortion, 1) == 0))
   # check for sphere (approximation,small residual angular distortion)
   metrics_sph <- get_distortion_metrics(s_america_proj, method = "sphere", 
                                         radius = 100)
   expect_true(all(round(metrics_sph$angular_distortion, 1) < 1))
+  # check for ellipsoid (exact Tissot factors, angular distortion should be 0)
+  skip_if_not_installed("PROJ", "0.7.0")
+  # check if PROJ can compute distortion factors (check for proj.db file)
+  proj_db_check <- try(
+    PROJ::proj_factors(cbind(0, 0), "EPSG:3857"),
+    silent = TRUE
+  )
+  skip_if(
+    inherits(proj_db_check, "try-error") ||
+      # check if areal_scale is NA
+      all(is.na(proj_db_check[, "areal_scale"])),
+    "PROJ cannot compute distortion factors (proj.db not found)"
+  )
+  metrics_ell <- get_distortion_metrics(s_america_proj, method = "ellipsoid")
+  expect_true(all(round(metrics_ell$angular_distortion, 1) == 0))
 })
 
 
