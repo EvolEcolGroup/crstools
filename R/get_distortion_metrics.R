@@ -64,37 +64,38 @@
 #' s_america_proj <- st_transform(s_america_sf, s_am_equal_area$proj4)
 #' metrics <- get_distortion_metrics(s_america_proj)
 #' summary(metrics[c("areal_scale", "angular_distortion")])
-
 get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
                                    method = c("sphere", "ellipsoid")) {
   # check that method is valid
   # use sphere (first element) as default if not specified
   method <- rlang::arg_match(method)
-  
+
   # generate a grid of points across the extent of data
   grid <- tissot_grid_centres(data, centres = centres)
   coord_grid <- grid$centres
   orig_crs <- grid$crs
-  
+
   # because the distortion metrics are only meaningful in a projected CRS,
   # check that the data is not in a geographic CRS
   if (sf::st_is_longlat(orig_crs)) {
     stop(
       paste0(
         "data uses a geographic (longitude/latitude) CRS; distortion ",
-        "metrics will be uninformative. Please project data before ", 
+        "metrics will be uninformative. Please project data before ",
         "calling get_distortion_metrics()."
       )
     )
   }
-  
+
   # if method is "ellipsoid", check that PROJ is installed and can be used
   if (method == "ellipsoid") {
-    # check if PROJ is installed 
+    # check if PROJ is installed
     if (!rlang::is_installed("PROJ", version = "0.7.0")) {
       # stop if not
-      stop(paste0("Package 'PROJ' version >= 0.7.0 is required to run this ",
-                  "fucntion Please install it."), call. = FALSE)
+      stop(paste0(
+        "Package 'PROJ' version >= 0.7.0 is required to run this ",
+        "fucntion Please install it."
+      ), call. = FALSE)
     }
     metrics <- tryCatch(
       # use ellopsoid via the PROJ package to estimate distortion
@@ -109,10 +110,11 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
           # don't show the call in the warning message
           call. = FALSE
         )
-      })
-      return(metrics)
+      }
+    )
+    return(metrics)
   }
-  
+
   # if PROJ failed or default used, estimate distortion on sphere
   distortion_sphere(coord_grid, orig_crs, radius = radius)
 }
@@ -137,7 +139,7 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
     diag(dist_mat) <- NA
     radius <- as.numeric(min(dist_mat, na.rm = TRUE)) / 4
   }
-  
+
   # compute Tissot metrics for each grid point
   metrics <- lapply(seq_len(nrow(coord_grid)), function(i) {
     cbind(
@@ -151,7 +153,7 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
       )
     )
   })
-  
+
   # return data frame with metrics
   metrics <- do.call(rbind, metrics)
   rownames(metrics) <- NULL
@@ -159,17 +161,17 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
 }
 
 
-# function to compute distortion metrid on the elipsoid usign 
+# function to compute distortion metrid on the elipsoid usign
 # the PROJ package
 distortion_ellipsoid <- function(coord_grid, crs) {
-  # use PROJ to estimate distortion 
+  # use PROJ to estimate distortion
   factors <- PROJ::proj_factors(coord_grid, crs$wkt)
-  
-  # check the values are not all NaN 
+
+  # check the values are not all NaN
   if (all(is.na(factors[, "areal_scale"]))) {
     stop("PROJ returned only missing values", call. = FALSE)
   }
-  
+
   # return a data frame with the metrics
   metrics <- data.frame(
     # point location
@@ -188,7 +190,7 @@ distortion_ellipsoid <- function(coord_grid, crs) {
     semi_minor = factors[, "tissot_semiminor"],
     row.names = NULL
   )
-  
+
   # return the metrics
   return(metrics)
 }
@@ -211,12 +213,12 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
   # get the bounding box of the data and its CRS
   data_bbox <- sf::st_bbox(data)
   orig_crs <- sf::st_crs(data_bbox)
-  
+
   # check that the data has a defined CRS
   if (is.na(orig_crs)) {
     stop("data must have a defined CRS")
   }
-  
+
   # if the bbox is not in crs 4326, we should reproject it
   bbox_4326 <- data_bbox
   if (orig_crs != sf::st_crs("EPSG:4326")) {
@@ -224,7 +226,7 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
       sf::st_transform(sf::st_as_sfc(data_bbox), sf::st_crs("EPSG:4326"))
     )
   }
-  
+
   # if centres is a vector of two elements (not a list),
   # generate the grid of centres
   if (!inherits(centres, "list") && length(centres) == 2) {
@@ -235,7 +237,7 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
     # fall on or beyond xmin/xmax. Remove first and last values.
     lon_seq <- lon_seq[-c(1, length(lon_seq))]
     lat_seq <- lat_seq[-c(1, length(lat_seq))]
-    
+
     # create a grid of points from the sequences
     coord_grid <- as.matrix(expand.grid(lon_seq, lat_seq))
     # if we have a list, we use the values in the list
@@ -251,10 +253,10 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
       )
     )
   }
-  
+
   # set the column names of the grid to "lon" and "lat"
   colnames(coord_grid) <- c("lon", "lat")
-  
+
   # return the complete output
   list(centres = coord_grid, crs = orig_crs)
 }
@@ -264,25 +266,24 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
 # from a lon/lat point using the standard spherical direct geodetic formula.
 # The radius is the assumed radius of the Earth.
 destination_point <- function(lon, lat, bearing, distance, radius = 6378137) {
-  
   # unname the inputs
   lon <- unname(lon)
   lat <- unname(lat)
-  
+
   # convert to radians
   lat1 <- lat * pi / 180
   lon1 <- lon * pi / 180
   brng <- bearing * pi / 180
   # calculate the angular distance
   delta <- distance / radius
-  
+
   # calculate the destination point
   lat2 <- asin(sin(lat1) * cos(delta) + cos(lat1) * sin(delta) * cos(brng))
   lon2 <- lon1 + atan2(
     sin(brng) * sin(delta) * cos(lat1),
     cos(delta) - sin(lat1) * sin(lat2)
   )
-  
+
   # return the destination point in degrees
   c(lon = lon2 * 180 / pi, lat = lat2 * 180 / pi)
 }
@@ -294,7 +295,7 @@ tissot_point_metrics <- function(lon, lat, crs, radius) {
   # move north (bearing 0) and east (bearing 90)
   north <- destination_point(lon, lat, bearing = 0, distance = radius)
   east <- destination_point(lon, lat, bearing = 90, distance = radius)
-  
+
   # create an sf object with the three points (lon/lat) and project them
   # into the target CRS
   pts <- sf::st_as_sf(
@@ -307,35 +308,34 @@ tissot_point_metrics <- function(lon, lat, crs, radius) {
   )
   # get the projected coordinates of the three points
   pts_proj <- sf::st_coordinates(sf::st_transform(pts, crs))
-  
+
   # get displacement of the projected north/east steps from the projected
   # centre, used to approximate the local partial derivative
   v_meridian <- pts_proj[2, ] - pts_proj[1, ]
   v_parallel <- pts_proj[3, ] - pts_proj[1, ]
-  
+
   # scale factors along the meridian (h) and parallel (k)
   h <- sqrt(sum(v_meridian^2)) / radius
   k <- sqrt(sum(v_parallel^2)) / radius
-  
+
   # calculate angle between the projected meridian and parallel directions
   cos_theta <- sum(v_meridian * v_parallel) /
     (sqrt(sum(v_meridian^2)) * sqrt(sum(v_parallel^2)))
   theta <- acos(pmin(pmax(cos_theta, -1), 1))
-  
+
   # calculate areal scale factor, as the ratio of projected to true area
   areal_scale <- h * k * sin(theta)
-  
+
   # calculate semi-major (a) and semi-minor (b) axes of the indicatrix
   a_prime <- sqrt(max(0, h^2 + k^2 + 2 * areal_scale))
   b_prime <- sqrt(max(0, h^2 + k^2 - 2 * areal_scale))
   semi_major <- (a_prime + b_prime) / 2
   semi_minor <- (a_prime - b_prime) / 2
-  
+
   # calculate maximum angular deformation
   angular_distortion <-
-    2 * asin((semi_major - semi_minor) / (semi_major + semi_minor)) *
-    180 / pi
-  
+    2 * asin((semi_major - semi_minor) / (semi_major + semi_minor)) * 180 / pi
+
   # return the complete output
   data.frame(
     areal_scale = areal_scale,
@@ -345,8 +345,3 @@ tissot_point_metrics <- function(lon, lat, crs, radius) {
     semi_minor = semi_minor
   )
 }
-
-
-
-
-
