@@ -64,11 +64,11 @@
 #' sqrt(mean(res$res_km^2))
 #' # mean loo rmse
 #' sqrt(mean(res$loo_km^2, na.rm = TRUE))
-
 get_gcp_residuals <- function(gcp,
-                          transform_method = c(
-                            "auto", "poly_1", "poly_2", "poly_3"
-                          )) {
+                              transform_method = c(
+                                "auto", "poly_1",
+                                "poly_2", "poly_3"
+                              )) {
   transform_method <- match.arg(transform_method)
 
   # check if gcp is a dataframe with the right columns

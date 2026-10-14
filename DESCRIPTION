@@ -40,6 +40,7 @@ Suggests:
     knitr,
     rmarkdown,
     pastclim,
+    PROJ (>= 0.7.0),
     rnaturalearth,
     rnaturalearthdata,
     tidyterra,
