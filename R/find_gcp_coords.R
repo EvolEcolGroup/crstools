@@ -1,8 +1,8 @@
 #' Find the coordinates (longitude and latitude) of the ground control points
 #' (GCPs) in a given image.
 #'
-#'
-#' @details NOTE: There are two conventions on how to define pixel coordinates. In this
+#' @details NOTE: There are two conventions on how to define pixel coordinates.
+#' In this
 #' function (and more generally throughout `crstools`), the origin is defined as
 #' the bottom left corner of the image, with x increasing to the right and y
 #' increasing upwards. This is consistent with the convention used in many image
@@ -10,7 +10,7 @@
 #' the origin at the top left corner, with y increasing downwards. Be sure to
 #' check which convention your image processing library uses when working with
 #' pixel coordinates.
-
+#'
 #' @param gcp A data frame containing the GCPs with columns `id`, `x`, `y`,
 #'   `longitude`, and `latitude`.
 #' @param sf_obj the reference map, as an sf object (already cut to the extend
