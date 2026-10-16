@@ -175,13 +175,13 @@ sf::st_crs(s_america_sf)$proj4string
 
 Now, let's use `suggest_crs()` to get a suggestion for an equal-area CRS 
 for this map:
-```{r}
+```{r get_suggested_crs}
 library(crstools)
 s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
 ```
 
 The function returns a list with two elements: `proj4` and `wkt`. Let's see:
-```{r}
+```{r check_suggested_crs}
 s_am_equal_area
 ```
 
@@ -199,7 +199,7 @@ characterize local distortions due to map projection. The `geom_tissot()` functi
 adds Tissot's indicatrix to a map, showing how circles are distorted by the
 projection. Let's use it to add Tissot's indicatrix to the map of South America
 with the equal-area projection:
-```{r}
+```{r plot_s_america_tissot}
 ggplot(data = s_america_sf) +
   geom_sf() +
   geom_tissot() +
@@ -208,7 +208,7 @@ ggplot(data = s_america_sf) +
 ```
 
 Let us compare this to a simple Mercator projection:
-```{r}
+```{r plot_s_america_tissot_mercator}
 ggplot(data = s_america_sf) +
   geom_sf() +
   geom_tissot() +
@@ -220,14 +220,52 @@ We can see how the area of the circles is distorted in the Mercator projection
 as we move further away from the equator, while the equidistant projection
 preserves the area of the circles better.
 
+While Tissot indicatrix provide an intuitive visual representation of
+distortion, we can also quantify the distortion introduced by our map 
+projections using the `get_distortion_metrics` function. This function
+calculates distortion metrics, such as areal and angular distortion, 
+for a given projected map, allowing us to compare the performance of
+different projections.
+
 We could use the CRS to also project the `sf` object, and check that the new
 CRS was indeed adopted:
-```{r}
+```{r get_distortion_metrics_equal_area}
 s_america_sf_equal_area <- sf::st_transform(s_america_sf, s_am_equal_area$proj4)
 sf::st_crs(s_america_sf_equal_area)$proj4string
+dis_s_america_sf_equal_area <- get_distortion_metrics(s_america_sf_equal_area, 
+                                                      radius = 100)
 ```
 
-Now we can plot it, and the new CRS will be used automatically:
+We can now see that our equal area projection has indeed preserved the area of
+the features, as the areal distortion is euqal to 1, while the angular
+distortion is not preserved.
+```{r get_distortion_metrics_summary_equal_area}
+summary(round(dis_s_america_sf_equal_area
+              [c("areal_scale", "angular_distortion")]), 1)
+```
+
+We can see how this changes if we use a Mercator projection instead:
+```{r get_distortion_metrics_mercator}
+s_america_sf_mercator <- sf::st_transform(s_america_sf, "+proj=merc")
+sf::st_crs(s_america_sf_mercator)$proj4string
+dis_s_america_sf_mercator <- get_distortion_metrics(s_america_sf_mercator, 
+                                                    radius = 100)
+```
+
+By viewing the summary of the distortion metrics, we can see that the areal
+distortion is not preserved in the Mercator projection, while the angular
+distortion is preserved.
+```{r get_distortion_metrics_summary_mercator}
+summary(round(dis_s_america_sf_mercator
+              [c("areal_scale", "angular_distortion")]), 1)
+```
+
+As here we want a map projection that preserves area, we can see that both 
+visually as well as quantitatively, the equal area projection is a better
+choice than the Mercator. 
+
+Now we can plot our map with the equal area projection, and see that 
+the new CRS will be used automatically:
 ```{r plot_sa_equidist_proj}
 ggplot() +
   geom_sf(data = s_america_sf_equal_area) +
@@ -255,18 +293,18 @@ europe_r <- region_slice(
 ```
 
 A quick summary of the object gives the CRS, as "coord. ref.":
-```{r}
+```{r check_raster_europe}
 europe_r
 ```
 
 We can inspect in more detail the CRS for a terra object with:
-```{r}
+```{r check_crs_raster_europe}
 terra::crs(europe_r)
 ```
 which gives a WKT.
 
 We can ask for the "Proj4" string with:
-```{r}
+```{r check_crs_proj4_raster_europe}
 terra::crs(europe_r, proj = TRUE)
 ```
 
@@ -283,7 +321,7 @@ ggplot() +
 ```
 
 We can now ask for a suggestion for an equal-area projection for this raster:
-```{r}
+```{r get_suggest_crs_raster_europe}
 europe_r_equal_area <- suggest_crs(europe_r, distortion = "equal_area")
 europe_r_equal_area
 ```
@@ -299,7 +337,7 @@ ggplot() +
 
 Let us use the Tissot indicatrix to assess how effective the equal area
 projection is:
-```{r}
+```{r plot_raster_europe_tissot}
 ggplot() +
   geom_spatraster(data = europe_r) +
   scale_fill_viridis_c(na.value = "transparent") +
@@ -309,7 +347,7 @@ ggplot() +
 ```
 
 Comparing it to the Mercator projection:
-```{r}
+```{r plot_raster_europe_tissot_mercator}
 ggplot() +
   geom_spatraster(data = europe_r) +
   scale_fill_viridis_c(na.value = "transparent") +
@@ -318,12 +356,36 @@ ggplot() +
   theme_minimal()
 ```
 
-We can also use the CRS to reproject the raster, and check that it has been
-applied correctly:
-```{r}
+As before we can check the distortion metrics for the equal area projection:
+```{r get_distortion_metrics_raster_europe_equal_area}
 europe_r_equal_area <- terra::project(europe_r, europe_r_equal_area$proj4)
 terra::crs(europe_r_equal_area, proj = TRUE)
+dis_europe_r_equal_area <- get_distortion_metrics(europe_r_equal_area, 
+                                                  radius = 100)
 ```
+
+And we can see check the summary of the distortion metrics:
+```{r get_distortion_metrics_summary_raster_europe_equal_area}
+summary(round(dis_europe_r_equal_area
+              [c("areal_scale", "angular_distortion")]), 1)
+```
+
+We can do the same for the Mercator projection:
+```{r get_distortion_metrics_raster_europe_mercator}
+europe_r_mercator <- terra::project(europe_r, "+proj=merc")
+terra::crs(europe_r_mercator, proj = TRUE)
+dis_europe_r_mercator <- get_distortion_metrics(europe_r_mercator, 
+                                               radius = 100)
+```
+
+And assess the distortion metrics:
+```{r get_distortion_metrics_summary_raster_europe_mercator}
+summary(round(dis_europe_r_mercator
+              [c("areal_scale", "angular_distortion")]), 1)
+```
+
+We can see that the equal area projection preserves the areal distortion, while
+the Mercator projection does not.
 
 If we now plot the raster, the CRS is automatically added:
 ```{r plot_raster_europe_ea_proj}
