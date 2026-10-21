@@ -59,10 +59,11 @@
 #' ))
 #' res <- get_gcp_residuals(gcp_df, transform_method = "poly_1")
 #' res
-#' # mean rmse
+#' # mean error (km)
 #' mean(res$res_km)
+#' # root mean square error (km)
 #' sqrt(mean(res$res_km^2))
-#' # mean loo rmse
+#' # leave-one-out root mean square error (km), no GCPs with leverage 1 (NA)
 #' sqrt(mean(res$loo_km^2, na.rm = TRUE))
 get_gcp_residuals <- function(gcp,
                               transform_method = c(
