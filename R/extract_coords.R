@@ -20,7 +20,7 @@
 #' # Georeference the image using the created GCPs
 #' # get the gcp coordinates
 #' gcp_europe_coords <-
-#'   readRDS(system.file("vignettes/img/europe_gcp_georef_v2.RDS",
+#'   readRDS(system.file("extdata/europe_gcp_georef.RDS",
 #'     package = "crstools"
 #'   ))
 #' # get the path to the image

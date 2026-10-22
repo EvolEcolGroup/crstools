@@ -15,8 +15,8 @@
 #' the default lamba 1e-4, and thus approaching perfect interpolation).
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
-#'   dataframe can be produced with the \code{draw_gcp_points} function. This
-#'   data frame should have the following columns:
+#'   dataframe can be produced with the [choose_gcp()] and [find_gcp_coords()]
+#'   functions. This data frame should have the following columns:
 #'   \itemize{
 #'     \item \code{id}: An identifier for each GCP (numeric).
 #'     \item \code{x}: The x-coordinate of the GCP (in pixel space).
@@ -26,9 +26,9 @@
 #'   }
 #'
 #' @param target_pts A data frame containing the target points to transform.
-#'   This dataframe must contain the following columns:
+#'   This dataframe must contain the following columns (any other column, such
+#'   as an identifier for each point, is kept in the output):
 #'   \itemize{
-#'     \item \code{id}: An identifier for each target point.
 #'     \item \code{x} or \code{cx}: The x-coordinate of the point
 #'       (in pixel space).
 #'     \item \code{y} or \code{cy}: The y-coordinate of the point
@@ -51,10 +51,10 @@
 #'
 #' @return A data frame containing:
 #'   \itemize{
-#'     \item \code{id}: The original target point identifier.
-#'     \item Pixel coordinate columns from the original dataframe.
-#'     \item \code{lon}: Estimated longitude.
-#'     \item \code{lat}: Estimated latitude.
+#'     \item All the columns of \code{target_pts} (including the pixel
+#'       coordinates).
+#'     \item \code{longitude}: Estimated longitude.
+#'     \item \code{latitude}: Estimated latitude.
 #'   }
 #'
 #' @export

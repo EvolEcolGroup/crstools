@@ -1,5 +1,5 @@
 #' Find the coordinates (longitude and latitude) of the ground control points
-#' (GCPs) in a given image.
+#' (GCPs) in a given image
 #'
 #' @details NOTE: There are two conventions on how to define pixel coordinates.
 #' In this

@@ -3,7 +3,7 @@
 \name{find_gcp_coords}
 \alias{find_gcp_coords}
 \title{Find the coordinates (longitude and latitude) of the ground control points
-(GCPs) in a given image.}
+(GCPs) in a given image}
 \usage{
 find_gcp_coords(gcp, sf_obj)
 }
@@ -20,7 +20,7 @@ corresponding geographic coordinates.
 }
 \description{
 Find the coordinates (longitude and latitude) of the ground control points
-(GCPs) in a given image.
+(GCPs) in a given image
 }
 \details{
 NOTE: There are two conventions on how to define pixel coordinates.

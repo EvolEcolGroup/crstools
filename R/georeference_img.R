@@ -12,16 +12,19 @@
 #'   georeferencing.
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
-#'   dataframe can be produced with the *draw_gcp_points* function. This data
-#'   frame should have the following columns:
+#'   dataframe can be produced with the [choose_gcp()] and [find_gcp_coords()]
+#'   functions. This data frame should have the following columns:
 #'   - `id`: An identifier for each GCP (numeric).
 #'   - `x`: The x-coordinate of the GCP (in pixel space).
 #'   - `y`: The y-coordinate of the GCP (in pixel space).
 #'   - `longitude`: The longitude of the GCP (georeferenced).
 #'   - `latitude`: The latitude of the GCP (georeferenced).
 #'
-#' @param output_path A character string representing the file path to the input
-#'   image. (`_warp.tif`) will be appended to it.
+#' @param output_path A character string giving the path (without extension)
+#'   used to name the output files: `.tif` is appended to it for the image with
+#'   the GCPs, and `_warp.tif` for the warped image. If NULL (the default), the
+#'   path of the input image without its extension is used if `image_obj` is a
+#'   file path, and "map" (in the working directory) if it is an array.
 #'
 #' @param transform_method A character string specifying the transformation
 #'   method to be used for warping the image. Options are "poly_1" (first order
@@ -44,7 +47,7 @@
 #'   package = "crstools"
 #' )
 #' # load a set of GCPs (or we could create them using the choose_gcp()
-#' # and find_gcp() functions)
+#' # and find_gcp_coords() functions)
 #' gcp_df <- readRDS(system.file(
 #'   "extdata/europe_gcp_georef.RDS",
 #'   package = "crstools"
@@ -52,10 +55,7 @@
 #' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
 #' warped_img <- georeference_img(
 #'   image_obj = img_path, gcp = gcp_df,
-#'   output_path = tempfile(
-#'     pattern = "georef_img_", tmpdir = tempdir(),
-#'     fileext = ".tif"
-#'   )
+#'   output_path = tempfile(pattern = "georef_img_")
 #' )
 georeference_img <- function(image_obj, gcp, output_path = NULL,
                              transform_method = c(
@@ -77,8 +77,7 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
     (!all(c("id", "x", "y", "longitude", "latitude")
     %in% colnames(gcp)))) {
     stop(
-      "gcp must be a data frame with columns: id, x, y, longitude
-      , latitude"
+      "gcp must be a data frame with columns: id, x, y, longitude, latitude"
     )
   }
   # nolint end
@@ -89,7 +88,7 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
   if (any(is.na(gcp))) {
     stop(
       "gcp dataframe contains NA values. Please fill them. ",
-      "Did you forget to use `find_gcp()`?"
+      "Did you forget to use `find_gcp_coords()`?"
     )
   }
 
