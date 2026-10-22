@@ -8,8 +8,8 @@
 #'   specified and inherit.aes = TRUE (the default), it is combined with the
 #'   default mapping at the top level of the plot. You must supply mapping if
 #'   there is no plot mapping.
-#' @param data The data to be displayed in this layer. There are two options: A
-#'   sf object or a SpatRaster object
+#' @param data The data to be displayed in this layer: an sf, SpatRaster or
+#'   SpatVector object. If NULL (the default), the data of the plot is used.
 #' @param na.rm If FALSE, the default, missing values are removed with a
 #'   warning. If TRUE, missing values are silently removed.
 #' @param show.legend logical. Should this layer be included in the legends? NA,
@@ -25,11 +25,13 @@
 #'   indicatrix, or a vector of length 2 with the number of rows and columns to
 #'   generate such a grid automatically. The latter is passed to [pretty()] to
 #'   get pretty breaks, and the exact number of Tissot's circles might differ
-#'   from the input numbers (see [pretty()] for details. It defaults to c(5,5).
+#'   from the input numbers (see [pretty()] for details). It defaults to
+#'   c(5,5).
 #' @param radius The radius of the circles (see [sf::st_buffer()] for an
 #'   explanation of how units are created; we recommend that you explicitly
-#'   state your using with the `units::as_units()`, e.g `units::as_units(100,
-#'   "km")`
+#'   state your units with `units::as_units()`, e.g. `units::as_units(100,
+#'   "km")`). If NULL (the default), it is set to a quarter of the minimum
+#'   distance between the centres.
 #' @param fill The fill colour of the circles
 #' @param alpha The transparency of the circles
 #' @param ... Other arguments passed on to [ggplot2::geom_sf()]
@@ -69,7 +71,7 @@ geom_tissot <- function(
       # create an sf object
       data <- sf::st_as_sf(sf::st_as_sfc(data_bbox))
     } else {
-      stop("data must be either an sf object or a SpatRaster object")
+      stop("data must be an sf, SpatRaster, or SpatVector object")
     }
   }
   c(

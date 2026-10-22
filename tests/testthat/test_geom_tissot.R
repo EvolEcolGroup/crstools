@@ -28,6 +28,13 @@ test_that("geom_tissot draws indicatrices in each facet", {
   }
 })
 
+test_that("geom_tissot rejects unsupported data", {
+  expect_error(
+    geom_tissot(data = data.frame(x = 1)),
+    "data must be an sf, SpatRaster, or SpatVector object"
+  )
+})
+
 skip_if_not_installed("rnaturalearth")
 skip_if_not_installed("rnaturalearthdata")
 
