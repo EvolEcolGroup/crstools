@@ -42,20 +42,12 @@ test_that("test whole world", {
 
   # check Hammer projection
   ref_proj4_hammer <- "+proj=hammer +lon_0=0 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_hammer <- 'PROJCS["ProjWiz_Custom_Hammer_Aitoff",
-                           GEOGCS["GCS_WGS_1984",
-                                  DATUM["D_WGS_1984",
-                                        SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                  PRIMEM["Greenwich",0.0],
-                                  UNIT["Degree",0.0174532925199433]],
-                           PROJECTION["Hammer_Aitoff"],
-                           PARAMETER["False_Easting",0.0],
-                           PARAMETER["False_Northing",0.0],
-                           PARAMETER["Central_Meridian",0],
-                           UNIT["Meter",1.0]]'
-
   expect_equal(whole_eqa_list$hammer$proj4, ref_proj4_hammer)
-  expect_true(sf::st_crs(whole_eqa_list$hammer$wkt) == sf::st_crs(ref_wkt_hammer))
+  # the ESRI WKT for Hammer cannot be parsed by PROJ, so the WKT is generated
+  # by PROJ from the proj4 string
+  expect_true(
+    sf::st_crs(whole_eqa_list$hammer$wkt) == sf::st_crs(ref_proj4_hammer)
+  )
 
   # check Eckert IV projection
   ref_proj4_eck4 <- "+proj=eck4 +lon_0=0 +datum=WGS84 +units=m +no_defs"

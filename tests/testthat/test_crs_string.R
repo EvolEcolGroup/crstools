@@ -44,7 +44,7 @@ project_with_both <- function(crs_obj) {
 }
 
 test_that("proj4 and wkt strings define the same projection", {
-  prjs <- setdiff(eval(formals(crs_string)$prj), "hammer")
+  prjs <- eval(formals(crs_string)$prj)
   for (prj in prjs) {
     if (prj == "tpeqd") {
       # lat0, lat1, lat2, lon0 store lat_1, lon_1, lat_2, lon_2
@@ -61,4 +61,22 @@ test_that("proj4 and wkt strings define the same projection", {
 test_that("Winkel Tripel uses the standard parallel 50.467", {
   wintri <- crs_string("wintri", NA, NA, NA, NA, 10, NA, "WGS84", "m")
   expect_match(wintri$proj4, "+lat_1=50.467", fixed = TRUE)
+})
+
+test_that("Hammer wkt can be used by sf and terra", {
+  for (datum in c("WGS84", "ETRS89", "NAD83")) {
+    for (unit in c("m", "ft")) {
+      hammer <- crs_string("hammer", NA, NA, NA, NA, 10, NA, datum, unit)
+      expect_false(is.na(sf::st_crs(hammer$wkt)$proj4string))
+      coords <- project_with_both(hammer)
+      expect_false(anyNA(coords$wkt))
+      expect_equal(coords$wkt, coords$proj4, tolerance = 1e-6)
+    }
+  }
+  hammer <- crs_string("hammer", NA, NA, NA, NA, 10, NA, "WGS84", "m")
+  pts <- terra::vect(cbind(c(-30, 40), c(-20, 60)), crs = "EPSG:4326")
+  expect_equal(
+    terra::crds(terra::project(pts, hammer$wkt)),
+    terra::crds(terra::project(pts, hammer$proj4))
+  )
 })
