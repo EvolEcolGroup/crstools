@@ -56,11 +56,13 @@ test_that("geom_tissot works with differnet inputs",{
 
   tmp1 <- tempfile(fileext = ".svg")
   tmp2 <- tempfile(fileext = ".svg")
-  suppressMessages(ggplot2::ggsave(tmp1, p2))
+  suppressMessages(ggplot2::ggsave(tmp1, p1))
   suppressMessages(ggplot2::ggsave(tmp2, p2))
   expect_true(tools::md5sum(tmp1) == tools::md5sum(tmp2))
 
   # check that it works with terra
+skip_if_not_installed("tidyterra")
+skip_if_not_installed("pastclim")
 library(terra)
 library(tidyterra)
 # get example dataset from cran
