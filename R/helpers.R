@@ -11,6 +11,20 @@ normalise_lon <- function(lon, lon0) {
 }
 
 ################################################################################
+# Get the extent (xmin, xmax, ymin, ymax) of a bbox in longitude and latitude,
+# reprojecting it if it is in a projected CRS
+bbox_lonlat_ext <- function(x_bbox) {
+  x_crs <- sf::st_crs(x_bbox)
+  if (!is.na(x_crs) && !isTRUE(sf::st_is_longlat(x_crs))) {
+    # transforming the bbox densifies its edges, so that its extent is not
+    # underestimated
+    x_bbox <- sf::st_transform(x_bbox, sf::st_crs("EPSG:4326"))
+  }
+  # note that sf::st_bbox returns c(xmin, ymin, xmax, ymax)
+  as.vector(x_bbox)[c(1, 3, 2, 4)]
+}
+
+################################################################################
 # Function to round values for world maps
 round_world_coords <- function(value, scale, round_cm) {
   val <- NULL

@@ -18,7 +18,10 @@ suggest_crs(
 }
 \arguments{
 \item{x}{A vector of four numeric values representing the extent of the map
-(xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.}
+in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
+(in longitude and latitude), or a SpatRaster or sf object. SpatRaster and
+sf objects in a projected CRS are reprojected to longitude and latitude
+(EPSG:4326) to compute their extent.}
 
 \item{distortion}{The type of distortion to be minimized. Options are
 "equal_area", "conformal", "equidistant" and "compromise". Default is

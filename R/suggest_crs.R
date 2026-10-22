@@ -14,7 +14,10 @@
 #'   "equal_area", "conformal", "equidistant" and "compromise". Default is
 #'   "equal_area".
 #' @param x A vector of four numeric values representing the extent of the map
-#'   (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
+#'   in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
+#'   (in longitude and latitude), or a SpatRaster or sf object. SpatRaster and
+#'   sf objects in a projected CRS are reprojected to longitude and latitude
+#'   (EPSG:4326) to compute their extent.
 #' @param round_cm Logical. If TRUE, the central meridian is rounded to the
 #'   nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned,
@@ -72,10 +75,13 @@ suggest_crs <- function(
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
-    x_ext <- as.vector(terra::ext(x))
+    x_bbox <- sf::st_bbox(terra::ext(x))
+    if (terra::crs(x) != "") {
+      sf::st_crs(x_bbox) <- terra::crs(x)
+    }
+    x_ext <- bbox_lonlat_ext(x_bbox)
   } else if (inherits(x, "sf")) {
-    # note that sf::st_bbox returns c(xmin, ymin, xmax, ymax)
-    x_ext <- as.vector(sf::st_bbox(x))[c(1, 3, 2, 4)]
+    x_ext <- bbox_lonlat_ext(sf::st_bbox(x))
   } else if (is.numeric(x) && length(x) == 4) {
     x_ext <- x
   } else {
