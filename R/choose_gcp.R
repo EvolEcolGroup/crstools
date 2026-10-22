@@ -65,7 +65,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
         paste(required_cols, collapse = ", ")
       )
     }
-    last_id <- max(gcp$id, na.rm = TRUE)
+    last_id <- if (nrow(gcp) > 0) max(gcp$id, na.rm = TRUE) else 0
     # check that the image dimensions are stored as an attribute
     if (!is.null(attr(gcp, "image_dims"))) {
       img_dims <- attr(gcp, "image_dims")
@@ -120,12 +120,18 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
     )
     # combine the gcp tables
     gcp <- rbind(gcp, gcp_df_new)
+    # add the ids of the new points on the image
+    graphics::text(
+      gcp_df_new$x,
+      gcp_df_new$y,
+      labels = gcp_df_new$id,
+      col = col,
+      pos = 2
+    )
   }
 
   # readd the dims of the image as an attribute
   attr(gcp, "image_dims") <- dim(img)
-
-  graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
 
   # return the gcp dataframe
   return(gcp)

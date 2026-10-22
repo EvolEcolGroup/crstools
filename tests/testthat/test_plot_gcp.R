@@ -69,3 +69,40 @@ test_that("choose_gcp uses columns as x and rows as y for non-square images", {
   expect_equal(gcp$y, c(5, 15))
   expect_equal(attr(gcp, "image_dims"), c(20, 40, 3))
 })
+
+test_that("choose_gcp works if no point is clicked", {
+  img <- array(0.5, dim = c(20, 40, 3))
+  local_mocked_bindings(
+    x11 = function(...) grDevices::pdf(NULL),
+    .package = "grDevices"
+  )
+  local_mocked_bindings(locator = function(...) NULL, .package = "graphics")
+  gcp <- choose_gcp(img)
+  grDevices::dev.off()
+  expect_equal(nrow(gcp), 0)
+  expect_equal(attr(gcp, "image_dims"), c(20, 40, 3))
+  # previous GCPs are returned unchanged
+  old_gcp <- data.frame(id = 1, x = 2, y = 3, longitude = NA, latitude = NA)
+  gcp <- choose_gcp(img, gcp = old_gcp)
+  grDevices::dev.off()
+  expect_equal(gcp[, names(old_gcp)], old_gcp)
+})
+
+test_that("choose_gcp works with an empty gcp data frame", {
+  img <- array(0.5, dim = c(20, 40, 3))
+  local_mocked_bindings(
+    x11 = function(...) grDevices::pdf(NULL),
+    .package = "grDevices"
+  )
+  local_mocked_bindings(
+    locator = function(...) list(x = 1, y = 2),
+    .package = "graphics"
+  )
+  empty_gcp <- data.frame(
+    id = integer(0), x = numeric(0), y = numeric(0),
+    longitude = numeric(0), latitude = numeric(0)
+  )
+  expect_no_warning(gcp <- choose_gcp(img, gcp = empty_gcp))
+  grDevices::dev.off()
+  expect_equal(gcp$id, 1)
+})
