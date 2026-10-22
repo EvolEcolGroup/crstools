@@ -377,3 +377,25 @@ test_that("get_pts_coords errors if GCPs contain NA values", {
     "'gcp' contains NA values"
   )
 })
+
+# -----------------------------------------------------------------------------
+# Collinear GCPs
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords errors if GCPs are collinear", {
+  gcp_line <- data.frame(
+    id = 1:4,
+    x = c(0, 50, 100, 150),
+    y = c(0, 50, 100, 150),
+    longitude = c(-3.0, -2.95, -2.9, -2.85),
+    latitude = c(55.0, 55.05, 55.1, 55.15)
+  )
+  expect_error(
+    get_pts_coords(
+      gcp = gcp_line,
+      target_pts = basic_target,
+      transform_method = "poly_1"
+    ),
+    "not sufficiently spread to fit a polynomial of order 1"
+  )
+})

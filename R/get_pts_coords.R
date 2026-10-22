@@ -198,9 +198,6 @@ get_pts_coords <- function(
       latitude ~ x + y,
       data = gcp
     )
-
-    lon_pred <- stats::predict(lon_model, pred_df)
-    lat_pred <- stats::predict(lat_model, pred_df)
   }
 
   # ---------------------------------------------------------------------------
@@ -217,9 +214,6 @@ get_pts_coords <- function(
       latitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
       data = gcp
     )
-
-    lon_pred <- stats::predict(lon_model, pred_df)
-    lat_pred <- stats::predict(lat_model, pred_df)
   }
 
   # ---------------------------------------------------------------------------
@@ -242,7 +236,21 @@ get_pts_coords <- function(
         I(x^2 * y) + I(x * y^2),
       data = gcp
     )
+  }
 
+  # ---------------------------------------------------------------------------
+  # Predict with the polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method %in% c("poly_1", "poly_2", "poly_3")) {
+    # lm() drops terms (NA coefficients) if the GCPs do not allow to estimate
+    # them
+    if (anyNA(stats::coef(lon_model)) || anyNA(stats::coef(lat_model))) {
+      stop(
+        "The GCPs are not sufficiently spread to fit a polynomial of order ",
+        substr(transform_method, 6, 6), " (e.g. they are collinear)."
+      )
+    }
     lon_pred <- stats::predict(lon_model, pred_df)
     lat_pred <- stats::predict(lat_model, pred_df)
   }
