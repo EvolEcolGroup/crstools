@@ -219,12 +219,12 @@ tissot_grid_centres <- function(data, centres = c(5, 5)) {
     stop("data must have a defined CRS")
   }
 
-  # if the bbox is not in crs 4326, we should reproject it
+  # if the bbox is not in crs 4326, we should reproject it; as in
+  # geom_tissot(), transform the bbox itself, as its edges are densified
+  # (transforming only its corners can underestimate the extent)
   bbox_4326 <- data_bbox
   if (orig_crs != sf::st_crs("EPSG:4326")) {
-    bbox_4326 <- sf::st_bbox(
-      sf::st_transform(sf::st_as_sfc(data_bbox), sf::st_crs("EPSG:4326"))
-    )
+    bbox_4326 <- sf::st_transform(data_bbox, sf::st_crs("EPSG:4326"))
   }
 
   # if centres is a vector of two elements (not a list),

@@ -100,6 +100,28 @@ test_that("sf, SpatVector and SpatRaster give the same results", {
 
 
 
+# check that the grid of centres is the same used by geom_tissot()
+test_that("grid of centres matches geom_tissot()", {
+  area <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(
+      rbind(c(-80, -60), c(-30, -60), c(-30, 10), c(-80, 10), c(-80, -60))
+    )),
+    crs = 4326
+  ))
+  area_laea <- sf::st_transform(area, "+proj=laea +lat_0=-25 +lon_0=-55")
+  metrics <- get_distortion_metrics(area_laea)
+  p <- ggplot2::ggplot(area_laea) +
+    ggplot2::geom_sf() +
+    geom_tissot()
+  circles <- ggplot2::ggplot_build(p)$data[[2]]$geometry
+  tissot_centres <- sf::st_coordinates(suppressWarnings(
+    sf::st_centroid(sf::st_transform(circles, 4326))
+  ))
+  expect_setequal(unique(round(tissot_centres[, "X"])), unique(metrics$lon))
+  expect_setequal(unique(round(tissot_centres[, "Y"])), unique(metrics$lat))
+})
+
+
 ####################
 ## Theoretical checks
 ####################
