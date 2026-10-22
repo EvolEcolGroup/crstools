@@ -6,14 +6,14 @@
 #'
 #' Distortion metrics can be computed using two different `method`:
 #'
-#' - `"sphere"`: for each GP, the function takes a short step, of lenght
-#' `radius` due north and due eat on a sphere with fixed radius. Point and steps
-#' are then projected to the CRS of `data`, and the distortion metrics are
-#' computed. Because the Earth is not a perfect sphere, this method is less
+#' - `"sphere"`: for each grid point, the function takes a short step, of
+#' length `radius`, due north and due east on a sphere with fixed radius. Point
+#' and steps are then projected to the CRS of `data`, and the distortion metrics
+#' are computed. Because the Earth is not a perfect sphere, this method is less
 #' accurate (below 1°) than the `"ellipsoid"` method, but it does not require
 #' the `PROJ` library and the PROJ R package installed.
 #' - `"ellipsoid"`: distortion metrics are computed using the `PROJ` R library
-#' via the [PROJ::proj_factors()] fucntion, using the ellipsoid defined by the
+#' via the [PROJ::proj_factors()] function, using the ellipsoid defined by the
 #' CRS and therefore being more accurate than the `"sphere"` method. This method
 #' requires the `PROJ` R package (>= 0.7.0) installed. Currently, the latter
 #' works from binary for Windows and Linux, but not for MacOS. The latter can be
@@ -37,7 +37,7 @@
 #'   'PROJ'. R package version 0.7.0. <https://CRAN.R-project.org/package=PROJ>
 #'
 #' @param data An sf, SpatRaster, or SpatVector object. This has to be projected
-#'   to the CRS intened to assess.
+#'   to the CRS intended to assess.
 #' @param centres Either a list with elements "lng" and "lat", or a vector of
 #'   length 2 with the number of rows/columns for an automatic grid, as in
 #'   [geom_tissot()]. Default is c(5, 5).
@@ -49,8 +49,8 @@
 #'   of each grid point, placed on a sphere, and estimates distortion from their
 #'   displacement. `"ellipsoid"` uses [PROJ::proj_factors()], which accounts for
 #'   the flattening of the ellipsoid and requires the suggested package 'PROJ'
-#'   (>= 0.7.0); if this fails, a warning is issued and `"sphere"` is used
-#'   instead. Default is `"sphere"`.
+#'   (>= 0.7.0); if PROJ cannot compute the metrics, an error is raised (use
+#'   `"sphere"` instead). Default is `"sphere"`.
 #' @return A data.frame with one row per grid point: `lon`, `lat` (centre of the
 #'   point, in EPSG:4326), `areal_scale`, `angular_distortion` (degrees),
 #'   `intersection_angle` (degrees), `semi_major`, and `semi_minor`.
@@ -94,20 +94,20 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
       # stop if not
       stop(paste0(
         "Package 'PROJ' version >= 0.7.0 is required to run this ",
-        "fucntion Please install it."
+        "function. Please install it."
       ), call. = FALSE)
     }
     metrics <- tryCatch(
-      # use ellopsoid via the PROJ package to estimate distortion
+      # use ellipsoid via the PROJ package to estimate distortion
       distortion_ellipsoid(coord_grid, orig_crs),
-      # if PROJ fails, fall back to sphere method
+      # if PROJ fails, stop suggesting the sphere method
       error = function(e) {
         stop(
           paste0(
             "PROJ could not compute the distortion metrics (",
             conditionMessage(e), "). Please use method = \"sphere\"."
           ),
-          # don't show the call in the warning message
+          # don't show the call in the error message
           call. = FALSE
         )
       }
@@ -115,7 +115,7 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
     return(metrics)
   }
 
-  # if PROJ failed or default used, estimate distortion on sphere
+  # otherwise, estimate distortion on a sphere
   distortion_sphere(coord_grid, orig_crs, radius = radius)
 }
 
@@ -161,7 +161,7 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
 }
 
 
-# function to compute distortion metrid on the elipsoid usign
+# function to compute distortion metrics on the ellipsoid using
 # the PROJ package
 distortion_ellipsoid <- function(coord_grid, crs) {
   # use PROJ to estimate distortion
@@ -185,7 +185,7 @@ distortion_ellipsoid <- function(coord_grid, crs) {
     # intersection angle between projected meridian and parallel
     # (90 no distortion)
     intersection_angle = factors[, "meridian_parallel_angle"] * 180 / pi,
-    # semi axes of elipses (1 no distorion)
+    # semi axes of ellipses (1 no distortion)
     semi_major = factors[, "tissot_semimajor"],
     semi_minor = factors[, "tissot_semiminor"],
     row.names = NULL
