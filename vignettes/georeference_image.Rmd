@@ -134,7 +134,7 @@ gcp_europe_coords
 ```
 
 Finally, we can use the `georeference_img()` function to georeference the image
-using the GCPs. This fucntion has an `tranform_method` argument that sets 
+using the GCPs. This function has a `transform_method` argument that sets 
 how pixel coordinates are mapped onto the geographic ones. The best choice
 depends on the type of map that we want to georeference and the number of 
 GCPs that we have: 
@@ -162,7 +162,7 @@ well spread across the image.
 For maps taken directly from publications or other digital sources, like in our
 case, a first- or second-order polynomial transformation is usually sufficient:
 ```{r georeference_image_1}
-georeferenced_image <- georeference_img(img_path, gcp_europe_coords, 
+georeferenced_image <- georeference_img(img_path, gcp_europe_coords,
                                         transform_method = "auto")
 ```
 
@@ -231,7 +231,7 @@ that pull the transformation towards them. The leave-one-out residuals (LOO)
 (`"loo_km"`) solve this issue by measurin the error of each GCP when it is not
 used to fit the transformation.
 
-However, when teh number of the GCPs equals the minimum required by the chosen
+However, when the number of the GCPs equals the minimum required by the chosen
 tyransormation method, like in our case (6 GCPs for a second-order polynomial
 transformation), the transformation passes through all the GCPs, so all
 residuals are zero and the leverages are 1. LOO residuals are instead all `NA`, 
@@ -306,7 +306,7 @@ as the map now aligns better with the geographic coordinates of the GCPs.
 We can also quantify the improvement by looking at the residuals of the GCPs:
 ```{r get_residuals_2}
 gcp_residuals_v2 <- get_gcp_residuals(gcp_europe_coords_v2,
-                                   transform_method = "auto")
+                                      transform_method = "auto")
 
 gcp_residuals_v2[, c("id", "res_km", "leverage", "loo_km")]
 ```

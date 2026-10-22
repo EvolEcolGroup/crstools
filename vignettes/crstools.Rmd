@@ -232,23 +232,24 @@ CRS was indeed adopted:
 ```{r get_distortion_metrics_equal_area}
 s_america_sf_equal_area <- sf::st_transform(s_america_sf, s_am_equal_area$proj4)
 sf::st_crs(s_america_sf_equal_area)$proj4string
-dis_s_america_sf_equal_area <- get_distortion_metrics(s_america_sf_equal_area, 
+dis_s_america_sf_equal_area <- get_distortion_metrics(s_america_sf_equal_area,
                                                       radius = 100)
 ```
 
 We can now see that our equal area projection has indeed preserved the area of
-the features, as the areal distortion is euqal to 1, while the angular
+the features, as the areal distortion is equal to 1, while the angular
 distortion is not preserved.
 ```{r get_distortion_metrics_summary_equal_area}
-summary(round(dis_s_america_sf_equal_area
-              [c("areal_scale", "angular_distortion")]), 1)
+summary(round(
+  dis_s_america_sf_equal_area[c("areal_scale", "angular_distortion")], 1
+))
 ```
 
 We can see how this changes if we use a Mercator projection instead:
 ```{r get_distortion_metrics_mercator}
 s_america_sf_mercator <- sf::st_transform(s_america_sf, "+proj=merc")
 sf::st_crs(s_america_sf_mercator)$proj4string
-dis_s_america_sf_mercator <- get_distortion_metrics(s_america_sf_mercator, 
+dis_s_america_sf_mercator <- get_distortion_metrics(s_america_sf_mercator,
                                                     radius = 100)
 ```
 
@@ -256,8 +257,9 @@ By viewing the summary of the distortion metrics, we can see that the areal
 distortion is not preserved in the Mercator projection, while the angular
 distortion is preserved.
 ```{r get_distortion_metrics_summary_mercator}
-summary(round(dis_s_america_sf_mercator
-              [c("areal_scale", "angular_distortion")]), 1)
+summary(round(
+  dis_s_america_sf_mercator[c("areal_scale", "angular_distortion")], 1
+))
 ```
 
 As here we want a map projection that preserves area, we can see that both 
@@ -360,28 +362,30 @@ As before we can check the distortion metrics for the equal area projection:
 ```{r get_distortion_metrics_raster_europe_equal_area}
 europe_r_equal_area <- terra::project(europe_r, europe_r_equal_area$proj4)
 terra::crs(europe_r_equal_area, proj = TRUE)
-dis_europe_r_equal_area <- get_distortion_metrics(europe_r_equal_area, 
+dis_europe_r_equal_area <- get_distortion_metrics(europe_r_equal_area,
                                                   radius = 100)
 ```
 
 And we can see check the summary of the distortion metrics:
 ```{r get_distortion_metrics_summary_raster_europe_equal_area}
-summary(round(dis_europe_r_equal_area
-              [c("areal_scale", "angular_distortion")]), 1)
+summary(round(
+  dis_europe_r_equal_area[c("areal_scale", "angular_distortion")], 1
+))
 ```
 
 We can do the same for the Mercator projection:
 ```{r get_distortion_metrics_raster_europe_mercator}
 europe_r_mercator <- terra::project(europe_r, "+proj=merc")
 terra::crs(europe_r_mercator, proj = TRUE)
-dis_europe_r_mercator <- get_distortion_metrics(europe_r_mercator, 
-                                               radius = 100)
+dis_europe_r_mercator <- get_distortion_metrics(europe_r_mercator,
+                                                radius = 100)
 ```
 
 And assess the distortion metrics:
 ```{r get_distortion_metrics_summary_raster_europe_mercator}
-summary(round(dis_europe_r_mercator
-              [c("areal_scale", "angular_distortion")]), 1)
+summary(round(
+  dis_europe_r_mercator[c("areal_scale", "angular_distortion")], 1
+))
 ```
 
 We can see that the equal area projection preserves the areal distortion, while
