@@ -45,8 +45,8 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
   if (!inherits(georef_image, "SpatRaster")) {
     stop("georef_image must be a SpatRaster object.")
   }
-  # check that the image has a CRS
-  if (is.null(terra::crs(georef_image))) {
+  # check that the image has a CRS (terra returns an empty string if not)
+  if (terra::crs(georef_image) == "") {
     stop("georef_image must have a coordinate reference system (CRS).")
   }
   # check if coords_df is a dataframe
@@ -63,7 +63,7 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
         paste(required_cols, collapse = ", ")
       )
     }
-    last_id <- max(coords_df$id, na.rm = TRUE)
+    last_id <- if (nrow(coords_df) > 0) max(coords_df$id, na.rm = TRUE) else 0
   } else {
     coords_df <- data.frame(
       id = integer(0),
@@ -73,19 +73,8 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
     last_id <- 0
   }
 
-  # plot the image
+  # open a new window and plot the image
   grDevices::x11()
-  # plot the image
-  plot(
-    0,
-    0,
-    xlim = c(0, dim(georef_image)[1]),
-    ylim = c(0, dim(georef_image)[2]),
-    type = "n",
-    xlab = "x_pixels",
-    ylab = "y_pixels"
-  )
-  # add the image to the plot
   terra::plot(georef_image)
 
   if (last_id > 0) {
@@ -108,24 +97,13 @@ extract_coords <- function(georef_image, coords_df = NULL, col = "red") {
   # extract coordinates from the image
   coords <- graphics::locator(n = 1000, type = "p")
 
-  # create id for points
-  id <- (last_id + 1):(length(coords$x) + last_id)
-
-  # plot the points on the image
-  if (last_id == 0) {
-    graphics::text(coords$x, coords$y, labels = id, col = col, pos = 2)
-  } else {
-    graphics::text(
-      coords_df$longitude,
-      coords_df$latitude,
-      labels = seq_len(last_id),
-      col = col,
-      pos = 2
-    )
-    graphics::text(coords$x, coords$y, labels = id, col = col, pos = 2)
-  }
-
+  # locator() returns NULL if no point was clicked
   if (!is.null(coords)) {
+    # create id for points
+    id <- last_id + seq_along(coords$x)
+    # add the ids of the new points on the image
+    graphics::text(coords$x, coords$y, labels = id, col = col, pos = 2)
+
     coords_df_new <- data.frame(
       id = id,
       longitude = coords$x,
