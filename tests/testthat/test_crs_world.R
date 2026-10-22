@@ -292,7 +292,7 @@ test_that("test whole world", {
   expect_true(sf::st_crs(whole_comp_list$natearth$wkt) == sf::st_crs(ref_wkt_natearth))
 
   # check Winkel Tripel projection
-  ref_proj4_wintri <- "+proj=wintri +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_proj4_wintri <- "+proj=wintri +lon_0=0 +lat_1=50.467 +datum=WGS84 +units=m +no_defs"
   ref_wkt_wintri <- 'PROJCS["ProjWiz_Custom_Winkel_Tripel",
                            GEOGCS["GCS_WGS_1984",
                                   DATUM["D_WGS_1984",

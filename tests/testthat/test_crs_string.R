@@ -29,3 +29,36 @@ test_that("generate crs string correctly", {
   # check that proj4 is the same as wkt
   expect_true(sf::st_crs(test_string$wkt) == sf::st_crs(test_string$proj4))
 })
+
+# project a few points with both the proj4 and the wkt strings
+project_with_both <- function(crs_obj) {
+  pts <- sf::st_as_sf(
+    data.frame(lon = c(-30, 0, 10, 25, 40), lat = c(-20, 0, 35, 50, 60)),
+    coords = c("lon", "lat"),
+    crs = 4326
+  )
+  list(
+    proj4 = sf::st_coordinates(sf::st_transform(pts, crs_obj$proj4)),
+    wkt = sf::st_coordinates(sf::st_transform(pts, crs_obj$wkt))
+  )
+}
+
+test_that("proj4 and wkt strings define the same projection", {
+  prjs <- setdiff(eval(formals(crs_string)$prj), "hammer")
+  for (prj in prjs) {
+    if (prj == "tpeqd") {
+      # lat0, lat1, lat2, lon0 store lat_1, lon_1, lat_2, lon_2
+      crs_obj <- crs_string(prj, NA, 34, -117, 46, 16, NA, "WGS84", "m")
+    } else {
+      crs_obj <- crs_string(prj, NA, 30, 20, 50, 10, NA, "WGS84", "m")
+    }
+    coords <- project_with_both(crs_obj)
+    expect_false(anyNA(coords$proj4), label = prj)
+    expect_equal(coords$wkt, coords$proj4, tolerance = 1e-6, label = prj)
+  }
+})
+
+test_that("Winkel Tripel uses the standard parallel 50.467", {
+  wintri <- crs_string("wintri", NA, NA, NA, NA, 10, NA, "WGS84", "m")
+  expect_match(wintri$proj4, "+lat_1=50.467", fixed = TRUE)
+})

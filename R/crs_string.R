@@ -394,7 +394,10 @@ crs_string <- function(
 
     # Winkel Tripel
     "wintri" = {
-      proj_str <- paste0(proj_str, " +lon_0=", lon0)
+      # lat_1 must be given explicitly: when a CRS is built from a PROJ
+      # string without it (e.g. by sf or terra), PROJ sets it to 0 rather
+      # than to the standard value of 50.467 used in the WKT
+      proj_str <- paste0(proj_str, " +lon_0=", lon0, " +lat_1=50.467")
       wkt_str <- paste0(
         wkt_str,
         'PARAMETER["Central_Meridian",',
