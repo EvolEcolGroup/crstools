@@ -65,17 +65,18 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   }
 
   # plot the image
+  # the image array has dimensions rows (height) x columns (width) x channels
   plot(
     0,
     0,
-    xlim = c(0, dim(img)[1]),
-    ylim = c(0, dim(img)[2]),
+    xlim = c(0, dim(img)[2]),
+    ylim = c(0, dim(img)[1]),
     type = "n",
     xlab = "x_pixels",
     ylab = "y_pixels"
   )
   # add the image to the plot
-  graphics::rasterImage(img, 0, 0, dim(img)[1], dim(img)[2])
+  graphics::rasterImage(img, 0, 0, dim(img)[2], dim(img)[1])
 
   # plot and add numbers for an existing set of gcp
   graphics::points(gcp$x, gcp$y, col = col, pch = 19)
