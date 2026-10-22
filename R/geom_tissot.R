@@ -162,7 +162,8 @@ create_indicatrix <- function(data, scales, coord, centres, radius) {
 
   new_data <- data.frame(
     geometry = coord_grid_sf_buffer,
-    PANEL = 1,
+    # keep the panel of the data, so that facets get their own indicatrices
+    PANEL = data$PANEL[1],
     group = -1
   )
   return(new_data)
