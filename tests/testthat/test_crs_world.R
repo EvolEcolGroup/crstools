@@ -198,6 +198,10 @@ test_that("test whole world", {
  UNIT["Meter",1.0]]'
   expect_equal(polar_equidist$proj4, ref_proj4_polar_eqd)
   expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
+  expect_equal(
+    polar_equidist$notes,
+    "Distance correct through or from the South Pole; Central meridian: 0."
+  )
 
   # Oblique Azimuthal equidistant
   oblique_equidist <- suggest_crs(c(-180, 180, -90, 90),

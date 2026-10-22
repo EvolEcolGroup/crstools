@@ -55,7 +55,7 @@ crs_world_equidistant <- function(
       notes = paste0(
         "Distance correct through or from the ",
         pole_str,
-        " Pole; Central meridian: ",
+        "; Central meridian: ",
         lng_central,
         "."
       )
