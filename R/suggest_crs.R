@@ -30,7 +30,7 @@
 #' @param world_equidist if `distortion`="equidistant" for a whole world
 #'   projection, then this parameter should be a list with one of the following
 #'   sets of elements:
-#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``,
+#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central`,
 #'   where `pole` is either -90 or 90 for the South and North Pole,
 #'   respectively, from or through which distances are correct, and
 #'   `lng_central` is the central meridian.

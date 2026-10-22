@@ -107,15 +107,15 @@ test_that("test whole world", {
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(blah = "blah")),
-               "`world_equidistant` must be a list with a `prj` element")
+               "`world_equidist` must be a list with a `prj` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = "blah"),
-               "`world_equidistant` must be a list with a `prj` element")
+               "`world_equidist` must be a list with a `prj` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", lng_central = 0)),
-               "`world_equidistant` must contain a `pole` element")
+               "`world_equidist` must contain a `pole` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", pole = -80, lng_central = 0)),
@@ -124,49 +124,49 @@ test_that("test whole world", {
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", pole = -90)),
-               "`world_equidistant` must contain a `lng_central` element")
+               "`world_equidist` must contain a `lng_central` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
                                                                    lng_centre = 0)),
-               "`world_equidistant` must contain a `lat_centre` element")
+               "`world_equidist` must contain a `lat_centre` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
                                                                    lat_centre = 0)),
-               "`world_equidistant` must contain a `lng_centre` element")
+               "`world_equidist` must contain a `lng_centre` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lng1 = -117,
                                                                                           lat2 = 46,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lat1` element")
+               "`world_equidist` must contain a `lat1` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lat2 = 46,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lng1` element")
+               "`world_equidist` must contain a `lng1` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lng1 = -117,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lat2` element")
+               "`world_equidist` must contain a `lat2` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lng1 = -117,
                                                                                           lat2 = 46)),
-               "`world_equidistant` must contain a `lng2` element")
+               "`world_equidist` must contain a `lng2` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "blah", pole = -90, lng_central = 0)),
-               "the `prj` element of world_equidistant` should be one of")
+               "the `prj` element of `world_equidist` should be one of")
 
 
 
