@@ -352,3 +352,28 @@ test_that("get_pts_coords validates lambda", {
     "'lambda' must be >= 0"
   )
 })
+
+# -----------------------------------------------------------------------------
+# Missing values in GCPs
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords errors if GCPs contain NA values", {
+  gcp_na <- pixel_gcp
+  gcp_na$longitude[1] <- NA
+  for (method in c("auto", "poly_1", "poly_2", "tps")) {
+    expect_error(
+      get_pts_coords(
+        gcp = gcp_na,
+        target_pts = basic_target,
+        transform_method = method
+      ),
+      "'gcp' contains NA values"
+    )
+  }
+  gcp_na <- pixel_gcp
+  gcp_na$x[2] <- NA
+  expect_error(
+    get_pts_coords(gcp = gcp_na, target_pts = basic_target),
+    "'gcp' contains NA values"
+  )
+})
