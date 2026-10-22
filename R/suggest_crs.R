@@ -76,7 +76,7 @@ suggest_crs <- function(
   } else if (inherits(x, "sf")) {
     # note that sf::st_bbox returns c(xmin, ymin, xmax, ymax)
     x_ext <- as.vector(sf::st_bbox(x))[c(1, 3, 2, 4)]
-  } else if (inherits(x, "numeric") && length(x) == 4) {
+  } else if (is.numeric(x) && length(x) == 4) {
     x_ext <- x
   } else {
     stop(

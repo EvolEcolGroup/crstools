@@ -25,3 +25,10 @@ test_that("test input sanity", {
     "Latitude values must be between -90 and 90"
   )
 })
+
+test_that("integer extents are accepted", {
+  expect_identical(
+    suggest_crs(c(-60L, 20L, 40L, 70L)),
+    suggest_crs(c(-60, 20, 40, 70))
+  )
+})
