@@ -10,7 +10,7 @@
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
 #'   image (currenly this can only be of type .jpg).
 #' @param gcp A dataframe of GCPs, containing at least columns `id`, `x`,
-#'   `y`.
+#'   `y`. If NULL (the default), only the image is plotted.
 #' @param col The colour of the points to be plotted on the image. Default is
 #' "red".
 #' @return A plot with the GCPs
@@ -49,18 +49,21 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   }
 
   # if gcp is not null, check if it has the required columns
-  required_cols <- c("id", "x", "y")
-  if (!all(required_cols %in% colnames(gcp))) {
-    stop(
-      "gcp dataframe must contain columns: ",
-      paste(required_cols, collapse = ", ")
-    )
-  }
-  # check that, if the image dimensions are stored as an attribute, they match
-  if (!is.null(attr(gcp, "image_dims"))) {
-    img_dims <- attr(gcp, "image_dims")
-    if (!all(img_dims == dim(img))) {
-      stop("Image dimensions do not match the dimensions stored in gcp.")
+  if (!is.null(gcp)) {
+    required_cols <- c("id", "x", "y")
+    if (!all(required_cols %in% colnames(gcp))) {
+      stop(
+        "gcp dataframe must contain columns: ",
+        paste(required_cols, collapse = ", ")
+      )
+    }
+    # check that, if the image dimensions are stored as an attribute, they
+    # match
+    if (!is.null(attr(gcp, "image_dims"))) {
+      img_dims <- attr(gcp, "image_dims")
+      if (!all(img_dims == dim(img))) {
+        stop("Image dimensions do not match the dimensions stored in gcp.")
+      }
     }
   }
 
@@ -79,6 +82,8 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   graphics::rasterImage(img, 0, 0, dim(img)[2], dim(img)[1])
 
   # plot and add numbers for an existing set of gcp
-  graphics::points(gcp$x, gcp$y, col = col, pch = 19)
-  graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
+  if (!is.null(gcp)) {
+    graphics::points(gcp$x, gcp$y, col = col, pch = 19)
+    graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
+  }
 }

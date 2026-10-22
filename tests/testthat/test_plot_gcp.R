@@ -106,3 +106,11 @@ test_that("choose_gcp works with an empty gcp data frame", {
   grDevices::dev.off()
   expect_equal(gcp$id, 1)
 })
+
+test_that("plot_gcp plots the image alone if gcp is NULL", {
+  img <- array(0.5, dim = c(20, 40, 3))
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off())
+  expect_no_error(plot_gcp(img))
+  expect_error(plot_gcp(img, gcp = list(id = 1, x = 1, y = 1)), "gcp must be")
+})
