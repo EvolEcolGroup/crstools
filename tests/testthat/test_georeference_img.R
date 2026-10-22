@@ -141,3 +141,35 @@ test_that("georeference_img passes GCPs to GDAL at full precision", {
   # error smaller than 1/1000 of a pixel
   expect_true(all(abs(img_ext - expected_ext) < pixel_size / 1000))
 })
+
+test_that("georeference_img checks that there are enough GCPs", {
+  img_file <- tempfile(fileext = ".jpg")
+  jpeg::writeJPEG(array(0.5, dim = c(50, 100, 3)), img_file)
+  gcp <- data.frame(
+    id = 1:5,
+    x = c(10, 90, 90, 10, 50),
+    y = c(10, 10, 40, 40, 25),
+    longitude = c(0, 8, 8, 0, 4.5),
+    latitude = c(40, 40, 43, 43, 41.2)
+  )
+  expect_error(
+    georeference_img(img_file, gcp,
+      output_path = tempfile(), transform_method = "poly_2"
+    ),
+    "At least 6 GCPs are required for transform_method = \"poly_2\""
+  )
+  expect_error(
+    georeference_img(img_file, gcp,
+      output_path = tempfile(), transform_method = "poly_3"
+    ),
+    "At least 10 GCPs are required"
+  )
+  for (method in c("auto", "poly_1", "tps")) {
+    expect_error(
+      georeference_img(img_file, gcp[1:2, ],
+        output_path = tempfile(), transform_method = method
+      ),
+      "At least 3 GCPs are required"
+    )
+  }
+})

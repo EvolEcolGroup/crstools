@@ -93,6 +93,20 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
     )
   }
 
+  # check that there are enough GCPs for the transformation (with too few
+  # GCPs, GDAL silently falls back to a lower order polynomial)
+  min_gcp <- switch(transform_method,
+    "poly_2" = 6,
+    "poly_3" = 10,
+    3
+  )
+  if (nrow(gcp) < min_gcp) {
+    stop(
+      "At least ", min_gcp, " GCPs are required for transform_method = \"",
+      transform_method, "\", but only ", nrow(gcp), " were provided."
+    )
+  }
+
   # check if image is a file path or an array
   if (is.character(image_obj)) {
     if (!file.exists(image_obj)) {
