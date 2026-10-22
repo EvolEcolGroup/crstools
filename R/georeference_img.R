@@ -126,12 +126,19 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
   map_tif <- paste0(output_path, ".tif")
   map_warp_tif <- paste0(output_path, "_warp.tif")
 
+  # Format the GCPs as "-gcp x y longitude latitude" options; rbind() with a
+  # character uses as.character(), which keeps 15 significant digits (going
+  # through a data.frame would use format(), which only keeps 7)
+  gcp_options <- as.vector(
+    rbind("-gcp", gcp$x, gcp$y, gcp$longitude, gcp$latitude)
+  )
+
   # Georeference using GDAL translate with GCPs
   sf::gdal_utils(
     "translate",
     source = map_jpg,
     dest = map_tif,
-    options = c(as.vector(t(cbind("-gcp", gcp[, -1]))), "-of", "GTiff")
+    options = c(gcp_options, "-of", "GTiff")
   )
 
   warp_options <- c(
