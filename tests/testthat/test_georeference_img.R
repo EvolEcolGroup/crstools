@@ -85,3 +85,34 @@ test_that("auto never uses 3rd order polynomial", {
     as.vector(terra::ext(terra::rast(out_poly3)))
   )))
 })
+
+test_that("georeference_img works with an image array", {
+  gcp <- data.frame(
+    id = 1:4,
+    x = c(10, 90, 90, 10),
+    y = c(10, 10, 40, 40),
+    longitude = c(0, 8, 8, 0),
+    latitude = c(40, 40, 43, 43)
+  )
+  # a non-square image, 50 pixels high and 100 pixels wide
+  img_array <- array(0.5, dim = c(50, 100, 3))
+  img_file <- tempfile(fileext = ".jpg")
+  jpeg::writeJPEG(img_array, img_file)
+  out_array <- georeference_img(img_array, gcp,
+    output_path = tempfile(), transform_method = "poly_1"
+  )
+  out_file <- georeference_img(img_file, gcp,
+    output_path = tempfile(), transform_method = "poly_1"
+  )
+  expect_true(file.exists(out_array))
+  expect_equal(
+    as.vector(terra::ext(terra::rast(out_array))),
+    as.vector(terra::ext(terra::rast(out_file)))
+  )
+  # each pixel is 0.1 degrees, so the image covers 10 x 5 degrees
+  expect_equal(
+    as.vector(terra::ext(terra::rast(out_file))),
+    c(xmin = -1, xmax = 9, ymin = 39, ymax = 44),
+    tolerance = 1e-6
+  )
+})

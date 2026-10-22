@@ -116,8 +116,9 @@ georeference_img <- function(image_obj, gcp, output_path = NULL,
     stop("Image must be a file path or an array.")
   }
 
-  # Get dimensions without fully loading image
-  img_height <- dim(jpeg::readJPEG(image_obj))[1]
+  # Get the image height (number of rows); read from the jpeg file, as
+  # image_obj might be an array
+  img_height <- dim(jpeg::readJPEG(map_jpg))[1]
   # Flip Y axis to match GDAL coordinate origin
   gcp$y <- img_height - gcp$y
 
