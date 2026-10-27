@@ -26,7 +26,7 @@
 #' ))
 #' # plot
 #' plot_gcp(img_path, gcp = gcp_europe)
-plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
+plot_gcp <- function(image_obj, gcp, col = "red") {
   # check if image is a file path or an array
   if (is.character(image_obj)) {
     if (!file.exists(image_obj)) {
@@ -42,6 +42,10 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   # check if image is a valid array
   if (length(dim(img)) != 3 || dim(img)[3] != 3) {
     stop("Image must be a colour image with three channels (RGB).")
+  }
+  # check gcp is provided 
+  if (missing(gcp)) {
+    stop("No GCPs provided.")
   }
   # check if gcp is a dataframe
   if (!is.null(gcp) && !is.data.frame(gcp)) {

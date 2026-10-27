@@ -37,6 +37,14 @@ test_that("plot_gcp creates a correct plot with gcp points", {
   )
 })
 
+test_that("fucntion stops if no GCPs provided", {
+  img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+  expect_error(
+    plot_gcp(img_path),
+    "No GCPs provided."
+  )
+})
+
 test_that("plot_gcp uses columns as x and rows as y for non-square images", {
   # image 20 pixels high (rows) and 40 pixels wide (columns)
   img <- array(0.5, dim = c(20, 40, 3))
@@ -105,12 +113,4 @@ test_that("choose_gcp works with an empty gcp data frame", {
   expect_no_warning(gcp <- choose_gcp(img, gcp = empty_gcp))
   grDevices::dev.off()
   expect_equal(gcp$id, 1)
-})
-
-test_that("plot_gcp plots the image alone if gcp is NULL", {
-  img <- array(0.5, dim = c(20, 40, 3))
-  grDevices::pdf(NULL)
-  on.exit(grDevices::dev.off())
-  expect_no_error(plot_gcp(img))
-  expect_error(plot_gcp(img, gcp = list(id = 1, x = 1, y = 1)), "gcp must be")
 })

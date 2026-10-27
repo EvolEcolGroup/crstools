@@ -4,7 +4,7 @@
 \alias{plot_gcp}
 \title{Function to plot the Ground Control Points (GCPs) on an raw image}
 \usage{
-plot_gcp(image_obj, gcp = NULL, col = "red")
+plot_gcp(image_obj, gcp, col = "red")
 }
 \arguments{
 \item{image_obj}{An array representing the image (colour images are generally
