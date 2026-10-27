@@ -14,10 +14,7 @@
 #'   "equal_area", "conformal", "equidistant" and "compromise". Default is
 #'   "equal_area".
 #' @param x A vector of four numeric values representing the extent of the map
-#'   in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
-#'   (in longitude and latitude), or a SpatRaster or sf object. SpatRaster and
-#'   sf objects in a projected CRS are reprojected to longitude and latitude
-#'   (EPSG:4326) to compute their extent.
+#' (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
 #' @param round_cm Logical. If TRUE, the central meridian is rounded to the
 #'   nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned,
@@ -75,13 +72,27 @@ suggest_crs <- function(
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
-    x_bbox <- sf::st_bbox(terra::ext(x))
-    if (terra::crs(x) != "") {
-      sf::st_crs(x_bbox) <- terra::crs(x)
+    # if crs is missing, then assume lat/lon
+    if (is.na(terra::crs(x))) {
+      warning("x has no crs, assuming lat/lon")
+      terra::crs(x) <- "EPSG:4326"
     }
-    x_ext <- bbox_lonlat_ext(x_bbox)
+    # check not projected
+    if (!terra::is.lonlat(x)) {
+      stop("x must be a in geographic coordinates (lon/lat)")
+    }
+    x_ext <- as.vector(terra::ext(x))
   } else if (inherits(x, "sf")) {
-    x_ext <- bbox_lonlat_ext(sf::st_bbox(x))
+    # if crs is missing, then assume lat/lon
+    if (is.na(sf::st_crs(x))) {
+      warning("x has no crs, assuming lat/lon")
+      sf::st_crs(x) <- 4326
+    }
+    # check not projected
+    if (!sf::st_is_longlat(x)) {
+      stop("x must be a in geographic coordinates (lon/lat)")
+    }
+    x_ext <- as.vector(sf::st_bbox(x))[c(1, 3, 2, 4)]
   } else if (is.numeric(x) && is.null(dim(x)) && length(x) == 4) {
     x_ext <- x
   } else {

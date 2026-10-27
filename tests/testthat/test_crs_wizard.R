@@ -13,11 +13,13 @@ test_that("test input sanity", {
 
   # check for correct coordinates
   expect_error(
-    suggest_crs(c(-180, 180, 90, -90), distortion = "equal_area", return_best = FALSE),
+    suggest_crs(c(-180, 180, 90, -90), distortion = "equal_area",
+                return_best = FALSE),
     "lat_min must be smaller than lat_max"
   )
   expect_error(
-    suggest_crs(c(180, -180, -90, 90), distortion = "equal_area", return_best = FALSE),
+    suggest_crs(c(180, -180, -90, 90), distortion = "equal_area",
+                return_best = FALSE),
     "lon_min must be smaller than lon_max"
   )
   expect_error(
@@ -69,7 +71,7 @@ test_that("quiet = TRUE suppresses messages for regional maps", {
   )
 })
 
-test_that("projected sf and SpatRaster objects are reprojected", {
+test_that("projected sf and SpatRaster objects fails", {
   area <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(
       rbind(c(-80, -55), c(-35, -55), c(-35, 12), c(-80, 12), c(-80, -55))
@@ -79,13 +81,9 @@ test_that("projected sf and SpatRaster objects are reprojected", {
   ref <- suggest_crs(area, quiet = TRUE)
   # a projected sf object
   area_merc <- sf::st_transform(area, "+proj=merc +units=km")
-  expect_equal(suggest_crs(area_merc, quiet = TRUE), ref)
-  # a SpatRaster in lon/lat and in a projected CRS
-  area_r <- terra::rast(
-    terra::ext(-80, -35, -55, 12),
-    crs = "EPSG:4326", nrows = 10, ncols = 10
+  expect_error(suggest_crs(area_merc, quiet = TRUE), 
+               "x must be a in geographic coordinates"
   )
-  expect_equal(suggest_crs(area_r, quiet = TRUE), ref)
   # Mercator maps a lon/lat rectangle onto a rectangle, so the extent is the
   # same
   area_3857 <- sf::st_transform(area, 3857)
@@ -93,8 +91,12 @@ test_that("projected sf and SpatRaster objects are reprojected", {
     terra::ext(as.vector(sf::st_bbox(area_3857))[c(1, 3, 2, 4)]),
     crs = "EPSG:3857", nrows = 10, ncols = 10
   )
-  expect_equal(suggest_crs(area_r_3857, quiet = TRUE), ref)
+  expect_error(suggest_crs(area_r_3857, quiet = TRUE), 
+               "x must be a in geographic coordinates"
+  )
   # objects without a CRS are assumed to be in lon/lat
   area_no_crs <- sf::st_set_crs(area, NA)
-  expect_equal(suggest_crs(area_no_crs, quiet = TRUE), ref)
+  expect_warning(suggest_crs(area_no_crs, quiet = TRUE),
+                 "x has no crs, assuming lat/lon",
+  )
 })
