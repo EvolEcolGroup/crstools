@@ -123,7 +123,7 @@ get_pts_coords <- function(
   # functions (and counted when choosing the polynomial order)
   if (anyNA(gcp[required_gcp_cols])) {
     stop(
-      "'gcp' contains NA values. Please fill them. ",
+      "'gcp' contains NA values. ",
       "Did you forget to use `find_gcp_coords()`?"
     )
   }
