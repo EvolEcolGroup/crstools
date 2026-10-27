@@ -390,10 +390,25 @@ test_that("get_pts_coords errors if GCPs are collinear", {
     longitude = c(-3.0, -2.95, -2.9, -2.85),
     latitude = c(55.0, 55.05, 55.1, 55.15)
   )
+  basic_target_2 <- data.frame(
+    id = 1,
+    x = 150,
+    y = 0
+  )
+  # within diagonal
   expect_error(
     get_pts_coords(
       gcp = gcp_line,
       target_pts = basic_target,
+      transform_method = "poly_1"
+    ),
+    "not sufficiently spread to fit a polynomial of order 1"
+  )
+  # outside diagonal
+  expect_error(
+    get_pts_coords(
+      gcp = gcp_line,
+      target_pts = basic_target_2,
       transform_method = "poly_1"
     ),
     "not sufficiently spread to fit a polynomial of order 1"
