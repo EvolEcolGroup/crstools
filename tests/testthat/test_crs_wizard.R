@@ -33,6 +33,13 @@ test_that("integer extents are accepted", {
   )
 })
 
+test_that("matrix are not accepted", {
+  expect_error(
+    suggest_crs(matrix(c(-60, 20, 40, 70), nrow = 2)),
+    "x must be a numeric vector"
+  )
+})
+
 test_that("quiet = TRUE suppresses messages for regional maps", {
   # extents covering east-west, north-south and square regional maps
   extents <- list(

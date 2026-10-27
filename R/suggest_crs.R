@@ -82,7 +82,7 @@ suggest_crs <- function(
     x_ext <- bbox_lonlat_ext(x_bbox)
   } else if (inherits(x, "sf")) {
     x_ext <- bbox_lonlat_ext(sf::st_bbox(x))
-  } else if (is.numeric(x) && length(x) == 4) {
+  } else if (is.numeric(x) && is.null(dim(x)) && length(x) == 4) {
     x_ext <- x
   } else {
     stop(
