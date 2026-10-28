@@ -95,6 +95,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
     0,
     xlim = c(0, dim(img)[2]),
     ylim = c(0, dim(img)[1]),
+    asp = 1,
     type = "n",
     xlab = "x_pixels",
     ylab = "y_pixels"
