@@ -65,7 +65,7 @@ Note that, when using \code{tps} as a method, you might get warnings that the
 "Grid searches over lambda (nugget and sill variances) with minima at
 the endpoints:" This is often benign warning and indicates that the optimal
 smoothing parameter is at or near the boundary of the search space (matching
-the default lamba 1e-4, and thus approaching perfect interpolation).
+the default lambda 1e-4, and thus approaching perfect interpolation).
 }
 \examples{
 pts_df <- readRDS(system.file(

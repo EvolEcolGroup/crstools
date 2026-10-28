@@ -43,7 +43,7 @@ plot_gcp <- function(image_obj, gcp, col = "red") {
   if (length(dim(img)) != 3 || dim(img)[3] != 3) {
     stop("Image must be a colour image with three channels (RGB).")
   }
-  # check gcp is provided 
+  # check gcp is provided
   if (missing(gcp)) {
     stop("No GCPs provided.")
   }

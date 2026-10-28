@@ -222,21 +222,21 @@ gcp_residuals[, c("id", "res_km", "leverage", "loo_km")]
 ```
 
 This function returns the residual of the GCPs (`"res_km"`), which is the
-distance between where we placed the GCP and where the transfomartion actually
+distance between where we placed the GCP and where the transformation actually
 puts it. A GCP with much larger residual that the others is likely to be
 misplaced. However, residuals can be optimistic, since each GCP is used to fit
 the transformation it is compared against. This is particularly true for GCPs
 with high `leverage` values (ranging from 0 to 1), which indicate isolated GCPs
 that pull the transformation towards them. The leave-one-out residuals (LOO)
-(`"loo_km"`) solve this issue by measurin the error of each GCP when it is not
+(`"loo_km"`) solve this issue by measuring the error of each GCP when it is not
 used to fit the transformation.
 
 However, when the number of the GCPs equals the minimum required by the chosen
-tyransormation method, like in our case (6 GCPs for a second-order polynomial
+transformation method, like in our case (6 GCPs for a second-order polynomial
 transformation), the transformation passes through all the GCPs, so all
 residuals are zero and the leverages are 1. LOO residuals are instead all `NA`, 
 as removing any GCP leaves us with too few GCPs to fit the transformation. This 
-indicates that more GCPs are needed to assesse the error. 
+indicates that more GCPs are needed to assess the error. 
 
 For these reasons, we may want to add more GCPs and spread them all across the
 image. To add more points to improve the fit, we use: 
@@ -319,13 +319,13 @@ sqrt(mean(gcp_residuals_v2$res_km^2))
 sqrt(mean(gcp_residuals_v2$loo_km^2, na.rm = TRUE))
 ```
 
-The RMSE tells us that, on average, our GCPs are approxiametely 42 Km away from
-where the transformation places them, while the LKOO RSEM is about three times
-larger. This gap indicates thta the error is thefore larger in parts of the map
+The RMSE tells us that, on average, our GCPs are approximately 42 Km away from
+where the transformation places them, while the LOO RSEM is about three times
+larger. This gap indicates that the error is therefore larger in parts of the map
 that are far way from any GCPs. 
 When we look at the residuals of each GCP, we can see that this is mostly driven
 by the GCPs placed at the edge of the map, such as GCP1 (Portugal),
-GCP4 (Iceland), and GCP3 (Russia), which have highe leverages and residuals
+GCP4 (Iceland), and GCP3 (Russia), which have higher leverages and residuals
 much larger than the rest of the GCPs. This indicates that we may need to 
 add more GCPs in these areas to improve the georeferencing of the image.
 
