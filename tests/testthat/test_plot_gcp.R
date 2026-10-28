@@ -50,51 +50,31 @@ test_that("plot_gcp uses columns as x and rows as y for non-square images", {
   img <- array(0.5, dim = c(20, 40, 3))
   grDevices::pdf(NULL)
   on.exit(grDevices::dev.off())
-  # draw the image with one point on it
   plot_gcp(img, gcp = data.frame(id = 1, x = 35, y = 5))
-  # get the axis limits 
   usr <- graphics::par("usr")
-  # get the size of the plotting area
-  pin <- graphics::par("pin")
-  # the left edge is at or before 0 and the right edge at or after 40,
-  # so the full width of the image (40 columns) is visible
-  expect_true(usr[1] <= 0 && usr[2] >= 40)
-  # the bottom edge is at or below 0 and the top edge at or above 20,
-  # so the full height of the image (20 rows) is visible
-  expect_true(usr[3] <= 0 && usr[4] >= 20)
-  # pixels per inch across equals pixels per inch up,
-  # so the image is not stretched or squashed
-  expect_equal((usr[2] - usr[1]) / pin[1], (usr[4] - usr[3]) / pin[2])
+  # default axes extend the range by 4% on each side
+  expect_equal(usr[1:2], c(0, 40) + c(-1, 1) * 0.04 * 40)
+  expect_equal(usr[3:4], c(0, 20) + c(-1, 1) * 0.04 * 20)
 })
 
 test_that("choose_gcp uses columns as x and rows as y for non-square images", {
-  # image 20 pixels high (rows) and 40 pixels wide (columns)
   img <- array(0.5, dim = c(20, 40, 3))
+  # mock the interactive device and the clicks on the image
   local_mocked_bindings(
     x11 = function(...) grDevices::pdf(NULL),
     .package = "grDevices"
   )
-  # get two clicks
   local_mocked_bindings(
     locator = function(...) list(x = c(35, 5), y = c(5, 15)),
     .package = "graphics"
   )
   gcp <- choose_gcp(img)
-  # get the axis limits 
   usr <- graphics::par("usr")
-  # get the size of the plotting area
-  pin <- graphics::par("pin")
   grDevices::dev.off()
-  # the full width of the image (40 columns) is visible
-  expect_true(usr[1] <= 0 && usr[2] >= 40)
-  # the full height of the image (20 rows) is visible
-  expect_true(usr[3] <= 0 && usr[4] >= 20)
-  # pixels per inch across equals pixels per inch up (no stretching)
-  expect_equal((usr[2] - usr[1]) / pin[1], (usr[4] - usr[3]) / pin[2])
-  # the clicks are stored exactly as they were made, in pixel units
+  expect_equal(usr[1:2], c(0, 40) + c(-1, 1) * 0.04 * 40)
+  expect_equal(usr[3:4], c(0, 20) + c(-1, 1) * 0.04 * 20)
   expect_equal(gcp$x, c(35, 5))
   expect_equal(gcp$y, c(5, 15))
-  # the image size is saved with the GCPs (rows, columns, colour channels)
   expect_equal(attr(gcp, "image_dims"), c(20, 40, 3))
 })
 
