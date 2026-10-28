@@ -32,11 +32,10 @@ Points (GCPs) and using GDAL to warp the image to a desired CRS.
 
 ## Installation
 
-Currently, `crstools` is only available on GitHub. You can install it using the
-`devtools` package:
+`crstools` is only available on CRAN and can be installed with:
 
 ```{r setup, eval=FALSE}
-devtools::install_github("EvolEcolGroup/crstools")
+install.packages("crstools")
 ```
 
 ## An overview of CRS codes
