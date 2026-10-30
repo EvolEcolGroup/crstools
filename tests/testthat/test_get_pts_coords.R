@@ -352,3 +352,65 @@ test_that("get_pts_coords validates lambda", {
     "'lambda' must be >= 0"
   )
 })
+
+# -----------------------------------------------------------------------------
+# Missing values in GCPs
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords errors if GCPs contain NA values", {
+  gcp_na <- pixel_gcp
+  gcp_na$longitude[1] <- NA
+  for (method in c("auto", "poly_1", "poly_2", "tps")) {
+    expect_error(
+      get_pts_coords(
+        gcp = gcp_na,
+        target_pts = basic_target,
+        transform_method = method
+      ),
+      "'gcp' contains NA values"
+    )
+  }
+  gcp_na <- pixel_gcp
+  gcp_na$x[2] <- NA
+  expect_error(
+    get_pts_coords(gcp = gcp_na, target_pts = basic_target),
+    "'gcp' contains NA values"
+  )
+})
+
+# -----------------------------------------------------------------------------
+# Collinear GCPs
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords errors if GCPs are collinear", {
+  gcp_line <- data.frame(
+    id = 1:4,
+    x = c(0, 50, 100, 150),
+    y = c(0, 50, 100, 150),
+    longitude = c(-3.0, -2.95, -2.9, -2.85),
+    latitude = c(55.0, 55.05, 55.1, 55.15)
+  )
+  basic_target_2 <- data.frame(
+    id = 1,
+    x = 150,
+    y = 0
+  )
+  # within diagonal
+  expect_error(
+    get_pts_coords(
+      gcp = gcp_line,
+      target_pts = basic_target,
+      transform_method = "poly_1"
+    ),
+    "not sufficiently spread to fit a polynomial of order 1"
+  )
+  # outside diagonal
+  expect_error(
+    get_pts_coords(
+      gcp = gcp_line,
+      target_pts = basic_target_2,
+      transform_method = "poly_1"
+    ),
+    "not sufficiently spread to fit a polynomial of order 1"
+  )
+})

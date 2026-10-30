@@ -187,21 +187,27 @@ crs_small_area <- function(
   } else {
     if (ratio > 1.25) {
       # Regional map with north-south extent
-      crs_suggestions <- crs_ns_extent(distortion, centre)
+      crs_suggestions <- crs_ns_extent(distortion, centre, quiet = quiet)
     } else if (ratio < 0.8) {
       # Regional map with east-west extent
       crs_suggestions <- crs_ew_extent(
         distortion,
         centre,
-        scale,
         lonmin = lonmin,
         lonmax = lonmax,
         latmin = latmin,
-        latmax = latmax
+        latmax = latmax,
+        quiet = quiet
       )
     } else {
       # Regional map in square format
-      crs_suggestions <- crs_square_format(distortion, centre, latmin, latmax)
+      crs_suggestions <- crs_square_format(
+        distortion,
+        centre,
+        latmin,
+        latmax,
+        quiet = quiet
+      )
     }
   }
   if (scale > 260 && !quiet) {

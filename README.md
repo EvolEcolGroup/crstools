@@ -25,7 +25,7 @@ pak::pak("EvolEcolGroup/crstools")
 
 `crstools` is a relatively new package. If you think you have found a bug,
 or have a feature request, please open an issue on our
-[GitHub repository]((https://github.com/EvolEcolGroup/crstools/issues). Before doing so, please 
+[GitHub repository](https://github.com/EvolEcolGroup/crstools/issues). Before doing so, please 
 make sure that you have installed the latest **development** version of
 `crstools` (as the bug might have already been fixed), as well as updating 
 all other packages on your system. If the problem persists, and there is no issue

@@ -16,8 +16,8 @@
 #' least square separately for longitude and latitude, with all terms up to the
 #' specific order (3, 6, 10 coefficients for first, second and third order
 #' polynomials). This forward (pixel to lon/lat) transformation, is the same
-#' applied by GDAL in [georeference_img()] and [get_pts_coords()]. LOO resisuals
-#' are computed without refittinhg as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
+#' applied by GDAL in [georeference_img()] and [get_pts_coords()]. LOO residuals
+#' are computed without refitting as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
 #' is the ordinary residual and \eqn{h_{ii}} is the leverage of the i-th GCP.
 #'
 #' Residuals are given in degrees (observed minus fitted) and as the
@@ -158,7 +158,7 @@ get_gcp_residuals <- function(gcp,
 
   # predicted lon/lat of each GCP from pixel position
   fitted <- cbind(stats::fitted(lon_model), stats::fitted(lat_model))
-  # residuals of each GCP from pixel position as observed minnus lon/lat of each
+  # residuals of each GCP from pixel position as observed minus lon/lat of each
   # GCP in degrees
   res <- cbind(stats::residuals(lon_model), stats::residuals(lat_model))
 
@@ -222,7 +222,7 @@ gcp_great_circle_km <- function(lon1, lat1, lon2, lat2,
   dlat <- (lat2 - lat1) * to_rad
   # difference in lon
   dlon <- (lon2 - lon1) * to_rad
-  # haversine formula from o (smae points) to 1(opposite sides of Earth) scale
+  # haversine formula from 0 (same points) to 1 (opposite sides of Earth) scale
   a <- sin(dlat / 2)^2 +
     # cosa here accounts for longitude degrees getting shorter as you move away
     # from the equator

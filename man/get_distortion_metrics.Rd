@@ -13,7 +13,7 @@ get_distortion_metrics(
 }
 \arguments{
 \item{data}{An sf, SpatRaster, or SpatVector object. This has to be projected
-to the CRS intened to assess.}
+to the CRS intended to assess.}
 
 \item{centres}{Either a list with elements "lng" and "lat", or a vector of
 length 2 with the number of rows/columns for an automatic grid, as in
@@ -28,8 +28,8 @@ estimated automatically as in \code{\link[=geom_tissot]{geom_tissot()}}. Default
 of each grid point, placed on a sphere, and estimates distortion from their
 displacement. \code{"ellipsoid"} uses \code{\link[PROJ:proj_factors]{PROJ::proj_factors()}}, which accounts for
 the flattening of the ellipsoid and requires the suggested package 'PROJ'
-(>= 0.7.0); if this fails, a warning is issued and \code{"sphere"} is used
-instead. Default is \code{"sphere"}.}
+(>= 0.7.0); if PROJ cannot compute the metrics, an error is raised (use
+\code{"sphere"} instead). Default is \code{"sphere"}.}
 }
 \value{
 A data.frame with one row per grid point: \code{lon}, \code{lat} (centre of the
@@ -44,14 +44,14 @@ CRS of \code{data}.
 \details{
 Distortion metrics can be computed using two different \code{method}:
 \itemize{
-\item \code{"sphere"}: for each GP, the function takes a short step, of lenght
-\code{radius} due north and due eat on a sphere with fixed radius. Point and steps
-are then projected to the CRS of \code{data}, and the distortion metrics are
-computed. Because the Earth is not a perfect sphere, this method is less
+\item \code{"sphere"}: for each grid point, the function takes a short step, of
+length \code{radius}, due north and due east on a sphere with fixed radius. Point
+and steps are then projected to the CRS of \code{data}, and the distortion metrics
+are computed. Because the Earth is not a perfect sphere, this method is less
 accurate (below 1°) than the \code{"ellipsoid"} method, but it does not require
 the \code{PROJ} library and the PROJ R package installed.
 \item \code{"ellipsoid"}: distortion metrics are computed using the \code{PROJ} R library
-via the \code{\link[PROJ:proj_factors]{PROJ::proj_factors()}} fucntion, using the ellipsoid defined by the
+via the \code{\link[PROJ:proj_factors]{PROJ::proj_factors()}} function, using the ellipsoid defined by the
 CRS and therefore being more accurate than the \code{"sphere"} method. This method
 requires the \code{PROJ} R package (>= 0.7.0) installed. Currently, the latter
 works from binary for Windows and Linux, but not for MacOS. The latter can be

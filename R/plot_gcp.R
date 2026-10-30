@@ -8,9 +8,9 @@
 #' to improve the transformation.
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
-#'   image (currenly this can only be of type .jpg).
+#'   image (currently this can only be of type .jpg).
 #' @param gcp A dataframe of GCPs, containing at least columns `id`, `x`,
-#'   `y`.
+#'   `y`. If NULL (the default), only the image is plotted.
 #' @param col The colour of the points to be plotted on the image. Default is
 #' "red".
 #' @return A plot with the GCPs
@@ -26,7 +26,7 @@
 #' ))
 #' # plot
 #' plot_gcp(img_path, gcp = gcp_europe)
-plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
+plot_gcp <- function(image_obj, gcp, col = "red") {
   # check if image is a file path or an array
   if (is.character(image_obj)) {
     if (!file.exists(image_obj)) {
@@ -43,41 +43,51 @@ plot_gcp <- function(image_obj, gcp = NULL, col = "red") {
   if (length(dim(img)) != 3 || dim(img)[3] != 3) {
     stop("Image must be a colour image with three channels (RGB).")
   }
+  # check gcp is provided
+  if (missing(gcp)) {
+    stop("No GCPs provided.")
+  }
   # check if gcp is a dataframe
   if (!is.null(gcp) && !is.data.frame(gcp)) {
     stop("gcp must be a dataframe with columns id, x, y.")
   }
 
   # if gcp is not null, check if it has the required columns
-  required_cols <- c("id", "x", "y")
-  if (!all(required_cols %in% colnames(gcp))) {
-    stop(
-      "gcp dataframe must contain columns: ",
-      paste(required_cols, collapse = ", ")
-    )
-  }
-  # check that, if the image dimensions are stored as an attribute, they match
-  if (!is.null(attr(gcp, "image_dims"))) {
-    img_dims <- attr(gcp, "image_dims")
-    if (!all(img_dims == dim(img))) {
-      stop("Image dimensions do not match the dimensions stored in gcp.")
+  if (!is.null(gcp)) {
+    required_cols <- c("id", "x", "y")
+    if (!all(required_cols %in% colnames(gcp))) {
+      stop(
+        "gcp dataframe must contain columns: ",
+        paste(required_cols, collapse = ", ")
+      )
+    }
+    # check that, if the image dimensions are stored as an attribute, they
+    # match
+    if (!is.null(attr(gcp, "image_dims"))) {
+      img_dims <- attr(gcp, "image_dims")
+      if (!all(img_dims == dim(img))) {
+        stop("Image dimensions do not match the dimensions stored in gcp.")
+      }
     }
   }
 
   # plot the image
+  # the image array has dimensions rows (height) x columns (width) x channels
   plot(
     0,
     0,
-    xlim = c(0, dim(img)[1]),
-    ylim = c(0, dim(img)[2]),
+    xlim = c(0, dim(img)[2]),
+    ylim = c(0, dim(img)[1]),
     type = "n",
     xlab = "x_pixels",
     ylab = "y_pixels"
   )
   # add the image to the plot
-  graphics::rasterImage(img, 0, 0, dim(img)[1], dim(img)[2])
+  graphics::rasterImage(img, 0, 0, dim(img)[2], dim(img)[1])
 
   # plot and add numbers for an existing set of gcp
-  graphics::points(gcp$x, gcp$y, col = col, pch = 19)
-  graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
+  if (!is.null(gcp)) {
+    graphics::points(gcp$x, gcp$y, col = col, pch = 19)
+    graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
+  }
 }

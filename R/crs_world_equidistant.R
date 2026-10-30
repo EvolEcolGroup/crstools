@@ -20,7 +20,7 @@ crs_world_equidistant <- function(
   if (!inherits(prj_details, "list") || !"prj" %in% names(prj_details)) {
     stop(
       paste0(
-        "`world_equidistant` must be a list with a `prj` element ",
+        "`world_equidist` must be a list with a `prj` element ",
         "and the appropriate projection details"
       )
     )
@@ -30,7 +30,7 @@ crs_world_equidistant <- function(
   if (prj_details$prj == "polar") {
     # Polar azimuthal equidistant
     if (!"pole" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `pole` element")
+      stop("`world_equidist` must contain a `pole` element")
     }
     # pole should be either 90 or -90
     if (prj_details$pole != 90 && prj_details$pole != -90) {
@@ -38,7 +38,7 @@ crs_world_equidistant <- function(
     }
     pole_eq <- prj_details$pole
     if (!"lng_central" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lng_central` element")
+      stop("`world_equidist` must contain a `lng_central` element")
     }
     lng_central <- prj_details$lng_central
     pole_str <- ifelse(pole_eq > 0, "North Pole", "South Pole")
@@ -55,7 +55,7 @@ crs_world_equidistant <- function(
       notes = paste0(
         "Distance correct through or from the ",
         pole_str,
-        " Pole; Central meridian: ",
+        "; Central meridian: ",
         lng_central,
         "."
       )
@@ -63,11 +63,11 @@ crs_world_equidistant <- function(
   } else if (prj_details$prj == "oblique") {
     # Oblique azimuthal equidistant
     if (!"lat_centre" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lat_centre` element")
+      stop("`world_equidist` must contain a `lat_centre` element")
     }
     lat_centre <- prj_details$lat_centre
     if (!"lng_centre" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lng_centre` element")
+      stop("`world_equidist` must contain a `lng_centre` element")
     }
     lng_centre <- prj_details$lng_centre
 
@@ -91,7 +91,7 @@ crs_world_equidistant <- function(
   } else if (prj_details$prj == "two_points") {
     # Two-point azimuthal equidistant
     if (!"lat1" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lat1` element")
+      stop("`world_equidist` must contain a `lat1` element")
     }
     lat1_eq <- round_world_coords(
       prj_details$lat1,
@@ -99,7 +99,7 @@ crs_world_equidistant <- function(
       round_cm = round_cm
     )
     if (!"lng1" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lng1` element")
+      stop("`world_equidist` must contain a `lng1` element")
     }
     lng1_eq <- round_world_coords(
       prj_details$lng1,
@@ -107,7 +107,7 @@ crs_world_equidistant <- function(
       round_cm = round_cm
     )
     if (!"lat2" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lat2` element")
+      stop("`world_equidist` must contain a `lat2` element")
     }
     lat2_eq <- round_world_coords(
       prj_details$lat2,
@@ -115,7 +115,7 @@ crs_world_equidistant <- function(
       round_cm = round_cm
     )
     if (!"lng2" %in% names(prj_details)) {
-      stop("`world_equidistant` must contain a `lng2` element")
+      stop("`world_equidist` must contain a `lng2` element")
     }
     lng2_eq <- round_world_coords(
       prj_details$lng2,
@@ -145,7 +145,7 @@ crs_world_equidistant <- function(
     )
   } else {
     stop(
-      "the `prj` element of world_equidistant` should be one of:\n",
+      "the `prj` element of `world_equidist` should be one of:\n",
       "'polar', 'oblique', 'two_points'"
     )
   }

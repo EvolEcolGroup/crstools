@@ -1,3 +1,40 @@
+test_that("geom_tissot draws indicatrices in each facet", {
+  two_areas <- sf::st_as_sf(
+    data.frame(area = c("a", "b")),
+    geometry = sf::st_sfc(
+      sf::st_polygon(list(
+        rbind(c(-80, -60), c(-30, -60), c(-30, 10), c(-80, 10), c(-80, -60))
+      )),
+      sf::st_polygon(list(
+        rbind(c(0, 30), c(40, 30), c(40, 70), c(0, 70), c(0, 30))
+      ))
+    ),
+    crs = 4326
+  )
+  p <- ggplot2::ggplot(two_areas) +
+    ggplot2::geom_sf() +
+    geom_tissot() +
+    ggplot2::facet_wrap(~area)
+  tissot_data <- ggplot2::ggplot_build(p)$data[[2]]
+  expect_setequal(unique(as.character(tissot_data$PANEL)), c("1", "2"))
+  # each panel has the indicatrices of its own area
+  for (i in 1:2) {
+    centroids <- sf::st_coordinates(suppressWarnings(sf::st_centroid(
+      tissot_data$geometry[tissot_data$PANEL == i]
+    )))
+    bbox <- sf::st_bbox(two_areas[i, ])
+    expect_true(all(centroids[, "X"] > bbox["xmin"]))
+    expect_true(all(centroids[, "X"] < bbox["xmax"]))
+  }
+})
+
+test_that("geom_tissot rejects unsupported data", {
+  expect_error(
+    geom_tissot(data = data.frame(x = 1)),
+    "data must be an sf, SpatRaster, or SpatVector object"
+  )
+})
+
 skip_if_not_installed("rnaturalearth")
 skip_if_not_installed("rnaturalearthdata")
 
@@ -26,11 +63,13 @@ test_that("geom_tissot works with differnet inputs",{
 
   tmp1 <- tempfile(fileext = ".svg")
   tmp2 <- tempfile(fileext = ".svg")
-  suppressMessages(ggplot2::ggsave(tmp1, p2))
+  suppressMessages(ggplot2::ggsave(tmp1, p1))
   suppressMessages(ggplot2::ggsave(tmp2, p2))
   expect_true(tools::md5sum(tmp1) == tools::md5sum(tmp2))
 
   # check that it works with terra
+skip_if_not_installed("tidyterra")
+skip_if_not_installed("pastclim")
 library(terra)
 library(tidyterra)
 # get example dataset from cran
