@@ -15,6 +15,9 @@
 <url><loc>/reference/find_gcp_coords.html</loc></url>
 <url><loc>/reference/geom_tissot.html</loc></url>
 <url><loc>/reference/georeference_img.html</loc></url>
+<url><loc>/reference/get_distortion_metrics.html</loc></url>
+<url><loc>/reference/get_gcp_residuals.html</loc></url>
+<url><loc>/reference/get_pts_coords.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/plot_gcp.html</loc></url>
 <url><loc>/reference/suggest_crs.html</loc></url>
