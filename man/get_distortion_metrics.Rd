@@ -81,7 +81,7 @@ summary(metrics[c("areal_scale", "angular_distortion")])
 \dontshow{\}) # examplesIf}
 }
 \references{
-Snyder, J.P. (1987) Map Projections—A Working Manual. U.S.
+Snyder, J.P. (1987) Map Projections: A Working Manual. U.S.
 Geological Survey Professional Paper 1395, pp. 20-26. Washington, D.C.:
 U.S. Government Printing Office. DOI: 10.3133/pp1395.
 
