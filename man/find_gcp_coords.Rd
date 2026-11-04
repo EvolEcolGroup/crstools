@@ -23,7 +23,8 @@ Find the coordinates (longitude and latitude) of the ground control points
 (GCPs) in a given image.
 }
 \details{
-NOTE: There are two conventions on how to define pixel coordinates. In this
+NOTE: There are two conventions on how to define pixel coordinates.
+In this
 function (and more generally throughout \code{crstools}), the origin is defined as
 the bottom left corner of the image, with x increasing to the right and y
 increasing upwards. This is consistent with the convention used in many image
