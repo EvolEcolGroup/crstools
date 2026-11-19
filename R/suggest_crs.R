@@ -14,7 +14,10 @@
 #'   "equal_area", "conformal", "equidistant" and "compromise". Default is
 #'   "equal_area".
 #' @param x A vector of four numeric values representing the extent of the map
-#' (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
+#'   in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
+#'   in longitude and latitude, or a SpatRaster or sf object in a geographic
+#'   (lon/lat) CRS. Objects with no CRS are assumed to be in longitude and
+#'   latitude.
 #' @param round_cm Logical. If TRUE, the central meridian is rounded to the
 #'   nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned,

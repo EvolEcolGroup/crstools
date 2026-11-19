@@ -5,9 +5,10 @@
   a chosen transformation method.
 * Add `get_gcp_residuals()` function` to get the residuals of polynomials to
   assess the quality of the transformation.
-* `suggest_crs()` now accepts integer extents, reprojects `sf` and `SpatRaster`
-  objects in a projected CRS to longitude/latitude, and honours `quiet = TRUE`
-  for regional maps.
+* `suggest_crs()` now accepts integer extents, stops with an error if an `sf`
+  or `SpatRaster` object is in a projected CRS (reproject it to
+  longitude/latitude first), assumes longitude/latitude with a warning if the
+  object has no CRS, and honours `quiet = TRUE` for regional maps.
 * Fix the proj4 string of Winkel Tripel (which defined a different projection
   from the WKT when used by `sf` or `terra`) and the WKT of Hammer (which could
   not be parsed by PROJ).
