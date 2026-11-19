@@ -176,4 +176,70 @@ test_that("Check angular_distortion values for conformal projection", {
   expect_true(all(round(metrics_ell$angular_distortion, 1) == 0))
 })
 
+# check that the sphere method is not affected by the antimeridian
+test_that("sphere method is stable across the antimeridian", {
+  # Web Mercator: the map is cut at 180 degrees longitude
+  location_merc <- sf::st_transform(location, "EPSG:3857")
+  # two centres mirrored around 180 degrees; the east step of the first one
+  # crosses the antimeridian and lands on the other side of the map
+  metrics <- get_distortion_metrics(location_merc,
+                                    centres = list(lng = c(179.999, -179.999),
+                                                   lat = 0),
+                                    radius = 1000)
+  # Mercator has no distortion at the equator
+  expect_equal(metrics$areal_scale, c(1, 1), tolerance = 1e-3)
+  expect_equal(metrics$semi_major, c(1, 1), tolerance = 1e-3)
+
+  # Pacific-centred Robinson: the map is cut at 0 degrees longitude
+  location_pacific <- sf::st_transform(location, "+proj=robin +lon_0=180")
+  # two centres mirrored around the cut are at the same distance from the
+  # central meridian, so they should have the same distortion
+  metrics <- get_distortion_metrics(location_pacific,
+                                    centres = list(lng = c(-0.0001, 0.0001),
+                                                   lat = 0),
+                                    radius = 1000)
+  expect_equal(unlist(metrics[1, -1]), unlist(metrics[2, -1]),
+               tolerance = 1e-3)
+})
+
+# check that the sphere method is not affected by stepping over the North Pole
+test_that("sphere method is stable near the poles", {
+  # equidistant cylindrical: each pole is a line as long as the equator
+  location_eqc <- sf::st_transform(location, "+proj=eqc")
+  # centres mirrored around the equator; the north step of the northern
+  # centre crosses the North Pole and lands on the opposite meridian
+  metrics <- get_distortion_metrics(location_eqc,
+                                    centres = list(lng = 0,
+                                                   lat = c(-89.995, 89.995)),
+                                    radius = 1000)
+  # the scale along the meridian is always 1 in this projection
+  expect_equal(metrics$semi_minor, c(1, 1), tolerance = 1e-3)
+  # both hemispheres should have the same distortion
+  expect_equal(metrics$areal_scale[2], metrics$areal_scale[1],
+               tolerance = 1e-3)
+
+  # same issue with a large step over Arctic data: a 500 km step north from
+  # 86 degrees also crosses the North Pole
+  metrics <- get_distortion_metrics(location_eqc,
+                                    centres = list(lng = 0, lat = c(-86, 86)),
+                                    radius = 5e5)
+  expect_equal(metrics$semi_minor, c(1, 1), tolerance = 1e-2)
+  expect_equal(metrics$areal_scale[2], metrics$areal_scale[1],
+               tolerance = 1e-3)
+})
+
+# check that polar azimuthal projections, where crossing the pole does not
+# create a jump on the map, still give the right values at the pole
+test_that("sphere method works at the pole for polar projections", {
+  location_polar <- sf::st_transform(location, "+proj=laea +lat_0=90")
+  metrics <- get_distortion_metrics(location_polar,
+                                    centres = list(lng = 0,
+                                                   lat = c(89.995, 90)),
+                                    radius = 1000)
+  # Lambert azimuthal equal area keeps the areal scale at 1
+  expect_equal(metrics$areal_scale, c(1, 1), tolerance = 1e-2)
+  # and has no angular distortion at the pole
+  expect_true(all(metrics$angular_distortion < 0.1))
+})
+
 

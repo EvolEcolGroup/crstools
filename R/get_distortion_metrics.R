@@ -292,27 +292,48 @@ destination_point <- function(lon, lat, bearing, distance, radius = 6378137) {
 # function to compute Tissot's indicatrix distortion parameters at a single
 # longitude/latitude point for a given target CRS.
 tissot_point_metrics <- function(lon, lat, crs, radius) {
-  # move north (bearing 0) and east (bearing 90)
-  north <- destination_point(lon, lat, bearing = 0, distance = radius)
+  # length of the step in degrees of arc (same Earth radius as
+  # destination_point())
+  step_deg <- radius / 6378137 * 180 / pi
+  # move north along the meridian, unless the step would go over the North
+  # Pole and land on the opposite meridian; in that case move south and flip
+  # the sign of the displacement. A step along a meridian only changes the
+  # latitude, which also avoids undefined bearings when the centre is a pole
+  meridian_sign <- 1
+  if (lat + step_deg > 90) {
+    meridian_sign <- -1
+  }
+  north <- c(lon = unname(lon), lat = unname(lat) + meridian_sign * step_deg)
+  # move east (bearing 90) and west (bearing 270)
   east <- destination_point(lon, lat, bearing = 90, distance = radius)
+  west <- destination_point(lon, lat, bearing = 270, distance = radius)
 
-  # create an sf object with the three points (lon/lat) and project them
+  # create an sf object with the four points (lon/lat) and project them
   # into the target CRS
   pts <- sf::st_as_sf(
     data.frame(
-      lon = unname(c(lon, north["lon"], east["lon"])),
-      lat = unname(c(lat, north["lat"], east["lat"]))
+      lon = unname(c(lon, north["lon"], east["lon"], west["lon"])),
+      lat = unname(c(lat, north["lat"], east["lat"], west["lat"]))
     ),
     coords = c("lon", "lat"),
     crs = sf::st_crs("EPSG:4326")
   )
-  # get the projected coordinates of the three points
+  # get the projected coordinates of the four points
   pts_proj <- sf::st_coordinates(sf::st_transform(pts, crs))
 
   # get displacement of the projected north/east steps from the projected
   # centre, used to approximate the local partial derivative
-  v_meridian <- pts_proj[2, ] - pts_proj[1, ]
+  v_meridian <- meridian_sign * (pts_proj[2, ] - pts_proj[1, ])
   v_parallel <- pts_proj[3, ] - pts_proj[1, ]
+  # if the east step crosses the edge of the map (e.g. the antimeridian), it
+  # jumps to the other side of the map and its displacement becomes much
+  # longer than the west one; in that case use the west step, flipped so that
+  # it still points east (isTRUE() keeps the east step if either step falls
+  # outside the valid area of the projection and is NaN)
+  v_west <- pts_proj[1, ] - pts_proj[4, ]
+  if (isTRUE(sum(v_parallel^2) > 4 * sum(v_west^2))) {
+    v_parallel <- v_west
+  }
 
   # scale factors along the meridian (h) and parallel (k)
   h <- sqrt(sum(v_meridian^2)) / radius
