@@ -140,6 +140,10 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
     radius <- as.numeric(min(dist_mat, na.rm = TRUE)) / 4
   }
 
+  # metres per CRS unit (e.g. 0.3048 for feet), so that the projected
+  # steps are in the same units as radius
+  to_metre <- terra::linearUnits(terra::rast(crs = crs$wkt))
+
   # compute Tissot metrics for each grid point
   metrics <- lapply(seq_len(nrow(coord_grid)), function(i) {
     cbind(
@@ -149,7 +153,8 @@ distortion_sphere <- function(coord_grid, crs, radius = NULL) {
         lon = coord_grid[i, "lon"],
         lat = coord_grid[i, "lat"],
         crs = crs,
-        radius = radius
+        radius = radius,
+        to_metre = to_metre
       )
     )
   })
@@ -291,7 +296,7 @@ destination_point <- function(lon, lat, bearing, distance, radius = 6378137) {
 
 # function to compute Tissot's indicatrix distortion parameters at a single
 # longitude/latitude point for a given target CRS.
-tissot_point_metrics <- function(lon, lat, crs, radius) {
+tissot_point_metrics <- function(lon, lat, crs, radius, to_metre) {
   # length of the step in degrees of arc (same Earth radius as
   # destination_point())
   step_deg <- radius / 6378137 * 180 / pi
@@ -318,8 +323,8 @@ tissot_point_metrics <- function(lon, lat, crs, radius) {
     coords = c("lon", "lat"),
     crs = sf::st_crs("EPSG:4326")
   )
-  # get the projected coordinates of the four points
-  pts_proj <- sf::st_coordinates(sf::st_transform(pts, crs))
+  # get the projected coordinates of the four points, converted to metres
+  pts_proj <- sf::st_coordinates(sf::st_transform(pts, crs)) * to_metre
 
   # get displacement of the projected north/east steps from the projected
   # centre, used to approximate the local partial derivative

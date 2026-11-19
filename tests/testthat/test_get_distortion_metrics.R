@@ -242,4 +242,48 @@ test_that("sphere method works at the pole for polar projections", {
   expect_true(all(metrics$angular_distortion < 0.1))
 })
 
+# check that the sphere method does not depend on the linear unit of the CRS
+test_that("sphere method gives the same results in any linear unit", {
+  # same projection in metres and in feet, as returned by suggest_crs()
+  crs_m <- suggest_crs(location, distortion = "equal_area", unit = "m")
+  crs_ft <- suggest_crs(location, distortion = "equal_area", unit = "ft")
+  metrics_m <- get_distortion_metrics(sf::st_transform(location, crs_m$proj4),
+                                      centres = test_centres)
+  metrics_ft <- get_distortion_metrics(sf::st_transform(location,
+                                                        crs_ft$proj4),
+                                       centres = test_centres)
+  # if the projected steps were not converted to metres, areal_scale would be
+  # about 10.76 times larger in feet
+  expect_equal(metrics_ft, metrics_m, tolerance = 1e-6)
+
+  # other units: kilometres and a custom unit (1 unit = 2 metres)
+  laea <- "+proj=laea +lat_0=45 +lon_0=0 +datum=WGS84"
+  metrics_laea <- get_distortion_metrics(
+    sf::st_transform(location, paste(laea, "+units=m")),
+    centres = test_centres
+  )
+  for (unit in c("+units=km", "+to_meter=2")) {
+    metrics_unit <- get_distortion_metrics(
+      sf::st_transform(location, paste(laea, unit)),
+      centres = test_centres
+    )
+    expect_equal(metrics_unit, metrics_laea, tolerance = 1e-6)
+  }
+
+  # feet with a datum shift: PROJ wraps the CRS in a BOUNDCRS, where the
+  # last unit in the WKT is the one of the datum shift (metres), not the one
+  # of the coordinates
+  laea_shift <- "+proj=laea +lat_0=45 +lon_0=0 +ellps=WGS84 +towgs84=0,0,0"
+  location_shift_ft <- sf::st_transform(location,
+                                        paste(laea_shift, "+units=ft"))
+  expect_true(grepl("^BOUNDCRS", sf::st_crs(location_shift_ft)$wkt))
+  metrics_shift_m <- get_distortion_metrics(
+    sf::st_transform(location, paste(laea_shift, "+units=m")),
+    centres = test_centres
+  )
+  metrics_shift_ft <- get_distortion_metrics(location_shift_ft,
+                                             centres = test_centres)
+  expect_equal(metrics_shift_ft, metrics_shift_m, tolerance = 1e-6)
+})
+
 
