@@ -41,6 +41,8 @@ skip_if_not_installed("rnaturalearthdata")
 # styler: off
 
 test_that("geom_tissot works with differnet inputs",{
+  # saving to svg needs the suggested svglite
+  skip_if_not_installed("svglite")
   suppressMessages(library(rnaturalearth))
   suppressMessages(library(sf))
   suppressMessages(library(ggplot2))
