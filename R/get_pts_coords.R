@@ -1,0 +1,326 @@
+#' Extract geographic coordinates from pixel coordinates
+#'
+#' Transform target point pixel coordinates into longitude/latitude coordinates
+#' using a set of Ground Control Points (GCPs). This function performs direct
+#' point-wise coordinate transformation without warping a raster.
+#'
+#' Polynomial transformations are implemented using native linear models, while
+#' thin plate spline transformations are implemented using
+#' \code{fields::Tps()}. For thin plate splines, the x and y pixel coordinates
+#' are rescaled by the same factor, so that distances between points are
+#' proportional to distances in pixels, as in the GDAL thin plate spline used
+#' by [georeference_img()].
+#'
+#' Note that, when using `tps` as a method, \code{fields::Tps()} might print
+#' "Grid searches over lambda (nugget and sill variances) with minima at
+#' the endpoints". This is benign: \code{fields::Tps()} always searches for the
+#' best smoothing parameter and reports when the best value is at the edge of
+#' its search range, but the fit uses the value given in `lambda`.
+#'
+#' @param gcp A data frame containing the Ground Control Points (GCPs). This
+#'   dataframe can be produced with the [choose_gcp()] and [find_gcp_coords()]
+#'   functions. This data frame should have the following columns:
+#'   \itemize{
+#'     \item \code{id}: An identifier for each GCP (numeric).
+#'     \item \code{x}: The x-coordinate of the GCP (in pixel space).
+#'     \item \code{y}: The y-coordinate of the GCP (in pixel space).
+#'     \item \code{longitude}: The longitude of the GCP (georeferenced).
+#'     \item \code{latitude}: The latitude of the GCP (georeferenced).
+#'   }
+#'
+#' @param target_pts A data frame containing the target points to transform.
+#'   This dataframe must contain the following columns (any other column, such
+#'   as an identifier for each point, is kept in the output):
+#'   \itemize{
+#'     \item \code{x} or \code{cx}: The x-coordinate of the point
+#'       (in pixel space).
+#'     \item \code{y} or \code{cy}: The y-coordinate of the point
+#'       (in pixel space).
+#'   }
+#'
+#' @param transform_method A character string specifying the transformation
+#'   method to be used for warping the image. Options are \code{"poly_1"}
+#'   (first order polynomial), \code{"poly_2"} (second order polynomial),
+#'   \code{"poly_3"} (third order polynomial), \code{"tps"} (thin plate
+#'   spline), or \code{"auto"} (the default, automatically selecting a
+#'   polynomial order based on the number of GCPs available).
+#'
+#' @param lambda Numeric smoothing parameter used for thin plate spline
+#'   transformations (\code{transform_method = "tps"}). The default,
+#'   \code{0}, interpolates exactly through the GCPs, matching the GDAL thin
+#'   plate spline used by [georeference_img()]. Larger values introduce
+#'   smoothing (the spline no longer passes exactly through the GCPs), which
+#'   may improve robustness when GCPs contain noise or digitizing errors. As
+#'   pixel coordinates are rescaled by the extent of the GCPs before fitting,
+#'   the amount of smoothing for a given \code{lambda} does not depend on the
+#'   resolution of the image.
+#'
+#' @return A data frame containing:
+#'   \itemize{
+#'     \item All the columns of \code{target_pts} (including the pixel
+#'       coordinates).
+#'     \item \code{longitude}: Estimated longitude.
+#'     \item \code{latitude}: Estimated latitude.
+#'   }
+#'
+#' @export
+#' @examples
+#' pts_df <- readRDS(system.file(
+#'   "extdata/europe_gcp_georef.RDS",
+#'   package = "crstools"
+#' ))
+#' target_df <- data.frame(pt_id = 1:2, x = c(477, 2014), y = c(554, 1311))
+#' get_pts_coords(pts_df, target_df)
+#'
+
+get_pts_coords <- function(
+  gcp,
+  target_pts,
+  transform_method = "auto",
+  lambda = 0
+) {
+  # ---------------------------------------------------------------------------
+  # Validate transform method
+  # ---------------------------------------------------------------------------
+
+  valid_methods <- c(
+    "auto",
+    "poly_1",
+    "poly_2",
+    "poly_3",
+    "tps"
+  )
+
+  if (!transform_method %in% valid_methods) {
+    stop(
+      "Invalid 'transform_method'. Must be one of: ",
+      paste(valid_methods, collapse = ", ")
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Validate lambda
+  # ---------------------------------------------------------------------------
+
+  if (!is.numeric(lambda) || length(lambda) != 1 || is.na(lambda)) {
+    stop("'lambda' must be a single numeric value.")
+  }
+
+  if (lambda < 0) {
+    stop("'lambda' must be >= 0.")
+  }
+
+  # ---------------------------------------------------------------------------
+  # Validate required columns in GCP dataframe
+  # ---------------------------------------------------------------------------
+
+  required_gcp_cols <- c("id", "x", "y", "longitude", "latitude")
+
+  missing_gcp_cols <- setdiff(required_gcp_cols, names(gcp))
+
+  if (length(missing_gcp_cols) > 0) {
+    stop(
+      "Missing required columns in 'gcp': ",
+      paste(missing_gcp_cols, collapse = ", ")
+    )
+  }
+
+  # GCPs with missing values would be silently dropped by the fitting
+  # functions (and counted when choosing the polynomial order)
+  if (anyNA(gcp[required_gcp_cols])) {
+    stop(
+      "'gcp' contains NA values. ",
+      "Did you forget to use `find_gcp_coords()`?"
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Allow x/y OR cx/cy in target points
+  # ---------------------------------------------------------------------------
+
+  if (all(c("x", "y") %in% names(target_pts))) {
+    target_pts$x_internal <- target_pts$x
+    target_pts$y_internal <- target_pts$y
+  } else if (all(c("cx", "cy") %in% names(target_pts))) {
+    target_pts$x_internal <- target_pts$cx
+    target_pts$y_internal <- target_pts$cy
+  } else {
+    stop(
+      "target_pts must contain either columns ('x', 'y') ",
+      "or ('cx', 'cy')."
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Validate minimum number of GCPs needed for each transformation
+  # ---------------------------------------------------------------------------
+
+  n_gcp <- nrow(gcp)
+
+  if (transform_method == "poly_1" && n_gcp < 3) {
+    stop("At least 3 GCPs are required for a first order polynomial.")
+  }
+
+  if (transform_method == "poly_2" && n_gcp < 6) {
+    stop("At least 6 GCPs are required for a second order polynomial.")
+  }
+
+  if (transform_method == "poly_3" && n_gcp < 10) {
+    stop("At least 10 GCPs are required for a third order polynomial.")
+  }
+
+  # ---------------------------------------------------------------------------
+  # Automatically select polynomial order if requested
+  # ---------------------------------------------------------------------------
+
+  if (transform_method == "auto") {
+    if (n_gcp >= 6) {
+      transform_method <- "poly_2"
+    } else {
+      transform_method <- "poly_1"
+    }
+  }
+
+  # ---------------------------------------------------------------------------
+  # Build prediction dataframe
+  # ---------------------------------------------------------------------------
+
+  pred_df <- data.frame(
+    x = target_pts$x_internal,
+    y = target_pts$y_internal
+  )
+
+  # ---------------------------------------------------------------------------
+  # First-order polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method == "poly_1") {
+    lon_model <- stats::lm(
+      longitude ~ x + y,
+      data = gcp
+    )
+
+    lat_model <- stats::lm(
+      latitude ~ x + y,
+      data = gcp
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Second-order polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method == "poly_2") {
+    lon_model <- stats::lm(
+      longitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      data = gcp
+    )
+
+    lat_model <- stats::lm(
+      latitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
+      data = gcp
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Third-order polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method == "poly_3") {
+    lon_model <- stats::lm(
+      longitude ~ x + y +
+        I(x^2) + I(y^2) + I(x * y) +
+        I(x^3) + I(y^3) +
+        I(x^2 * y) + I(x * y^2),
+      data = gcp
+    )
+
+    lat_model <- stats::lm(
+      latitude ~ x + y +
+        I(x^2) + I(y^2) + I(x * y) +
+        I(x^3) + I(y^3) +
+        I(x^2 * y) + I(x * y^2),
+      data = gcp
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Predict with the polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method %in% c("poly_1", "poly_2", "poly_3")) {
+    # lm() drops terms (NA coefficients) if the GCPs do not allow to estimate
+    # them
+    if (anyNA(stats::coef(lon_model)) || anyNA(stats::coef(lat_model))) {
+      stop(
+        "The GCPs are not sufficiently spread to fit a polynomial of order ",
+        substr(transform_method, 6, 6), " (e.g. they are collinear)."
+      )
+    }
+    lon_pred <- stats::predict(lon_model, pred_df)
+    lat_pred <- stats::predict(lat_model, pred_df)
+  }
+
+  # ---------------------------------------------------------------------------
+  # Thin plate spline transformation
+  # ---------------------------------------------------------------------------
+
+  if (transform_method == "tps") {
+    if (!requireNamespace("fields", quietly = TRUE)) {
+      stop(
+        "Package 'fields' is required for transform_method = 'tps'."
+      )
+    }
+
+    gcp_xy <- as.matrix(gcp[, c("x", "y")])
+
+    pred_xy <- as.matrix(pred_df)
+
+    # use one common scale for both axes, so that distances are proportional
+    # to pixel distances as in GDAL TPS.
+    xy_center <- colMeans(gcp_xy)
+    xy_scale <- rep(max(apply(gcp_xy, 2, function(v) diff(range(v)))), 2)
+
+    lon_model <- fields::Tps(
+      x = gcp_xy,
+      Y = gcp$longitude,
+      lambda = lambda,
+      scale.type = "user",
+      x.center = xy_center,
+      x.scale = xy_scale
+    )
+
+    lat_model <- fields::Tps(
+      x = gcp_xy,
+      Y = gcp$latitude,
+      lambda = lambda,
+      scale.type = "user",
+      x.center = xy_center,
+      x.scale = xy_scale
+    )
+
+    lon_pred <- stats::predict(
+      lon_model,
+      pred_xy
+    )
+
+    lat_pred <- stats::predict(
+      lat_model,
+      pred_xy
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Assemble result
+  # ---------------------------------------------------------------------------
+
+  result <- target_pts
+
+  result$x_internal <- NULL
+  result$y_internal <- NULL
+
+  result$longitude <- as.numeric(lon_pred)
+  result$latitude <- as.numeric(lat_pred)
+
+  return(result)
+}

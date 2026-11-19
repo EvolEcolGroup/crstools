@@ -18,7 +18,10 @@ suggest_crs(
 }
 \arguments{
 \item{x}{A vector of four numeric values representing the extent of the map
-(xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.}
+in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
+in longitude and latitude, or a SpatRaster or sf object in a geographic
+(lon/lat) CRS. Objects with no CRS are assumed to be in longitude and
+latitude.}
 
 \item{distortion}{The type of distortion to be minimized. Options are
 "equal_area", "conformal", "equidistant" and "compromise". Default is
@@ -42,7 +45,11 @@ within range (-90,90). Default is TRUE.}
 projection, then this parameter should be a list with one of the following
 sets of elements:
 \itemize{
-\item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \verb{lng_central``, where }pole\verb{is either -90 or 90 for the South and North Pole, respectively, from or through which distances are correct, and}lng_central\verb{is the central meridian. E.g.}list(prj = "polar", pole = 90, lng_central = -180)`
+\item "Polar azimuthal equidistant": \code{prj} = "polar", \code{pole}, \code{lng_central},
+where \code{pole} is either -90 or 90 for the South and North Pole,
+respectively, from or through which distances are correct, and
+\code{lng_central} is the central meridian.
+E.g. \code{list(prj = "polar", pole = 90, lng_central = -180)}
 \item "Oblique azimuthal equidistant": \code{prj} = "oblique", \code{lat_centre},
 \code{lng_centre}, where \code{lat_centre} and \code{lng_centre} are the latitude and
 longitude of the centre from or through which distances are correct.

@@ -4,12 +4,12 @@
 \alias{plot_gcp}
 \title{Function to plot the Ground Control Points (GCPs) on an raw image}
 \usage{
-plot_gcp(image_obj, gcp = NULL, col = "red")
+plot_gcp(image_obj, gcp, col = "red")
 }
 \arguments{
 \item{image_obj}{An array representing the image (colour images are generally
 imported as an array of nx x ny x 3 colour channels), or a file path to the
-image (currenly this can only be of type .jpg).}
+image (currently this can only be of type .jpg).}
 
 \item{gcp}{A dataframe of GCPs, containing at least columns \code{id}, \code{x},
 \code{y}.}
@@ -34,8 +34,9 @@ to improve the transformation.
 img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
 # load some previously captured GCPs
 gcp_europe <- readRDS(system.file(
-                                "extdata/europe_gcp_georef.RDS",
-                                package = "crstools"))
+  "extdata/europe_gcp_georef.RDS",
+  package = "crstools"
+))
 # plot
 plot_gcp(img_path, gcp = gcp_europe)
 \dontshow{\}) # examplesIf}

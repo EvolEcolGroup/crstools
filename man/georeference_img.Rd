@@ -4,7 +4,12 @@
 \alias{georeference_img}
 \title{Georeference an Image using Ground Control Points (GCPs)}
 \usage{
-georeference_img(image_obj, gcp, output_path = NULL)
+georeference_img(
+  image_obj,
+  gcp,
+  output_path = NULL,
+  transform_method = c("auto", "poly_1", "poly_2", "poly_3", "tps")
+)
 }
 \arguments{
 \item{image_obj}{A character string specifying the file path to the input
@@ -12,18 +17,31 @@ image (JPEG format). The function reads this image and applies the GCPs for
 georeferencing.}
 
 \item{gcp}{A data frame containing the Ground Control Points (GCPs). This
-dataframe can be produced with the \emph{draw_gcp_points} function. This data
-frame should have the following columns:
+dataframe can be produced with the \code{\link[=choose_gcp]{choose_gcp()}} and \code{\link[=find_gcp_coords]{find_gcp_coords()}}
+functions. This data frame should have the following columns:
 \itemize{
 \item \code{id}: An identifier for each GCP (numeric).
 \item \code{x}: The x-coordinate of the GCP (in pixel space).
 \item \code{y}: The y-coordinate of the GCP (in pixel space).
-\item \code{lon}: The longitude of the GCP (georeferenced).
-\item \code{lat}: The latitude of the GCP (georeferenced).
+\item \code{longitude}: The longitude of the GCP (georeferenced).
+\item \code{latitude}: The latitude of the GCP (georeferenced).
 }}
 
-\item{output_path}{A character string representing the file path to the input
-image. (\verb{_warp.tif}) will be appended to it.}
+\item{output_path}{A character string giving the path (without extension)
+used to name the output files: \code{.tif} is appended to it for the image with
+the GCPs, and \verb{_warp.tif} for the warped image. If NULL (the default), the
+path of the input image without its extension is used if \code{image_obj} is a
+file path, and "map" (in the working directory) if it is an array.}
+
+\item{transform_method}{A character string specifying the transformation
+method to be used for warping the image. Options are "poly_1" (first order
+polynomial), "poly_2" (second order polynomial), "poly_3" (third order
+polynomial), "tps" (thin plate spline), or "auto" (the default, allowing
+GDAL to choose of a polynomial of the appropriate order based on the
+number of available GCP. Polynomials are best for standard maps directly
+captured from a publication (a first or second order polynomial is often
+sufficient), tps allows for scanning artefacts, but it is badly affected
+by any incorrect GCP.}
 }
 \value{
 A character string representing the path to the newly created warped
@@ -40,21 +58,19 @@ system (EPSG:4326). The warped image is saved as a new file with the suffix
 \examples{
 \dontshow{if (rlang::is_interactive()) withAutoprint(\{ # examplesIf}
 # get the path to an example image included in the package
-img_path <- system.file("extdata/europe_map.jpeg", package = "crstools")
+img_path <- system.file("extdata/europe_map.jpeg",
+  package = "crstools"
+)
 # load a set of GCPs (or we could create them using the choose_gcp()
-# and find_gcp() functions)
+# and find_gcp_coords() functions)
 gcp_df <- readRDS(system.file(
   "extdata/europe_gcp_georef.RDS",
   package = "crstools"
 ))
-#' # Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
+# Assuming you have a set of GCPs in gcp_df and an image file "image.jpg"
 warped_img <- georeference_img(
   image_obj = img_path, gcp = gcp_df,
-  output_path = tempfile(
-    patter = "georef_img_",
-    tmpdir = tempdir(),
-    fileext = ".tif"
-  )
+  output_path = tempfile(pattern = "georef_img_")
 )
 \dontshow{\}) # examplesIf}
 }

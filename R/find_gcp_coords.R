@@ -1,5 +1,15 @@
 #' Find the coordinates (longitude and latitude) of the ground control points
-#' (GCPs) in a given image.
+#' (GCPs) in a given image
+#'
+#' @details NOTE: There are two conventions on how to define pixel coordinates.
+#' In this
+#' function (and more generally throughout `crstools`), the origin is defined as
+#' the bottom left corner of the image, with x increasing to the right and y
+#' increasing upwards. This is consistent with the convention used in many image
+#' processing libraries. However, some libraries (like OpenCV and GDAL) define
+#' the origin at the top left corner, with y increasing downwards. Be sure to
+#' check which convention your image processing library uses when working with
+#' pixel coordinates.
 #'
 #' @param gcp A data frame containing the GCPs with columns `id`, `x`, `y`,
 #'   `longitude`, and `latitude`.
@@ -71,8 +81,8 @@ find_gcp_coords <- function(gcp, sf_obj) {
   }
   message("Click on the map to add a new GCP. Press ESC to finish.\n")
 
-  # get coordinates of additional points
-  while (TRUE) {
+  # get coordinates of additional points, until all GCPs have coordinates
+  while (anyNA(gcp$longitude) || anyNA(gcp$latitude)) {
     coords <- graphics::locator(n = 1, type = "p", col = "red", pch = 19)
     if (is.null(coords)) {
       break
