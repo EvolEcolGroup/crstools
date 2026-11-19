@@ -120,7 +120,7 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = 100,
 
   # check that radius is a single positive number
   if (!is.numeric(radius) || length(radius) != 1 || !is.finite(radius) ||
-    radius <= 0) {
+        radius <= 0) {
     stop("radius must be a single positive number (in metres)")
   }
 
@@ -136,7 +136,7 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = 100,
 # function to estimate distortion metrics using the "walking" north and east
 # approach on a sphere. The step (radius, in metres) only sets the accuracy of
 # the estimates, so it is not derived from the spacing of the grid as in
-# geom_tissot()
+# the geom_tissot() fucntion.
 distortion_sphere <- function(coord_grid, crs, radius) {
   # metres per CRS unit (e.g. 0.3048 for feet), so that the projected
   # steps are in the same units as radius
