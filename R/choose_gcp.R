@@ -16,7 +16,7 @@
 #' pixel coordinates.
 #' @param image_obj An array representing the image (colour images are generally
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
-#'   image (currenly this can only be of type .jpg).
+#'   image (currently this can only be of type .jpg).
 #' @param gcp (optional) A dataframe of GCPs, containing columns `id`, `x`,
 #'   `y`,`longitude`, `latitude`. This is used if we want to add additional GCP
 #'   to an existing list (usually created by running this function multiple
@@ -65,7 +65,7 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
         paste(required_cols, collapse = ", ")
       )
     }
-    last_id <- max(gcp$id, na.rm = TRUE)
+    last_id <- if (nrow(gcp) > 0) max(gcp$id, na.rm = TRUE) else 0
     # check that the image dimensions are stored as an attribute
     if (!is.null(attr(gcp, "image_dims"))) {
       img_dims <- attr(gcp, "image_dims")
@@ -89,17 +89,18 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
   # open a new window to plot the image
   grDevices::x11()
   # plot the image
+  # the image array has dimensions rows (height) x columns (width) x channels
   plot(
     0,
     0,
-    xlim = c(0, dim(img)[1]),
-    ylim = c(0, dim(img)[2]),
+    xlim = c(0, dim(img)[2]),
+    ylim = c(0, dim(img)[1]),
     type = "n",
     xlab = "x_pixels",
     ylab = "y_pixels"
   )
   # add the image to the plot
-  graphics::rasterImage(img, 0, 0, dim(img)[1], dim(img)[2])
+  graphics::rasterImage(img, 0, 0, dim(img)[2], dim(img)[1])
 
   if (last_id > 0) {
     # plot and add numbers for an existing set of gcp
@@ -119,12 +120,18 @@ choose_gcp <- function(image_obj, gcp = NULL, col = "red") {
     )
     # combine the gcp tables
     gcp <- rbind(gcp, gcp_df_new)
+    # add the ids of the new points on the image
+    graphics::text(
+      gcp_df_new$x,
+      gcp_df_new$y,
+      labels = gcp_df_new$id,
+      col = col,
+      pos = 2
+    )
   }
 
   # readd the dims of the image as an attribute
   attr(gcp, "image_dims") <- dim(img)
-
-  graphics::text(gcp$x, gcp$y, labels = gcp$id, col = col, pos = 2)
 
   # return the gcp dataframe
   return(gcp)

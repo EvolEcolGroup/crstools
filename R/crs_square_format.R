@@ -165,7 +165,7 @@ crs_square_format <- function(
     message(
       paste0(
         "To reduce overall area distortion on the map, ",
-        "one can also apply a scale factor. Various values for can be ",
+        "one can also apply a scale factor k. Various values for k can be ",
         "applied and the area distortion patterns along the centre and ",
         "at the border of the map are compared to select ",
         "most appropriate value."

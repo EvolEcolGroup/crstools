@@ -56,8 +56,8 @@ The transformation is a polynomial in pixel coordinates, fitted by ordinary
 least square separately for longitude and latitude, with all terms up to the
 specific order (3, 6, 10 coefficients for first, second and third order
 polynomials). This forward (pixel to lon/lat) transformation, is the same
-applied by GDAL in \code{\link[=georeference_img]{georeference_img()}} and \code{\link[=get_pts_coords]{get_pts_coords()}}. LOO resisuals
-are computed without refittinhg as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
+applied by GDAL in \code{\link[=georeference_img]{georeference_img()}} and \code{\link[=get_pts_coords]{get_pts_coords()}}. LOO residuals
+are computed without refitting as \eqn{e_i / (1 - h_{ii})}, where \eqn{e_i}
 is the ordinary residual and \eqn{h_{ii}} is the leverage of the i-th GCP.
 
 Residuals are given in degrees (observed minus fitted) and as the
@@ -73,9 +73,10 @@ gcp_df <- readRDS(system.file(
 ))
 res <- get_gcp_residuals(gcp_df, transform_method = "poly_1")
 res
-# mean rmse
+# mean error (km)
 mean(res$res_km)
+# root mean square error (km)
 sqrt(mean(res$res_km^2))
-# mean loo rmse
+# leave-one-out root mean square error (km), no GCPs with leverage 1 (NA)
 sqrt(mean(res$loo_km^2, na.rm = TRUE))
 }

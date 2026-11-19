@@ -42,20 +42,12 @@ test_that("test whole world", {
 
   # check Hammer projection
   ref_proj4_hammer <- "+proj=hammer +lon_0=0 +datum=WGS84 +units=m +no_defs"
-  ref_wkt_hammer <- 'PROJCS["ProjWiz_Custom_Hammer_Aitoff",
-                           GEOGCS["GCS_WGS_1984",
-                                  DATUM["D_WGS_1984",
-                                        SPHEROID["WGS_1984",6378137.0,298.257223563]],
-                                  PRIMEM["Greenwich",0.0],
-                                  UNIT["Degree",0.0174532925199433]],
-                           PROJECTION["Hammer_Aitoff"],
-                           PARAMETER["False_Easting",0.0],
-                           PARAMETER["False_Northing",0.0],
-                           PARAMETER["Central_Meridian",0],
-                           UNIT["Meter",1.0]]'
-
   expect_equal(whole_eqa_list$hammer$proj4, ref_proj4_hammer)
-  expect_true(sf::st_crs(whole_eqa_list$hammer$wkt) == sf::st_crs(ref_wkt_hammer))
+  # the ESRI WKT for Hammer cannot be parsed by PROJ, so the WKT is generated
+  # by PROJ from the proj4 string
+  expect_true(
+    sf::st_crs(whole_eqa_list$hammer$wkt) == sf::st_crs(ref_proj4_hammer)
+  )
 
   # check Eckert IV projection
   ref_proj4_eck4 <- "+proj=eck4 +lon_0=0 +datum=WGS84 +units=m +no_defs"
@@ -115,15 +107,15 @@ test_that("test whole world", {
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(blah = "blah")),
-               "`world_equidistant` must be a list with a `prj` element")
+               "`world_equidist` must be a list with a `prj` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = "blah"),
-               "`world_equidistant` must be a list with a `prj` element")
+               "`world_equidist` must be a list with a `prj` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", lng_central = 0)),
-               "`world_equidistant` must contain a `pole` element")
+               "`world_equidist` must contain a `pole` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", pole = -80, lng_central = 0)),
@@ -132,49 +124,49 @@ test_that("test whole world", {
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "polar", pole = -90)),
-               "`world_equidistant` must contain a `lng_central` element")
+               "`world_equidist` must contain a `lng_central` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
                                                                    lng_centre = 0)),
-               "`world_equidistant` must contain a `lat_centre` element")
+               "`world_equidist` must contain a `lat_centre` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "oblique",
                                                                    lat_centre = 0)),
-               "`world_equidistant` must contain a `lng_centre` element")
+               "`world_equidist` must contain a `lng_centre` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lng1 = -117,
                                                                                           lat2 = 46,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lat1` element")
+               "`world_equidist` must contain a `lat1` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lat2 = 46,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lng1` element")
+               "`world_equidist` must contain a `lng1` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lng1 = -117,
                                                                                           lng2 = 16)),
-               "`world_equidistant` must contain a `lat2` element")
+               "`world_equidist` must contain a `lat2` element")
   expect_error(whole_equidist <- two_points_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                                                     distortion = "equidistant",
                                                                     world_equidist = list(prj = "two_points",
                                                                                           lat1 = 34,
                                                                                           lng1 = -117,
                                                                                           lat2 = 46)),
-               "`world_equidistant` must contain a `lng2` element")
+               "`world_equidist` must contain a `lng2` element")
   expect_error(whole_equidist <- suggest_crs(c(-180, 180, -90, 90),
                                              distortion = "equidistant",
                                              world_equidist = list(prj = "blah", pole = -90, lng_central = 0)),
-               "the `prj` element of world_equidistant` should be one of")
+               "the `prj` element of `world_equidist` should be one of")
 
 
 
@@ -198,6 +190,10 @@ test_that("test whole world", {
  UNIT["Meter",1.0]]'
   expect_equal(polar_equidist$proj4, ref_proj4_polar_eqd)
   expect_true(sf::st_crs(polar_equidist$wkt) == sf::st_crs(ref_wkt_polar_eqd))
+  expect_equal(
+    polar_equidist$notes,
+    "Distance correct through or from the South Pole; Central meridian: 0."
+  )
 
   # Oblique Azimuthal equidistant
   oblique_equidist <- suggest_crs(c(-180, 180, -90, 90),
@@ -288,7 +284,7 @@ test_that("test whole world", {
   expect_true(sf::st_crs(whole_comp_list$natearth$wkt) == sf::st_crs(ref_wkt_natearth))
 
   # check Winkel Tripel projection
-  ref_proj4_wintri <- "+proj=wintri +lon_0=0 +datum=WGS84 +units=m +no_defs"
+  ref_proj4_wintri <- "+proj=wintri +lon_0=0 +lat_1=50.467 +datum=WGS84 +units=m +no_defs"
   ref_wkt_wintri <- 'PROJCS["ProjWiz_Custom_Winkel_Tripel",
                            GEOGCS["GCS_WGS_1984",
                                   DATUM["D_WGS_1984",

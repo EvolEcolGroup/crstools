@@ -4,15 +4,15 @@
 \alias{plot_gcp}
 \title{Function to plot the Ground Control Points (GCPs) on an raw image}
 \usage{
-plot_gcp(image_obj, gcp = NULL, col = "red")
+plot_gcp(image_obj, gcp, col = "red")
 }
 \arguments{
 \item{image_obj}{An array representing the image (colour images are generally
 imported as an array of nx x ny x 3 colour channels), or a file path to the
-image (currenly this can only be of type .jpg).}
+image (currently this can only be of type .jpg).}
 
 \item{gcp}{A dataframe of GCPs, containing at least columns \code{id}, \code{x},
-\code{y}.}
+\code{y}. If NULL (the default), only the image is plotted.}
 
 \item{col}{The colour of the points to be plotted on the image. Default is
 "red".}

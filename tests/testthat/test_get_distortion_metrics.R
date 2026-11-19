@@ -100,6 +100,28 @@ test_that("sf, SpatVector and SpatRaster give the same results", {
 
 
 
+# check that the grid of centres is the same used by geom_tissot()
+test_that("grid of centres matches geom_tissot()", {
+  area <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(
+      rbind(c(-80, -60), c(-30, -60), c(-30, 10), c(-80, 10), c(-80, -60))
+    )),
+    crs = 4326
+  ))
+  area_laea <- sf::st_transform(area, "+proj=laea +lat_0=-25 +lon_0=-55")
+  metrics <- get_distortion_metrics(area_laea)
+  p <- ggplot2::ggplot(area_laea) +
+    ggplot2::geom_sf() +
+    geom_tissot()
+  circles <- ggplot2::ggplot_build(p)$data[[2]]$geometry
+  tissot_centres <- sf::st_coordinates(suppressWarnings(
+    sf::st_centroid(sf::st_transform(circles, 4326))
+  ))
+  expect_setequal(unique(round(tissot_centres[, "X"])), unique(metrics$lon))
+  expect_setequal(unique(round(tissot_centres[, "Y"])), unique(metrics$lat))
+})
+
+
 ####################
 ## Theoretical checks
 ####################
@@ -107,11 +129,15 @@ test_that("sf, SpatVector and SpatRaster give the same results", {
 
 # check that for an equal area projection we `areal_scale` values of 1
 test_that("Check areal_scale values for equal area projection", {
-  library(rnaturalearth)
-  library(sf)
-  s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
+  # rnaturalearth (and its data package) are only suggested
+  skip_if_not_installed("rnaturalearth")
+  skip_if_not_installed("rnaturalearthdata")
+  s_america_sf <- rnaturalearth::ne_countries(
+    continent = "South America",
+    returnclass = "sf"
+  )
   s_am_equal_area <- suggest_crs(s_america_sf, distortion = "equal_area")
-  s_america_proj <- st_transform(s_america_sf, s_am_equal_area$proj4)
+  s_america_proj <- sf::st_transform(s_america_sf, s_am_equal_area$proj4)
   metrics <- get_distortion_metrics(s_america_proj)
   # check that areal_scale values are all equal to 1
   expect_true(all(round(metrics["areal_scale"], 1) == 1))
@@ -120,11 +146,15 @@ test_that("Check areal_scale values for equal area projection", {
 
 # check that for a conformal projection we `angular_distortion` values of 0
 test_that("Check angular_distortion values for conformal projection", {
-  library(rnaturalearth)
-  library(sf)
-  s_america_sf <- ne_countries(continent = "South America", returnclass = "sf")
+  # rnaturalearth (and its data package) are only suggested
+  skip_if_not_installed("rnaturalearth")
+  skip_if_not_installed("rnaturalearthdata")
+  s_america_sf <- rnaturalearth::ne_countries(
+    continent = "South America",
+    returnclass = "sf"
+  )
   s_am_conformal <- suggest_crs(s_america_sf, distortion = "conformal")
-  s_america_proj <- st_transform(s_america_sf, s_am_conformal$proj4)
+  s_america_proj <- sf::st_transform(s_america_sf, s_am_conformal$proj4)
   # check for sphere (approximation,small residual angular distortion)
   metrics_sph <- get_distortion_metrics(s_america_proj, method = "sphere", 
                                         radius = 100)

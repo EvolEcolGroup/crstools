@@ -12,11 +12,11 @@
 #' "Grid searches over lambda (nugget and sill variances) with minima at
 #' the endpoints:" This is often benign warning and indicates that the optimal
 #' smoothing parameter is at or near the boundary of the search space (matching
-#' the default lamba 1e-4, and thus approaching perfect interpolation).
+#' the default lambda 1e-4, and thus approaching perfect interpolation).
 #'
 #' @param gcp A data frame containing the Ground Control Points (GCPs). This
-#'   dataframe can be produced with the \code{draw_gcp_points} function. This
-#'   data frame should have the following columns:
+#'   dataframe can be produced with the [choose_gcp()] and [find_gcp_coords()]
+#'   functions. This data frame should have the following columns:
 #'   \itemize{
 #'     \item \code{id}: An identifier for each GCP (numeric).
 #'     \item \code{x}: The x-coordinate of the GCP (in pixel space).
@@ -26,9 +26,9 @@
 #'   }
 #'
 #' @param target_pts A data frame containing the target points to transform.
-#'   This dataframe must contain the following columns:
+#'   This dataframe must contain the following columns (any other column, such
+#'   as an identifier for each point, is kept in the output):
 #'   \itemize{
-#'     \item \code{id}: An identifier for each target point.
 #'     \item \code{x} or \code{cx}: The x-coordinate of the point
 #'       (in pixel space).
 #'     \item \code{y} or \code{cy}: The y-coordinate of the point
@@ -51,10 +51,10 @@
 #'
 #' @return A data frame containing:
 #'   \itemize{
-#'     \item \code{id}: The original target point identifier.
-#'     \item Pixel coordinate columns from the original dataframe.
-#'     \item \code{lon}: Estimated longitude.
-#'     \item \code{lat}: Estimated latitude.
+#'     \item All the columns of \code{target_pts} (including the pixel
+#'       coordinates).
+#'     \item \code{longitude}: Estimated longitude.
+#'     \item \code{latitude}: Estimated latitude.
 #'   }
 #'
 #' @export
@@ -116,6 +116,15 @@ get_pts_coords <- function(
     stop(
       "Missing required columns in 'gcp': ",
       paste(missing_gcp_cols, collapse = ", ")
+    )
+  }
+
+  # GCPs with missing values would be silently dropped by the fitting
+  # functions (and counted when choosing the polynomial order)
+  if (anyNA(gcp[required_gcp_cols])) {
+    stop(
+      "'gcp' contains NA values. ",
+      "Did you forget to use `find_gcp_coords()`?"
     )
   }
 
@@ -189,9 +198,6 @@ get_pts_coords <- function(
       latitude ~ x + y,
       data = gcp
     )
-
-    lon_pred <- stats::predict(lon_model, pred_df)
-    lat_pred <- stats::predict(lat_model, pred_df)
   }
 
   # ---------------------------------------------------------------------------
@@ -208,9 +214,6 @@ get_pts_coords <- function(
       latitude ~ x + y + I(x^2) + I(y^2) + I(x * y),
       data = gcp
     )
-
-    lon_pred <- stats::predict(lon_model, pred_df)
-    lat_pred <- stats::predict(lat_model, pred_df)
   }
 
   # ---------------------------------------------------------------------------
@@ -233,7 +236,21 @@ get_pts_coords <- function(
         I(x^2 * y) + I(x * y^2),
       data = gcp
     )
+  }
 
+  # ---------------------------------------------------------------------------
+  # Predict with the polynomial
+  # ---------------------------------------------------------------------------
+
+  if (transform_method %in% c("poly_1", "poly_2", "poly_3")) {
+    # lm() drops terms (NA coefficients) if the GCPs do not allow to estimate
+    # them
+    if (anyNA(stats::coef(lon_model)) || anyNA(stats::coef(lat_model))) {
+      stop(
+        "The GCPs are not sufficiently spread to fit a polynomial of order ",
+        substr(transform_method, 6, 6), " (e.g. they are collinear)."
+      )
+    }
     lon_pred <- stats::predict(lon_model, pred_df)
     lat_pred <- stats::predict(lat_model, pred_df)
   }

@@ -14,7 +14,7 @@
 #'   "equal_area", "conformal", "equidistant" and "compromise". Default is
 #'   "equal_area".
 #' @param x A vector of four numeric values representing the extent of the map
-#'   (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
+#' (xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.
 #' @param round_cm Logical. If TRUE, the central meridian is rounded to the
 #'   nearest degree. Default is FALSE.
 #' @param return_best Logical. If TRUE, only the best projection is returned,
@@ -27,7 +27,7 @@
 #' @param world_equidist if `distortion`="equidistant" for a whole world
 #'   projection, then this parameter should be a list with one of the following
 #'   sets of elements:
-#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central``,
+#' * "Polar azimuthal equidistant": `prj` = "polar", `pole`, `lng_central`,
 #'   where `pole` is either -90 or 90 for the South and North Pole,
 #'   respectively, from or through which distances are correct, and
 #'   `lng_central` is the central meridian.
@@ -72,11 +72,28 @@ suggest_crs <- function(
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
+    # if crs is missing, then assume lat/lon
+    if (is.na(terra::crs(x))) {
+      warning("x has no crs, assuming lat/lon")
+      terra::crs(x) <- "EPSG:4326"
+    }
+    # check not projected
+    if (!terra::is.lonlat(x)) {
+      stop("x must be a in geographic coordinates (lon/lat)")
+    }
     x_ext <- as.vector(terra::ext(x))
   } else if (inherits(x, "sf")) {
-    # note that sf::st_bbox returns c(xmin, ymin, xmax, ymax)
+    # if crs is missing, then assume lat/lon
+    if (is.na(sf::st_crs(x))) {
+      warning("x has no crs, assuming lat/lon")
+      sf::st_crs(x) <- 4326
+    }
+    # check not projected
+    if (!sf::st_is_longlat(x)) {
+      stop("x must be a in geographic coordinates (lon/lat)")
+    }
     x_ext <- as.vector(sf::st_bbox(x))[c(1, 3, 2, 4)]
-  } else if (inherits(x, "numeric") && length(x) == 4) {
+  } else if (is.numeric(x) && is.null(dim(x)) && length(x) == 4) {
     x_ext <- x
   } else {
     stop(

@@ -292,7 +292,7 @@ crs_ew_extent <- function(
   # Add central meridian information
 
   # Include the scale factor note if necessary
-  if (scale_note) {
+  if (scale_note && !quiet) {
     message(
       paste0(
         "To reduce overall area distortion on the map, one can also ",

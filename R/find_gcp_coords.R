@@ -1,5 +1,5 @@
 #' Find the coordinates (longitude and latitude) of the ground control points
-#' (GCPs) in a given image.
+#' (GCPs) in a given image
 #'
 #' @details NOTE: There are two conventions on how to define pixel coordinates.
 #' In this
@@ -81,8 +81,8 @@ find_gcp_coords <- function(gcp, sf_obj) {
   }
   message("Click on the map to add a new GCP. Press ESC to finish.\n")
 
-  # get coordinates of additional points
-  while (TRUE) {
+  # get coordinates of additional points, until all GCPs have coordinates
+  while (anyNA(gcp$longitude) || anyNA(gcp$latitude)) {
     coords <- graphics::locator(n = 1, type = "p", col = "red", pch = 19)
     if (is.null(coords)) {
       break
