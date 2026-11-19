@@ -27,5 +27,5 @@
 * `geom_tissot()` now draws the indicatrices in every facet, and
   `get_distortion_metrics()` uses the same grid of centres as `geom_tissot()`.
 
-# crstools 0.1.0
+# crstools 1.0.0
 * Initial CRAN submission.
