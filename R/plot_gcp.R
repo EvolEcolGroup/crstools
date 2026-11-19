@@ -10,7 +10,7 @@
 #'   imported as an array of nx x ny x 3 colour channels), or a file path to the
 #'   image (currently this can only be of type .jpg).
 #' @param gcp A dataframe of GCPs, containing at least columns `id`, `x`,
-#'   `y`. If NULL (the default), only the image is plotted.
+#'   `y`.
 #' @param col The colour of the points to be plotted on the image. Default is
 #' "red".
 #' @return A plot with the GCPs
