@@ -1,4 +1,4 @@
-# crstools dev
+# crstools 1.2.0
 * implement plotting function for GCPs.
 * Allow to choose transformation method when georeferencing rasters.
 * Add `get_points_coords()` function to georeference individual points with 
