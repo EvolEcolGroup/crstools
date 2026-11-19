@@ -4,7 +4,7 @@
 \alias{get_pts_coords}
 \title{Extract geographic coordinates from pixel coordinates}
 \usage{
-get_pts_coords(gcp, target_pts, transform_method = "auto", lambda = 1e-04)
+get_pts_coords(gcp, target_pts, transform_method = "auto", lambda = 0)
 }
 \arguments{
 \item{gcp}{A data frame containing the Ground Control Points (GCPs). This
@@ -36,11 +36,14 @@ spline), or \code{"auto"} (the default, automatically selecting a
 polynomial order based on the number of GCPs available).}
 
 \item{lambda}{Numeric smoothing parameter used for thin plate spline
-transformations (\code{transform_method = "tps"}). A value of \code{1e-4}
-produces near-exact interpolation through the GCPs, mimicking GDAL TPS
-behaviour whilst helping with algorithm convergence. Larger values
-introduce smoothing and may improve robustness
-when GCPs contain noise or digitizing errors.}
+transformations (\code{transform_method = "tps"}). The default,
+\code{0}, interpolates exactly through the GCPs, matching the GDAL thin
+plate spline used by \code{\link[=georeference_img]{georeference_img()}}. Larger values introduce
+smoothing (the spline no longer passes exactly through the GCPs), which
+may improve robustness when GCPs contain noise or digitizing errors. As
+pixel coordinates are rescaled by the extent of the GCPs before fitting,
+the amount of smoothing for a given \code{lambda} does not depend on the
+resolution of the image.}
 }
 \value{
 A data frame containing:
@@ -59,13 +62,16 @@ point-wise coordinate transformation without warping a raster.
 \details{
 Polynomial transformations are implemented using native linear models, while
 thin plate spline transformations are implemented using
-\code{fields::Tps()}.
+\code{fields::Tps()}. For thin plate splines, the x and y pixel coordinates
+are rescaled by the same factor, so that distances between points are
+proportional to distances in pixels, as in the GDAL thin plate spline used
+by \code{\link[=georeference_img]{georeference_img()}}.
 
-Note that, when using \code{tps} as a method, you might get warnings that the
+Note that, when using \code{tps} as a method, \code{fields::Tps()} might print
 "Grid searches over lambda (nugget and sill variances) with minima at
-the endpoints:" This is often benign warning and indicates that the optimal
-smoothing parameter is at or near the boundary of the search space (matching
-the default lambda 1e-4, and thus approaching perfect interpolation).
+the endpoints". This is benign: \code{fields::Tps()} always searches for the
+best smoothing parameter and reports when the best value is at the edge of
+its search range, but the fit uses the value given in \code{lambda}.
 }
 \examples{
 pts_df <- readRDS(system.file(

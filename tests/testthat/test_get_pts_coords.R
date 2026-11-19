@@ -128,6 +128,23 @@ basic_target <- data.frame(
   y = 50
 )
 
+# GCPs spread 1000 px across but only 100 px down, with a non-affine
+# longitude, so that the tps result depends on how distances are measured
+wide_gcp <- data.frame(
+  id = 1:5,
+  x = c(0, 1000, 0, 1000, 300),
+  y = c(0, 0, 100, 100, 40),
+  longitude = c(0, 10, 0, 10, 4),
+  latitude = c(0, 0, 1, 1, 0.4)
+)
+
+# target points between the GCPs
+wide_target <- data.frame(
+  id = 1:8,
+  x = rep(c(100, 500, 700, 900), 2),
+  y = rep(c(20, 70), each = 4)
+)
+
 # -----------------------------------------------------------------------------
 # poly_1 recovery test
 # -----------------------------------------------------------------------------
@@ -191,6 +208,77 @@ test_that("get_pts_coords correctly recovers lon/lat coordinates using tps", {
     truth$latitude,
     tolerance = 1e-3
   )
+})
+
+# -----------------------------------------------------------------------------
+# TPS matches GDAL
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords tps matches GDAL tps between the GCPs", {
+  skip_if_not_installed("fields")
+
+  # reference values from GDAL 3.13.3, obtained with:
+  # gdaltransform -tps -output_xy -gcp 0 0 0 0 -gcp 1000 0 10 0
+  #   -gcp 0 100 0 1 -gcp 1000 100 10 1 -gcp 300 40 4 0.4
+  gdal_lon <- c(
+    1.35588676861892, 5.97573649140131, 7.63351020967065, 9.19506385170972,
+    1.35314249748361, 5.97147040850824, 7.63060700093157, 9.19353289121228
+  )
+  gdal_lat <- rep(c(0.2, 0.7), each = 4)
+
+  result <- get_pts_coords(
+    gcp = wide_gcp,
+    target_pts = wide_target,
+    transform_method = "tps"
+  )
+
+  expect_equal(result$longitude, gdal_lon, tolerance = 1e-8)
+  expect_equal(result$latitude, gdal_lat, tolerance = 1e-8)
+
+  # confirm that scaling each axis independently (the default of fields::Tps)
+  # would not match GDAL
+  lon_range <- fields::Tps(
+    x = as.matrix(wide_gcp[, c("x", "y")]),
+    Y = wide_gcp$longitude,
+    lambda = 0
+  )
+  lon_range <- as.numeric(stats::predict(
+    lon_range,
+    as.matrix(wide_target[, c("x", "y")])
+  ))
+  expect_false(isTRUE(all.equal(lon_range, gdal_lon, tolerance = 1e-3)))
+})
+
+# -----------------------------------------------------------------------------
+# TPS does not depend on the orientation of the image
+# -----------------------------------------------------------------------------
+
+test_that("get_pts_coords tps gives the same result on a rotated image", {
+  skip_if_not_installed("fields")
+
+  # rotate pixel coordinates by 30 degrees, as if the map was scanned at an
+  # angle
+  rotate_px <- function(df, angle = pi / 6) {
+    new_x <- df$x * cos(angle) - df$y * sin(angle)
+    new_y <- df$x * sin(angle) + df$y * cos(angle)
+    df$x <- new_x
+    df$y <- new_y
+    df
+  }
+
+  result <- get_pts_coords(
+    gcp = wide_gcp,
+    target_pts = wide_target,
+    transform_method = "tps"
+  )
+  result_rot <- get_pts_coords(
+    gcp = rotate_px(wide_gcp),
+    target_pts = rotate_px(wide_target),
+    transform_method = "tps"
+  )
+
+  expect_equal(result_rot$longitude, result$longitude, tolerance = 1e-8)
+  expect_equal(result_rot$latitude, result$latitude, tolerance = 1e-8)
 })
 
 # -----------------------------------------------------------------------------

@@ -2,7 +2,10 @@
 * implement plotting function for GCPs.
 * Allow to choose transformation method when georeferencing rasters.
 * Add `get_pts_coords()` function to georeference individual points with 
-  a chosen transformation method.
+  a chosen transformation method. Thin plate splines (`transform_method =
+  "tps"`) measure distances in the same way as GDAL, so that, with the default
+  `lambda = 0`, points match the GDAL thin plate spline used by
+  `georeference_img()`.
 * Add `get_gcp_residuals()` function` to get the residuals of polynomials to
   assess the quality of the transformation.
 * `suggest_crs()` now accepts integer extents, stops with an error if an `sf`
