@@ -73,7 +73,7 @@ CRS of <code>data</code>.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_distortion_metrics</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  centres <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,</span>
-<span>  radius <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  radius <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sphere"</span>, <span class="st">"ellipsoid"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,8 +95,10 @@ length 2 with the number of rows/columns for an automatic grid, as in
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
 <dd><p>The length of the probing step used to estimate local
-distortion, in metres, used only when <code>method = "sphere"</code>. If NULL,
-estimated automatically as in <code><a href="geom_tissot.html">geom_tissot()</a></code>. Default is NULL.</p></dd>
+distortion, in metres, used only when <code>method = "sphere"</code>. Unlike in
+<code><a href="geom_tissot.html">geom_tissot()</a></code>, it does not depend on the spacing of the grid, as it
+only sets the accuracy of the estimates (longer steps are less accurate).
+Default is 100.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -121,8 +123,9 @@ point, in EPSG:4326), <code>areal_scale</code>, <code>angular_distortion</code> 
 length <code>radius</code>, due north and due east on a sphere with fixed radius. Point
 and steps are then projected to the CRS of <code>data</code>, and the distortion metrics
 are computed. Because the Earth is not a perfect sphere, this method is less
-accurate (below 1°) than the <code>"ellipsoid"</code> method, but it does not require
-the <code>PROJ</code> library and the PROJ R package installed.</p></li>
+accurate than the <code>"ellipsoid"</code> method (differences in angular distortion
+are usually below 1°), but it does not require the <code>PROJ</code> library and the
+PROJ R package installed.</p></li>
 <li><p><code>"ellipsoid"</code>: distortion metrics are computed using the <code>PROJ</code> R library
 via the <code><a href="https://hypertidy.github.io/PROJ/reference/proj_factors.html" class="external-link">PROJ::proj_factors()</a></code> function, using the ellipsoid defined by the
 CRS and therefore being more accurate than the <code>"sphere"</code> method. This method
@@ -159,13 +162,13 @@ U.S. Government Printing Office. DOI: 10.3133/pp1395.</p>
 <span class="r-in"><span><span class="va">s_america_proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">s_america_sf</span>, <span class="va">s_am_equal_area</span><span class="op">$</span><span class="va">proj4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu">get_distortion_metrics</span><span class="op">(</span><span class="va">s_america_proj</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">metrics</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"areal_scale"</span>, <span class="st">"angular_distortion"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   areal_scale     angular_distortion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.9920   Min.   : 0.02516  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.9979   1st Qu.: 1.22167  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0003   Median : 4.64258  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.0006   Mean   : 5.77314  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0042   3rd Qu.: 8.28786  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :1.0090   Max.   :18.23024  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   areal_scale angular_distortion</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :1    Min.   : 0.02684  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:1    1st Qu.: 1.10587  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1    Median : 4.29052  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1    Mean   : 5.71520  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1    3rd Qu.: 8.31986  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :1    Max.   :18.71476  </span>
 </code></pre></div>
     </div>
   </div>

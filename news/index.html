@@ -64,10 +64,10 @@
 <h2 class="page-header" data-toc-text="1.2.0" id="crstools-120">crstools 1.2.0<a class="anchor" aria-label="anchor" href="#crstools-120"></a></h2>
 <ul><li>implement plotting function for GCPs.</li>
 <li>Allow to choose transformation method when georeferencing rasters.</li>
-<li>Add <code>get_points_coords()</code> function to georeference individual points with a chosen transformation method.</li>
+<li>Add <code><a href="../reference/get_pts_coords.html">get_pts_coords()</a></code> function to georeference individual points with a chosen transformation method. Thin plate splines (<code>transform_method = "tps"</code>) measure distances in the same way as GDAL, so that, with the default <code>lambda = 0</code>, points match the GDAL thin plate spline used by <code><a href="../reference/georeference_img.html">georeference_img()</a></code>.</li>
 <li>Add <code><a href="../reference/get_gcp_residuals.html">get_gcp_residuals()</a></code> function` to get the residuals of polynomials to assess the quality of the transformation.</li>
 <li>
-<code><a href="../reference/suggest_crs.html">suggest_crs()</a></code> now accepts integer extents, reprojects <code>sf</code> and <code>SpatRaster</code> objects in a projected CRS to longitude/latitude, and honours <code>quiet = TRUE</code> for regional maps.</li>
+<code><a href="../reference/suggest_crs.html">suggest_crs()</a></code> now accepts integer extents, stops with an error if an <code>sf</code> or <code>SpatRaster</code> object is in a projected CRS (reproject it to longitude/latitude first), assumes longitude/latitude with a warning if the object has no CRS, and honours <code>quiet = TRUE</code> for regional maps.</li>
 <li>Fix the proj4 string of Winkel Tripel (which defined a different projection from the WKT when used by <code>sf</code> or <code>terra</code>) and the WKT of Hammer (which could not be parsed by PROJ).</li>
 <li>Fix <code><a href="../reference/choose_gcp.html">choose_gcp()</a></code> and <code><a href="../reference/plot_gcp.html">plot_gcp()</a></code> swapping the width and height of non-square images, which led to incorrect georeferencing.</li>
 <li>

@@ -95,7 +95,10 @@ Projection Wizard (Bojan et al., 2016), version 2.1.
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A vector of four numeric values representing the extent of the map
-(xmin, xmax, ymin, ymax), or a SpatExtent object, or a SpatRaster object.</p></dd>
+in longitude and latitude (xmin, xmax, ymin, ymax), or a SpatExtent object
+in longitude and latitude, or a SpatRaster or sf object in a geographic
+(lon/lat) CRS. Objects with no CRS are assumed to be in longitude and
+latitude.</p></dd>
 
 
 <dt id="arg-distortion">distortion<a class="anchor" aria-label="anchor" href="#arg-distortion"></a></dt>

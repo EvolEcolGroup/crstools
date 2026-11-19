@@ -70,7 +70,7 @@ point-wise coordinate transformation without warping a raster.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_pts_coords</span><span class="op">(</span><span class="va">gcp</span>, <span class="va">target_pts</span>, transform_method <span class="op">=</span> <span class="st">"auto"</span>, lambda <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_pts_coords</span><span class="op">(</span><span class="va">gcp</span>, <span class="va">target_pts</span>, transform_method <span class="op">=</span> <span class="st">"auto"</span>, lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -109,11 +109,14 @@ polynomial order based on the number of GCPs available).</p></dd>
 
 <dt id="arg-lambda">lambda<a class="anchor" aria-label="anchor" href="#arg-lambda"></a></dt>
 <dd><p>Numeric smoothing parameter used for thin plate spline
-transformations (<code>transform_method = "tps"</code>). A value of <code>1e-4</code>
-produces near-exact interpolation through the GCPs, mimicking GDAL TPS
-behaviour whilst helping with algorithm convergence. Larger values
-introduce smoothing and may improve robustness
-when GCPs contain noise or digitizing errors.</p></dd>
+transformations (<code>transform_method = "tps"</code>). The default,
+<code>0</code>, interpolates exactly through the GCPs, matching the GDAL thin
+plate spline used by <code><a href="georeference_img.html">georeference_img()</a></code>. Larger values introduce
+smoothing (the spline no longer passes exactly through the GCPs), which
+may improve robustness when GCPs contain noise or digitizing errors. As
+pixel coordinates are rescaled by the extent of the GCPs before fitting,
+the amount of smoothing for a given <code>lambda</code> does not depend on the
+resolution of the image.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -127,12 +130,15 @@ coordinates).</p></li>
     <h2>Details</h2>
     <p>Polynomial transformations are implemented using native linear models, while
 thin plate spline transformations are implemented using
-<code><a href="https://rdrr.io/pkg/fields/man/Tps.html" class="external-link">fields::Tps()</a></code>.</p>
-<p>Note that, when using <code>tps</code> as a method, you might get warnings that the
+<code><a href="https://rdrr.io/pkg/fields/man/Tps.html" class="external-link">fields::Tps()</a></code>. For thin plate splines, the x and y pixel coordinates
+are rescaled by the same factor, so that distances between points are
+proportional to distances in pixels, as in the GDAL thin plate spline used
+by <code><a href="georeference_img.html">georeference_img()</a></code>.</p>
+<p>Note that, when using <code>tps</code> as a method, <code><a href="https://rdrr.io/pkg/fields/man/Tps.html" class="external-link">fields::Tps()</a></code> might print
 "Grid searches over lambda (nugget and sill variances) with minima at
-the endpoints:" This is often benign warning and indicates that the optimal
-smoothing parameter is at or near the boundary of the search space (matching
-the default lambda 1e-4, and thus approaching perfect interpolation).</p>
+the endpoints". This is benign: <code><a href="https://rdrr.io/pkg/fields/man/Tps.html" class="external-link">fields::Tps()</a></code> always searches for the
+best smoothing parameter and reports when the best value is at the edge of
+its search range, but the fit uses the value given in <code>lambda</code>.</p>
     </div>
 
     <div id="ref-examples">
