@@ -99,4 +99,14 @@ test_that("projected sf and SpatRaster objects fails", {
   expect_warning(suggest_crs(area_no_crs, quiet = TRUE),
                  "x has no crs, assuming lat/lon",
   )
+  # same for a raster: terra uses "" (not NA) for a missing crs
+  area_r_no_crs <- terra::rast(
+    terra::ext(as.vector(sf::st_bbox(area))[c(1, 3, 2, 4)]),
+    crs = "", nrows = 10, ncols = 10
+  )
+  expect_warning(
+    no_crs_r <- suggest_crs(area_r_no_crs, quiet = TRUE),
+    "x has no crs, assuming lat/lon"
+  )
+  expect_identical(no_crs_r, ref)
 })

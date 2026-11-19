@@ -72,8 +72,8 @@ suggest_crs <- function(
   if (inherits(x, "SpatExtent")) {
     x_ext <- as.vector(x)
   } else if (inherits(x, "SpatRaster")) {
-    # if crs is missing, then assume lat/lon
-    if (is.na(terra::crs(x))) {
+    # if crs is missing, then assume lat/lon (terra uses "" for unknown crs)
+    if (is.na(terra::crs(x)) || terra::crs(x) == "") {
       warning("x has no crs, assuming lat/lon")
       terra::crs(x) <- "EPSG:4326"
     }
