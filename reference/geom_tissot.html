@@ -96,8 +96,8 @@ there is no plot mapping.</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>The data to be displayed in this layer. There are two options: A
-sf object or a SpatRaster object</p></dd>
+<dd><p>The data to be displayed in this layer: an sf, SpatRaster or
+SpatVector object. If NULL (the default), the data of the plot is used.</p></dd>
 
 
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
@@ -125,13 +125,15 @@ longitudes and latitudes of the grid of centres for the Tissot's
 indicatrix, or a vector of length 2 with the number of rows and columns to
 generate such a grid automatically. The latter is passed to <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty()</a></code> to
 get pretty breaks, and the exact number of Tissot's circles might differ
-from the input numbers (see <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty()</a></code> for details. It defaults to c(5,5).</p></dd>
+from the input numbers (see <code><a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty()</a></code> for details). It defaults to
+c(5,5).</p></dd>
 
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
 <dd><p>The radius of the circles (see <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_buffer()</a></code> for an
 explanation of how units are created; we recommend that you explicitly
-state your using with the <code><a href="https://r-quantities.github.io/units/reference/units.html" class="external-link">units::as_units()</a></code>, e.g <code>units::as_units(100, "km")</code></p></dd>
+state your units with <code><a href="https://r-quantities.github.io/units/reference/units.html" class="external-link">units::as_units()</a></code>, e.g. <code>units::as_units(100, "km")</code>). If NULL (the default), it is set to a quarter of the minimum
+distance between the centres.</p></dd>
 
 
 <dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>

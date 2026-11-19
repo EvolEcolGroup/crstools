@@ -79,8 +79,8 @@ point-wise coordinate transformation without warping a raster.</p>
 
 <dl><dt id="arg-gcp">gcp<a class="anchor" aria-label="anchor" href="#arg-gcp"></a></dt>
 <dd><p>A data frame containing the Ground Control Points (GCPs). This
-dataframe can be produced with the <code>draw_gcp_points</code> function. This
-data frame should have the following columns:</p><ul><li><p><code>id</code>: An identifier for each GCP (numeric).</p></li>
+dataframe can be produced with the <code><a href="choose_gcp.html">choose_gcp()</a></code> and <code><a href="find_gcp_coords.html">find_gcp_coords()</a></code>
+functions. This data frame should have the following columns:</p><ul><li><p><code>id</code>: An identifier for each GCP (numeric).</p></li>
 <li><p><code>x</code>: The x-coordinate of the GCP (in pixel space).</p></li>
 <li><p><code>y</code>: The y-coordinate of the GCP (in pixel space).</p></li>
 <li><p><code>longitude</code>: The longitude of the GCP (georeferenced).</p></li>
@@ -90,8 +90,8 @@ data frame should have the following columns:</p><ul><li><p><code>id</code>: An 
 
 <dt id="arg-target-pts">target_pts<a class="anchor" aria-label="anchor" href="#arg-target-pts"></a></dt>
 <dd><p>A data frame containing the target points to transform.
-This dataframe must contain the following columns:</p><ul><li><p><code>id</code>: An identifier for each target point.</p></li>
-<li><p><code>x</code> or <code>cx</code>: The x-coordinate of the point
+This dataframe must contain the following columns (any other column, such
+as an identifier for each point, is kept in the output):</p><ul><li><p><code>x</code> or <code>cx</code>: The x-coordinate of the point
 (in pixel space).</p></li>
 <li><p><code>y</code> or <code>cy</code>: The y-coordinate of the point
 (in pixel space).</p></li>
@@ -118,10 +118,10 @@ when GCPs contain noise or digitizing errors.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame containing:</p><ul><li><p><code>id</code>: The original target point identifier.</p></li>
-<li><p>Pixel coordinate columns from the original dataframe.</p></li>
-<li><p><code>lon</code>: Estimated longitude.</p></li>
-<li><p><code>lat</code>: Estimated latitude.</p></li>
+    <p>A data frame containing:</p><ul><li><p>All the columns of <code>target_pts</code> (including the pixel
+coordinates).</p></li>
+<li><p><code>longitude</code>: Estimated longitude.</p></li>
+<li><p><code>latitude</code>: Estimated latitude.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
@@ -132,7 +132,7 @@ thin plate spline transformations are implemented using
 "Grid searches over lambda (nugget and sill variances) with minima at
 the endpoints:" This is often benign warning and indicates that the optimal
 smoothing parameter is at or near the boundary of the search space (matching
-the default lamba 1e-4, and thus approaching perfect interpolation).</p>
+the default lambda 1e-4, and thus approaching perfect interpolation).</p>
     </div>
 
     <div id="ref-examples">

@@ -131,8 +131,8 @@ position, in km.</p></li>
 least square separately for longitude and latitude, with all terms up to the
 specific order (3, 6, 10 coefficients for first, second and third order
 polynomials). This forward (pixel to lon/lat) transformation, is the same
-applied by GDAL in <code><a href="georeference_img.html">georeference_img()</a></code> and <code><a href="get_pts_coords.html">get_pts_coords()</a></code>. LOO resisuals
-are computed without refittinhg as \(e_i / (1 - h_{ii})\), where \(e_i\)
+applied by GDAL in <code><a href="georeference_img.html">georeference_img()</a></code> and <code><a href="get_pts_coords.html">get_pts_coords()</a></code>. LOO residuals
+are computed without refitting as \(e_i / (1 - h_{ii})\), where \(e_i\)
 is the ordinary residual and \(h_{ii}\) is the leverage of the i-th GCP.</p>
 <p>Residuals are given in degrees (observed minus fitted) and as the
 great-circle distance (in km, on a sphere of radius 6371.0088 km) between the
@@ -163,12 +163,13 @@ across latitudes, whereas distances in km are.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.26380279 198.8889 0.6693948 -12.911370  0.7979389 606.6181</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 -0.60331713 135.0555 0.2772730   2.378385 -0.8347788 186.4964</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.18831078 165.2206 0.3730808  -2.944634  0.3003749 263.7281</span>
-<span class="r-in"><span><span class="co"># mean rmse</span></span></span>
+<span class="r-in"><span><span class="co"># mean error (km)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_km</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 252.6287</span>
+<span class="r-in"><span><span class="co"># root mean square error (km)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">res_km</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 283.4457</span>
-<span class="r-in"><span><span class="co"># mean loo rmse</span></span></span>
+<span class="r-in"><span><span class="co"># leave-one-out root mean square error (km), no GCPs with leverage 1 (NA)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">loo_km</span><span class="op">^</span><span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 648.4303</span>
 </code></pre></div>

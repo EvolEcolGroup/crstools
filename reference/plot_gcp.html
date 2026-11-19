@@ -76,7 +76,7 @@ to improve the transformation.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_gcp</span><span class="op">(</span><span class="va">image_obj</span>, gcp <span class="op">=</span> <span class="cn">NULL</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_gcp</span><span class="op">(</span><span class="va">image_obj</span>, <span class="va">gcp</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,12 +86,12 @@ to improve the transformation.</p>
 <dl><dt id="arg-image-obj">image_obj<a class="anchor" aria-label="anchor" href="#arg-image-obj"></a></dt>
 <dd><p>An array representing the image (colour images are generally
 imported as an array of nx x ny x 3 colour channels), or a file path to the
-image (currenly this can only be of type .jpg).</p></dd>
+image (currently this can only be of type .jpg).</p></dd>
 
 
 <dt id="arg-gcp">gcp<a class="anchor" aria-label="anchor" href="#arg-gcp"></a></dt>
 <dd><p>A dataframe of GCPs, containing at least columns <code>id</code>, <code>x</code>,
-<code>y</code>.</p></dd>
+<code>y</code>. If NULL (the default), only the image is plotted.</p></dd>
 
 
 <dt id="arg-col">col<a class="anchor" aria-label="anchor" href="#arg-col"></a></dt>

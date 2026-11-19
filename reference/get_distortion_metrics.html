@@ -84,7 +84,7 @@ CRS of <code>data</code>.</p>
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>An sf, SpatRaster, or SpatVector object. This has to be projected
-to the CRS intened to assess.</p></dd>
+to the CRS intended to assess.</p></dd>
 
 
 <dt id="arg-centres">centres<a class="anchor" aria-label="anchor" href="#arg-centres"></a></dt>
@@ -105,8 +105,8 @@ estimated automatically as in <code><a href="geom_tissot.html">geom_tissot()</a>
 of each grid point, placed on a sphere, and estimates distortion from their
 displacement. <code>"ellipsoid"</code> uses <code><a href="https://hypertidy.github.io/PROJ/reference/proj_factors.html" class="external-link">PROJ::proj_factors()</a></code>, which accounts for
 the flattening of the ellipsoid and requires the suggested package 'PROJ'
-(&gt;= 0.7.0); if this fails, a warning is issued and <code>"sphere"</code> is used
-instead. Default is <code>"sphere"</code>.</p></dd>
+(&gt;= 0.7.0); if PROJ cannot compute the metrics, an error is raised (use
+<code>"sphere"</code> instead). Default is <code>"sphere"</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -117,14 +117,14 @@ point, in EPSG:4326), <code>areal_scale</code>, <code>angular_distortion</code> 
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Distortion metrics can be computed using two different <code>method</code>:</p><ul><li><p><code>"sphere"</code>: for each GP, the function takes a short step, of lenght
-<code>radius</code> due north and due eat on a sphere with fixed radius. Point and steps
-are then projected to the CRS of <code>data</code>, and the distortion metrics are
-computed. Because the Earth is not a perfect sphere, this method is less
+    <p>Distortion metrics can be computed using two different <code>method</code>:</p><ul><li><p><code>"sphere"</code>: for each grid point, the function takes a short step, of
+length <code>radius</code>, due north and due east on a sphere with fixed radius. Point
+and steps are then projected to the CRS of <code>data</code>, and the distortion metrics
+are computed. Because the Earth is not a perfect sphere, this method is less
 accurate (below 1°) than the <code>"ellipsoid"</code> method, but it does not require
 the <code>PROJ</code> library and the PROJ R package installed.</p></li>
 <li><p><code>"ellipsoid"</code>: distortion metrics are computed using the <code>PROJ</code> R library
-via the <code><a href="https://hypertidy.github.io/PROJ/reference/proj_factors.html" class="external-link">PROJ::proj_factors()</a></code> fucntion, using the ellipsoid defined by the
+via the <code><a href="https://hypertidy.github.io/PROJ/reference/proj_factors.html" class="external-link">PROJ::proj_factors()</a></code> function, using the ellipsoid defined by the
 CRS and therefore being more accurate than the <code>"sphere"</code> method. This method
 requires the <code>PROJ</code> R package (&gt;= 0.7.0) installed. Currently, the latter
 works from binary for Windows and Linux, but not for MacOS. The latter can be
@@ -141,7 +141,7 @@ distortion).</p>
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Snyder, J.P. (1987) Map Projections—A Working Manual. U.S.
+    <p>Snyder, J.P. (1987) Map Projections: A Working Manual. U.S.
 Geological Survey Professional Paper 1395, pp. 20-26. Washington, D.C.:
 U.S. Government Printing Office. DOI: 10.3133/pp1395.</p>
 <p>Sumner, M.D. (2026) PROJ: Generic Coordinate System Transformations Using
@@ -160,12 +160,12 @@ U.S. Government Printing Office. DOI: 10.3133/pp1395.</p>
 <span class="r-in"><span><span class="va">metrics</span> <span class="op">&lt;-</span> <span class="fu">get_distortion_metrics</span><span class="op">(</span><span class="va">s_america_proj</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">metrics</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"areal_scale"</span>, <span class="st">"angular_distortion"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   areal_scale     angular_distortion</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.9904   Min.   : 0.03553  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.9967   1st Qu.: 1.27360  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0004   Median : 5.14879  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.0007   Mean   : 6.25539  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0057   3rd Qu.: 9.83820  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :1.0107   Max.   :18.13907  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.9920   Min.   : 0.02516  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.9979   1st Qu.: 1.22167  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :1.0003   Median : 4.64258  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :1.0006   Mean   : 5.77314  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:1.0042   3rd Qu.: 8.28786  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :1.0090   Max.   :18.23024  </span>
 </code></pre></div>
     </div>
   </div>
