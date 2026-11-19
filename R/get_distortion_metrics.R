@@ -10,8 +10,9 @@
 #' length `radius`, due north and due east on a sphere with fixed radius. Point
 #' and steps are then projected to the CRS of `data`, and the distortion metrics
 #' are computed. Because the Earth is not a perfect sphere, this method is less
-#' accurate (below 1°) than the `"ellipsoid"` method, but it does not require
-#' the `PROJ` library and the PROJ R package installed.
+#' accurate than the `"ellipsoid"` method (differences in angular distortion
+#' are usually below 1°), but it does not require the `PROJ` library and the
+#' PROJ R package installed.
 #' - `"ellipsoid"`: distortion metrics are computed using the `PROJ` R library
 #' via the [PROJ::proj_factors()] function, using the ellipsoid defined by the
 #' CRS and therefore being more accurate than the `"sphere"` method. This method
@@ -42,8 +43,10 @@
 #'   length 2 with the number of rows/columns for an automatic grid, as in
 #'   [geom_tissot()]. Default is c(5, 5).
 #' @param radius The length of the probing step used to estimate local
-#'   distortion, in metres, used only when `method = "sphere"`. If NULL,
-#'   estimated automatically as in [geom_tissot()]. Default is NULL.
+#'   distortion, in metres, used only when `method = "sphere"`. Unlike in
+#'   [geom_tissot()], it does not depend on the spacing of the grid, as it
+#'   only sets the accuracy of the estimates (longer steps are less accurate).
+#'   Default is 100.
 #' @param method The Earth model used to compute the distortion metrics, either
 #'   `"sphere"` or `"ellipsoid"`. `"sphere"` projects small steps north and east
 #'   of each grid point, placed on a sphere, and estimates distortion from their
@@ -64,7 +67,7 @@
 #' s_america_proj <- st_transform(s_america_sf, s_am_equal_area$proj4)
 #' metrics <- get_distortion_metrics(s_america_proj)
 #' summary(metrics[c("areal_scale", "angular_distortion")])
-get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
+get_distortion_metrics <- function(data, centres = c(5, 5), radius = 100,
                                    method = c("sphere", "ellipsoid")) {
   # check that method is valid
   # use sphere (first element) as default if not specified
@@ -115,6 +118,12 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
     return(metrics)
   }
 
+  # check that radius is a single positive number
+  if (!is.numeric(radius) || length(radius) != 1 || !is.finite(radius) ||
+    radius <= 0) {
+    stop("radius must be a single positive number (in metres)")
+  }
+
   # otherwise, estimate distortion on a sphere
   distortion_sphere(coord_grid, orig_crs, radius = radius)
 }
@@ -125,21 +134,10 @@ get_distortion_metrics <- function(data, centres = c(5, 5), radius = NULL,
 
 
 # function to estimate distortion metrics using the "walking" north and east
-# approach on a sphere
-distortion_sphere <- function(coord_grid, crs, radius = NULL) {
-  # if radius is null, estimate distance between two grid points
-  # as in geom_tissot()
-  if (is.null(radius)) {
-    coord_grid_sf <- sf::st_as_sf(
-      as.data.frame(coord_grid),
-      coords = c("lon", "lat"),
-      crs = sf::st_crs("EPSG:4326")
-    )
-    dist_mat <- sf::st_distance(x = coord_grid_sf)
-    diag(dist_mat) <- NA
-    radius <- as.numeric(min(dist_mat, na.rm = TRUE)) / 4
-  }
-
+# approach on a sphere. The step (radius, in metres) only sets the accuracy of
+# the estimates, so it is not derived from the spacing of the grid as in
+# geom_tissot()
+distortion_sphere <- function(coord_grid, crs, radius) {
   # metres per CRS unit (e.g. 0.3048 for feet), so that the projected
   # steps are in the same units as radius
   to_metre <- terra::linearUnits(terra::rast(crs = crs$wkt))

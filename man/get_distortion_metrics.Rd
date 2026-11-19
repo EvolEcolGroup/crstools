@@ -7,7 +7,7 @@
 get_distortion_metrics(
   data,
   centres = c(5, 5),
-  radius = NULL,
+  radius = 100,
   method = c("sphere", "ellipsoid")
 )
 }
@@ -20,8 +20,10 @@ length 2 with the number of rows/columns for an automatic grid, as in
 \code{\link[=geom_tissot]{geom_tissot()}}. Default is c(5, 5).}
 
 \item{radius}{The length of the probing step used to estimate local
-distortion, in metres, used only when \code{method = "sphere"}. If NULL,
-estimated automatically as in \code{\link[=geom_tissot]{geom_tissot()}}. Default is NULL.}
+distortion, in metres, used only when \code{method = "sphere"}. Unlike in
+\code{\link[=geom_tissot]{geom_tissot()}}, it does not depend on the spacing of the grid, as it
+only sets the accuracy of the estimates (longer steps are less accurate).
+Default is 100.}
 
 \item{method}{The Earth model used to compute the distortion metrics, either
 \code{"sphere"} or \code{"ellipsoid"}. \code{"sphere"} projects small steps north and east
@@ -48,8 +50,9 @@ Distortion metrics can be computed using two different \code{method}:
 length \code{radius}, due north and due east on a sphere with fixed radius. Point
 and steps are then projected to the CRS of \code{data}, and the distortion metrics
 are computed. Because the Earth is not a perfect sphere, this method is less
-accurate (below 1°) than the \code{"ellipsoid"} method, but it does not require
-the \code{PROJ} library and the PROJ R package installed.
+accurate than the \code{"ellipsoid"} method (differences in angular distortion
+are usually below 1°), but it does not require the \code{PROJ} library and the
+PROJ R package installed.
 \item \code{"ellipsoid"}: distortion metrics are computed using the \code{PROJ} R library
 via the \code{\link[PROJ:proj_factors]{PROJ::proj_factors()}} function, using the ellipsoid defined by the
 CRS and therefore being more accurate than the \code{"sphere"} method. This method

@@ -61,6 +61,36 @@ test_that("Check method is either 'sphere' or 'ellipsoid'", {
                "must be one of")
 })
 
+# check that radius is a single positive number
+test_that("Check radius is a single positive number", {
+  location_merc <- sf::st_transform(location, "EPSG:3857")
+  expect_error(get_distortion_metrics(location_merc, centres = c(2, 2),
+                                      radius = NULL),
+               "radius must be a single positive number")
+  expect_error(get_distortion_metrics(location_merc, centres = c(2, 2),
+                                      radius = -100),
+               "radius must be a single positive number")
+  expect_error(get_distortion_metrics(location_merc, centres = c(2, 2),
+                                      radius = c(100, 200)),
+               "radius must be a single positive number")
+  expect_error(get_distortion_metrics(location_merc, centres = c(2, 2),
+                                      radius = "100"),
+               "radius must be a single positive number")
+  # radius is not used by the ellipsoid method, so it is not checked
+  skip_if_not_installed("PROJ", "0.7.0")
+  proj_db_check <- try(
+    PROJ::proj_factors(cbind(0, 0), "EPSG:3857"),
+    silent = TRUE
+  )
+  skip_if(
+    inherits(proj_db_check, "try-error") ||
+      all(is.na(proj_db_check[, "areal_scale"])),
+    "PROJ cannot compute distortion factors (proj.db not found)"
+  )
+  expect_no_error(get_distortion_metrics(location_merc, centres = c(2, 2),
+                                         radius = NULL, method = "ellipsoid"))
+})
+
 # check output structure
 test_that("Output has the expected structure", {
   # get crs
@@ -240,6 +270,30 @@ test_that("sphere method works at the pole for polar projections", {
   expect_equal(metrics$areal_scale, c(1, 1), tolerance = 1e-2)
   # and has no angular distortion at the pole
   expect_true(all(metrics$angular_distortion < 0.1))
+})
+
+# check that the default step does not depend on the spacing of the grid
+test_that("sphere method default step does not depend on the grid", {
+  location_merc <- sf::st_transform(location, "EPSG:3857")
+  # two centres far apart: when the step was a quarter of the distance between
+  # centres (about 1,150 km here), the north step moved about 10 degrees and
+  # gave about 15 degrees of angular distortion
+  metrics <- get_distortion_metrics(location_merc,
+                                    centres = list(lng = c(0, 90), lat = 60))
+  # spherical Mercator is conformal, with a scale of 1 / cos(lat) in every
+  # direction
+  expect_true(all(metrics$angular_distortion < 0.01))
+  expect_equal(metrics$areal_scale, rep(1 / cos(60 * pi / 180)^2, 2),
+               tolerance = 1e-4)
+  # the same centre gives the same metrics with a denser grid
+  metrics_dense <- get_distortion_metrics(location_merc,
+                                          centres = list(lng = c(0, 1),
+                                                         lat = 60))
+  expect_equal(metrics_dense[1, ], metrics[1, ], tolerance = 1e-8)
+  # and with a single centre, where there is no distance between centres
+  metrics_single <- get_distortion_metrics(location_merc,
+                                           centres = list(lng = 0, lat = 60))
+  expect_equal(metrics_single, metrics[1, ], tolerance = 1e-8)
 })
 
 # check that the sphere method does not depend on the linear unit of the CRS
